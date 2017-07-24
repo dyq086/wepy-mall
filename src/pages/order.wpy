@@ -1,0 +1,85 @@
+<template>
+  <!--tab模块-->
+  <view class="swiper-tab-pd">
+    <tab @currentTab.user="getCurrentTab" :tabList.sync="tabList"></tab>
+  </view>
+  <scroll-view scroll-y="true" class="swiper-item-box" style="height:{{winHeight - 31}}px">
+    <orderItem :orderList.sync="orderList"></orderItem>
+    <!--加载更多时动画-->
+    <bottomLoadMore :show.sync="showLoading" message="正在加载"></bottomLoadMore>
+    <!--暂无数据显示-->
+    <placeholder :show.sync="is_empty" message="暂无发现数据"></placeholder>
+  </scroll-view>
+</template>
+<script>
+import wepy from 'wepy';
+import Tab from '../components/tab'
+import {
+  SYSTEM_INFO
+} from '../utils/constant';
+import OrderItem from '../components/order_item'
+import BottomLoadMore from "../components/common/bottomLoadMore"
+import Placeholder from "../components/common/placeholder"
+import {
+  orderList
+} from '../api/data';
+export default class Order extends wepy.page {
+  config = {
+    navigationBarTitleText: '我的订单',
+  }
+  components = {
+    tab: Tab,
+    orderItem: OrderItem,
+    bottomLoadMore: BottomLoadMore,
+    placeholder: Placeholder
+  }
+  data = {
+    currentTab: 0,
+    winHeight: 0,
+    tabList: ["全部订单", "待支付", "待收货", "已完成"],
+    orderList: [],
+    showLoading: false,
+    is_empty: false
+
+  }
+  onLoad() {
+    let that = this;
+    let systemInfo = wx.getStorageSync(SYSTEM_INFO);
+    that.winHeight = systemInfo.windowHeight;
+    that.orderList = orderList.result.order_info;
+    that.$apply()
+  }
+  computed = {
+
+  }
+  methods = {
+    getCurrentTab(cur, evt) {
+      let that = this;
+      that.currentTab = cur;
+      that.$apply();
+    }
+  }
+  events = {
+
+  }
+  watch = {
+    currentTab(val) {
+      console.log("====" + val)
+    }
+  }
+
+}
+
+</script>
+<style lang="scss">
+.swiper-tab-pd {
+  padding: 0 30rpx;
+  background: #fff;
+}
+
+.swiper-tab-order.active {
+  color: #ff4856;
+  border-bottom: 5rpx solid #ff4856;
+}
+
+</style>

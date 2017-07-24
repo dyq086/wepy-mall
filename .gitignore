@@ -1,0 +1,25 @@
+# ---> Yii
+assets/*
+!assets/.gitignore
+runtime/*
+!runtime/.gitignore
+web/assets/*
+tests/
+.settings/
+.buildpath
+.project
+.idea
+node_modules
+test.js
+npm-debug.log
+dist
+node_modules
+
+
+# idea ignore
+.idea/
+*.ipr
+*.iml
+*.iws
+
+*.wepycache

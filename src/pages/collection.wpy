@@ -1,0 +1,156 @@
+<style lang="scss">
+.tab_box {
+  background: #fff;
+  padding: 0 120rpx;
+}
+</style>
+<template>
+  <view class="collection">
+    <!--tab模块-->
+    <view class="tab_box">
+      <tab @currentTab.user="getCurrentTab" :currentTab.sync="currentTab" :tabList.sync="tabList"></tab>
+    </view>
+    <scroll-view scroll-y="true" class="swiper-item-box" style="height:{{winHeight - 31}}px">
+       <!-- 我的足迹 -->
+      <collectionList :list.sync="browselist" wx:if="{{currentTab==0}}"></collectionList>
+      <!-- 我的收藏 -->
+      <collectionList :list.sync="favorlist" wx:if="{{currentTab==1}}"></collectionList>
+    </scroll-view>
+  </view>
+</template>
+<script>
+import wepy from 'wepy';
+import api from '../api/api';
+import Tab from '../components/tab'
+import CollectionList from '../components/collection_list'
+import {
+  SYSTEM_INFO,
+  USER_SPECICAL_INFO
+} from '../utils/constant';
+import {
+  bb
+} from '../api/data';
+export default class PointsRules extends wepy.page {
+  config = {
+    navigationBarTitleText: "",
+  }
+  components = {
+    tab: Tab,
+    collectionList: CollectionList
+  }
+
+  data = {
+    browselist: [],
+    favorlist:[],
+    tabList: ["我的足迹", "我的收藏"],
+    currentTab: {
+      default: 0
+    },
+    winHeight: 0
+  }
+
+   async getUserBrowse() {
+        let that = this;
+        let userSpecialInfo = wepy.getStorageSync(USER_SPECICAL_INFO) || {};
+        let openId = userSpecialInfo.openid;
+        const json = await api.browseInfo({
+          query: {
+            openId: openId,
+            pageNo:"1",
+            pageSize:"10"
+          }
+        });
+        if (json.data.code == 0) {
+          that.browselist = json.data.list;
+          that.$apply();
+          that.$invoke('collectionList', 'refreshList', that.browselist);
+          console.log("=================");
+        } else {
+          tip.error(json.data.msg)
+        }
+        that.showLoading = false;
+   }
+
+   async getUserFavorite() {
+         let that = this;
+           let userSpecialInfo = wepy.getStorageSync(USER_SPECICAL_INFO) || {};
+           let openId = userSpecialInfo.openid;
+           const json = await api.favoriteInfo({
+             query: {
+               openId: openId,
+               pageNo:"1",
+               pageSize:"10"
+             }
+           });
+           if (json.data.code == 0) {
+           console.log("=================");
+            console.log(json.data);
+             that.favorlist = json.data.list;
+             that.$invoke('collectionList', 'refreshList', that.favorlist);
+             that.$apply();
+           } else {
+             tip.error(json.data.msg)
+           }
+           that.showLoading = false;
+   }
+
+
+  onLoad(opts) {
+    let that = this;
+    let title = "";
+    that.list = bb.result.products;
+    //opts.type 0：我的足迹 ，1：我的收藏
+    that.currentTab = opts.type;
+
+    console.log("ddddddddddd:"+opts.type);
+    if(opts.type==0){
+     that.getUserBrowse();
+    }else{
+     that.getUserFavorite();
+    }
+    //动态设置标题
+    that.setTitle(opts.type);
+
+    //设置滚动高度
+    let systemInfo = wepy.getStorageSync(SYSTEM_INFO);
+    that.winHeight = systemInfo.windowHeight;
+    that.$apply();
+
+  }
+  computed = {
+
+  }
+  methods = {
+    getCurrentTab(cur, evt) {
+      let that = this;
+      that.currentTab = cur;
+      that.setTitle(cur)
+      if (cur==1) {
+        that.getUserFavorite();
+      } else {
+        that.getUserBrowse();
+      }
+      that.$apply();
+    },
+    /**
+     * 滑动切换tab
+     */
+    bindChange(e) {
+
+      let that = this;
+      that.currentTab = e.detail.current;
+      console.log("change tab...."+e.detailcurrent);
+      that.$apply();
+    },
+  }
+  setTitle(cur) {
+    wepy.setNavigationBarTitle({
+      title: this.tabList[cur]
+    })
+  }
+  events = {
+
+  }
+}
+
+</script>

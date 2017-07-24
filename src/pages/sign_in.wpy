@@ -1,0 +1,257 @@
+<template>
+  <view class="sgin_in">
+    <image src="../images/bc_qdyl.png" class="head_bc"></image>
+    <view class="qd_content">
+      <view class="jf">积分:{{score}}</view>
+      <view class="out_crl">
+        <view class="second_crl"  @tap="sign">
+          <view class="in_crl">
+            <text class="sign_state">
+              <text wx:if="{{signed}}">已签到</text>
+              <text wx:if="{{!signed}}">签到</text>
+            </text>
+            <view class="line"></view>
+            <text class="sign_times">连续{{conDays}}天</text>
+          </view>
+        </view>
+      </view>
+      <view class="sign_doc" wx:if="{{signed}}">今日已签到，获得5积分</view>
+      <view class="sign_doc" wx:if="{{!signed}}">今日还未签到</view>
+    </view>
+    <!--tab模块-->
+    <view class="tab_box">
+      <tab @currentTab.user="getCurrentTab" :currentTab.sync="currentTab" :tabList.sync="tabList"></tab>
+    </view>
+    <scroll-view scroll-y="true" class="swiper-item-box" style="height:{{winHeight - 275}}px">
+      <!-- 积分规则 -->
+      <pointsRule wx:if="{{currentTab==0}}"></pointsRule>
+      <!-- 积分记录 -->
+      <pointsDetail :is_empty.sync="is_empty" :list.sync="signList" wx:if="{{currentTab==1}}"></pointsDetail>
+    </scroll-view>
+  </view>
+</template>
+<script>
+import wepy from 'wepy';
+import api from '../api/api';
+import Tab from '../components/tab'
+import tip from '../utils/tip'
+import {
+  SYSTEM_INFO,
+  USER_SPECICAL_INFO
+} from '../utils/constant';
+import PointsDetail from '../components/points_detail'
+import PointsRule from '../components/points_rule'
+export default class SignIn extends wepy.page {
+  config = {
+    navigationBarTitleText: '签到有礼',
+  }
+  components = {
+    tab: Tab,
+    pointsDetail: PointsDetail,
+    pointsRule: PointsRule
+  }
+
+  data = {
+    currentTab: 0,
+    winHeight: 0,
+    tabList: ["积分规则", "获得记录"],
+    signed: false,
+    score: 0,
+    conDays: 0,
+    signList: [],
+    is_empty:false,
+    signing: false
+  }
+
+  async getUserSign() {
+    let that = this;
+    let userSpecialInfo = wepy.getStorageSync(USER_SPECICAL_INFO) || {};
+    let openId = userSpecialInfo.openid;
+    const json = await api.userSginInfo({
+      query: {
+        openId: openId
+      }
+    });
+    console.log("json==", json);
+    if (json.data.code == 0) {
+      that.signed = json.data.hasSign;
+      that.conDays = json.data.conDays;
+      that.signList = json.data.list;
+      that.score = json.data.score;
+      console.log("jefe==", that.signList);
+      that.$apply();
+    } else {
+      tip.error(json.data.msg)
+    }
+    that.showLoading = false;
+  }
+
+  async doSign() {
+    let that = this;
+    if (that.signing) {
+      return;
+    }
+    that.signing = true;
+
+    let userSpecialInfo = wepy.getStorageSync(USER_SPECICAL_INFO) || {};
+    let openId = userSpecialInfo.openid;
+    const json = await api.doSign({
+      query: {
+        openId: openId
+      }
+    });
+    console.log("json==", json);
+    if (json.data.code == 0) {
+      tip.success("恭喜获得5积分!",3000);
+      that.signed = true;
+      that.conDays = that.conDays+1;
+      that.siging = false;
+      that.$apply();
+    } else {
+      wepy.showToast({
+        title: json.data.msg,
+        images: '../images/error.png',
+        duration: 5000
+      })
+    }
+  }
+
+  onLoad() {
+    let that = this;
+    let systemInfo = wepy.getStorageSync(SYSTEM_INFO);
+    console.log("." + systemInfo.windowHeight);
+    that.winHeight = systemInfo.windowHeight;
+
+    that.getUserSign();
+
+    that.$apply();
+  }
+  computed = {
+
+  }
+  methods = {
+    getCurrentTab(cur, evt) {
+      let that = this;
+      that.currentTab = cur;
+      that.$apply();
+    },
+    /**
+     * 滑动切换tab
+     */
+    bindChange(e) {
+      let that = this;
+      that.currentTab = e.detail.current;
+      that.$apply();
+    },
+
+    sign() {
+      let that = this;
+      if (that.signed) {
+        tip.alert("你今天已签过了!");
+      } else {
+        that.doSign();
+      }
+    }
+  }
+  events = {
+
+  }
+}
+
+</script>
+<style lang="scss">
+.sgin_in {
+  position: relative;
+}
+
+.qd_content {
+  position: relative;
+  z-index: 6;
+  height: 460rpx;
+}
+
+.head_bc {
+  height: 460rpx;
+  width: 100%;
+  position: absolute;
+}
+
+.jf {
+  font-size: 32rpx;
+  color: #fff;
+  padding: 50rpx 0rpx 10rpx 35rpx;
+}
+
+.in_crl {
+  background: #FFF;
+  border-radius: 1000rpx;
+  border: 2rpx solid #7fbcff;
+  bottom: 0;
+  color: #007aff;
+  height: 200rpx;
+  left: 0;
+  margin: auto;
+  position: absolute;
+  right: 0;
+  top: 0;
+  width: 200rpx;
+  z-index: 100;
+  text-align: center;
+}
+
+.second_crl {
+  position: relative;
+  border-radius: 1000rpx;
+  width: 235rpx;
+  height: 235rpx;
+  margin: 0 auto;
+  top: 15rpx;
+  z-index: 3;
+  background: #fff;
+}
+
+.out_crl {
+  position: relative;
+  border-radius: 1000rpx;
+  width: 265rpx;
+  height: 265rpx;
+  margin: 0 auto;
+  z-index: 2;
+  background: #f40;
+  background-color: rgba(255, 255, 255, 0.2);
+}
+
+.sign_state {
+  font-size: 40rpx;
+  font-weight: 600;
+  margin-bottom: 15rpx;
+  margin-top: 50rpx;
+  display: block;
+}
+
+.line {
+  height: 2rpx;
+  background: #dcdcdc;
+  width: 165rpx;
+  margin: 0 auto;
+}
+
+.sign_times {
+  font-size: 30rpx;
+  margin-top: 15rpx;
+  display: block;
+}
+
+.sign_doc {
+  font-size: 30rpx;
+  text-align: center;
+  color: #fff;
+  margin-top: 30rpx;
+}
+
+.tab_box {
+  background: #fff;
+  padding: 0 120rpx;
+}
+
+</style>

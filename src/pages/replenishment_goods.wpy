@@ -1,0 +1,74 @@
+<!--我要补货-->
+<template>
+  <view class="tab_box">
+    <!--tab模块-->
+    <tab @currentTab.user="getCurrentTab" :currentTab.sync="currentTab" :tabList.sync="tabList"></tab>
+  </view>
+  <swiper current="{{currentTab}}" class="swiper-box" duration="300" style="height:{{winHeight - 31}}px" bindchange="bindChange">
+    <swiper-item wx:for="{{tabList}}" wx:key="index">
+      <!--矩阵商品列表模块-->
+      <shopGridList :list.sync="list"></shopGridList>
+    </swiper-item>
+  </swiper>
+</template>
+<style type="scss">
+  .tab_box{ padding: 0rpx 60rpx; background: #fff;}
+</style>
+<script>
+import wepy from 'wepy';
+import Tab from '../components/tab'
+import {
+  SYSTEM_INFO
+} from '../utils/constant';
+import ShopGridList from '../components/shop_grid_list'
+import {
+  bb
+} from '../api/data';
+export default class replenishmentGoods extends wepy.page {
+  config = {
+    navigationBarTitleText: '我要补货',
+  }
+  components = {
+    tab: Tab,
+    shopGridList: ShopGridList,
+
+  }
+  data = {
+    currentTab: 0,
+    winHeight: 0,
+    tabList: ["快速补货", "申请记录", "待补货"],
+    list: []
+  }
+  onLoad() {
+    let that = this;
+    let systemInfo = wx.getStorageSync(SYSTEM_INFO);
+    that.winHeight = systemInfo.windowHeight;
+    that.list = bb.result.products;
+    console.log(bb.result.products)
+  }
+  computed = {
+
+  }
+  methods = {
+    getCurrentTab(cur, evt) {
+      let that = this;
+      that.currentTab = cur;
+      that.$apply();
+    },
+    /** 
+     * 滑动切换tab 
+     */
+    bindChange(e) {
+      let that = this;
+      that.currentTab = e.detail.current;
+      that.$apply();
+    },
+
+  }
+  events = {
+
+  }
+
+}
+
+</script>

@@ -1,0 +1,89 @@
+<style lang="scss">
+.setting {
+ 
+}
+
+.list_block {
+  padding-top: 20rpx;
+}
+
+.item_bock {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 40rpx 25rpx;
+  border-bottom: 1px solid #f7f7f7;
+  background: #fff;
+}
+
+.title {
+  color: #808080;
+  font-size: 32rpx;
+}
+
+.item_content {
+  font-size: 32rpx;
+  color: #333333;
+}
+
+</style>
+<!--我的消息-->
+<template>
+  <view class="setting">
+    <scroll-view scroll-y="true" class="swiper-item-box">
+      <view class="list_block">
+        <view class="item_bock">
+          <view class="title">昵称</view>
+          <view class="item_content">樱桃小丸子</view>
+        </view>
+        <view class="item_bock">
+          <view class="title">我的手机</view>
+          <view class="item_content">1809989878</view>
+        </view>
+        <view class="item_bock">
+          <view class="title">收货地址</view>
+          <navigator class="item_content" url="/pages/address">更改地址 &gt;</navigator>
+        </view>
+      </view>
+  </view>
+  </scroll-view>
+  </view>
+</template>
+<script>
+import wepy from 'wepy';
+import {
+  SYSTEM_INFO
+} from '../utils/constant';
+export default class Messages extends wepy.page {
+  config = {
+    navigationBarTitleText: '设置',
+  }
+  components = {
+
+  }
+  data = {
+    list: [],
+    winHeight: 0
+  }
+  onLoad() {
+    let that = this;
+
+    //设置滚动高度
+    let systemInfo = wepy.getStorageSync(SYSTEM_INFO);
+    that.winHeight = systemInfo.windowHeight;
+
+  }
+  computed = {
+
+  }
+  methods = {
+
+
+  }
+  events = {
+
+  }
+
+}
+
+</script>

@@ -1,0 +1,110 @@
+<!--收藏or历史足迹列表-->
+<template name="cart-goods-list">
+  <view class="goodsList">
+    <repeat for="{{list}}" key="index" index="index" item="item">
+      <view class="list_box">
+        <swipeDelete :swipeData="item" @delItem.user="handleDelItem">
+          <view class="goods-info">
+            <view class="img-box">
+              <image src="{{item.thumLogo}}" class="img" />
+            </view>
+            <view class="text-box">
+              <view class="goods-title">{{item.name}}</view>
+              <view class="goods-price">¥ {{item.price}}</view>
+            </view>
+          </view>
+        </swipeDelete>
+      </view>
+    </repeat>
+  </view>
+</template>
+<script>
+import wepy from 'wepy';
+import SwipeDelete from './common/wepy-swipe-delete'
+export default class CollecntionList extends wepy.component {
+  props = {
+    list: {
+      type: Object,
+      default: []
+    }
+  }
+  components = {
+    swipeDelete: SwipeDelete
+  }
+
+  onLoad() {
+    let that = this;
+    console.log(that.list)
+
+  }
+  computed = {
+
+  }
+  methods = {
+    handleDelItem(itemData) {
+      console.log(itemData)
+    },
+    refreshList(val){
+       if (val==undefined) return;
+       console.log("val.....",val);
+        this.list = val;
+        this.$apply();
+    }
+  }
+  events = {
+
+  }
+}
+
+</script>
+<style lang="scss">
+.goodsList {
+  margin-top: 15rpx;
+}
+
+.goods-info {
+  border-bottom: 1px solid #eee;
+  display: flex;
+  justify-content: space-between;
+  padding: 15rpx 21rpx;
+  box-sizing: border-box;
+}
+
+.goods-info .img-box {
+  width: 175rpx;
+  height: 175rpx;
+  overflow: hidden;
+  margin-right: 20rpx;
+  background-color: #d8d8d8;
+}
+
+.goods-info .text-box {
+  width: 440rpx;
+  position: relative;
+}
+
+.goods-info .text-box .goods-title {
+  font-size: 32rpx;
+  color: #414141;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+  padding: 10rpx 20rpx 5rpx 0;
+}
+
+.goods-info .text-box .goods-price {
+  font-size: 30rpx;
+  color: #ed601b;
+  padding-top: 30rpx;
+}
+
+.goods-info .img-box .img {
+  width: 175rpx;
+  height: 175rpx;
+}
+
+.list_box {
+  height: 200rpx;
+}
+
+</style>

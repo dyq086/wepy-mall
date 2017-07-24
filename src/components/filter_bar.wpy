@@ -1,0 +1,147 @@
+<!--筛选栏-->
+<template>
+  <view class="filter">
+    <view class="nav {{currentType=='zonghe' ? 'active' : ''}}" data-current="zonghe" @tap="orderBy">综合</view>
+    <view class="nav  {{currentType=='sale' ? 'active' : ''}}" data-current="sale" @tap="orderBy">销量</view>
+    <view class="grid nav">
+      <view class="price {{currentType=='price' ? 'active' : ''}}" data-current="price" @tap.stop="orderBy">价格</view>
+      <view>
+        <view class="arrow_up {{arrowType=='desc' ? 'arrow_up_red' : 'arrow_up_gray'}}"></view>
+        <!-- 向下的三角形 -->
+        <view class="arrow_down {{arrowType=='asc' ? 'arrow_down_red' : 'arrow_down_gray'}} "></view>
+      </view>
+    </view>
+    <navigator class="nav" url="/pages/filter">筛选<i class="iconfont icon-filter"></i></navigator>
+  </view>
+</template>
+<script>
+import wepy from 'wepy';
+export default class exchangeGoods extends wepy.component {
+  data = {
+    currentType: "",
+    arrowType: "",
+    flag: false
+  }
+  methods = {
+    orderBy(e) {
+      let that = this;
+      if (that.data.currentType == e.target.dataset.current) {
+        if (e.target.dataset.current !== "price") {
+          return false;
+        }
+      } else {
+        that.currentType = e.target.dataset.current;
+
+      }
+      that.priceOrderBy(e.target.dataset.current)
+      that.$apply();
+    }
+  }
+  priceOrderBy(orderBy) {
+    let that = this;
+    if (orderBy == "price") {
+      if (that.arrowType === "desc") {
+        that.arrowType = "asc";
+      } else {
+        that.arrowType = "desc";
+      }
+    } else {
+      that.arrowType = "";
+    }
+  }
+  watch = {
+    currentType(newValue) {
+      this.$emit("currentType", {
+        name: newValue,
+        type: 'desc'
+      });
+    },
+    arrowType(newValue, oldValue) {
+      if (oldValue !== "" && newValue !== "") {
+        this.$emit("currentType", {
+          name: "price",
+          type: newValue
+        });
+      }
+
+    }
+
+  }
+}
+
+</script>
+<style lang="sass">
+.filter {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #fff;
+  .nav {
+    color: #000000;
+    font-size: 26rpx;
+    padding: 12px 28px;
+  }
+  .active {
+    color: #f03939;
+  }
+  .icon-filter {
+    font-size: 26rpx;
+    color: #666;
+    margin-left: 5rpx;
+  }
+}
+
+.price {
+  color: #000000;
+  font-size: 26rpx;
+}
+
+.grid {
+  display: flex;
+  align-items: center;
+}
+
+
+
+/*向上*/
+
+.arrow_up_red {
+  border-color: transparent transparent #f03939;
+}
+
+.arrow_down_red {
+  border-color: #f03939 transparent transparent;
+}
+
+.arrow_up_gray {
+  border-color: transparent transparent #ccc;
+}
+
+.arrow_down_gray {
+  border-color: #ccc transparent transparent;
+}
+
+.arrow_up {
+  width: 0;
+  height: 0;
+  border-width: 0 10rpx 10rpx;
+  border-style: solid;
+  margin: 9rpx 10rpx;
+  position: relative;
+}
+
+
+
+/*向下*/
+
+.arrow_down {
+  width: 0;
+  height: 0;
+  border-width: 10rpx 10rpx 0;
+  border-style: solid;
+  /*灰 透明 透明 */
+  margin: 9rpx 10rpx;
+  position: relative;
+}
+
+</style>

@@ -1,0 +1,96 @@
+<template>
+  <view class="content">
+    <view class="search">
+      <view class="serch_content">
+        <i class="iconfont icon-search"></i>
+        <input type="text" name="search_input" bindinput="searchInput" class="search_input" focus="true" value="{{search_input_value}}" confirm-type="search" placeholder="搜索商品" />
+        <i wx:if="{{search_input_value!=''}}" @tap="delText" class="iconfont icon-del"></i>
+      </view>
+      <button class="btn btn_cancel" @tap="goBack()" wx:if="{{search_input_value==''}}">取消</button>
+      <button class="btn btn_search" @tap="search()" wx:else>搜索</button>
+    </view>
+  </view>
+</template>
+<script>
+import wepy from 'wepy';
+export default class Search extends wepy.component {
+  data = {
+    search_input_value: ''
+  }
+
+  events = {
+
+  }
+  methods = {
+    searchInput(e) {
+      this.search_input_value = e.detail.value;
+      this.$apply();
+    },
+    goBack() {
+      wepy.navigateBack({
+        delta: 1 // 回退前 delta(默认为1) 页面
+
+      })
+    },
+    search() {
+      this.$emit('searchValue', this.search_input_value);
+    },
+    delText() {
+      this.search_input_value = "";
+      this.$apply();
+    }
+  }
+
+  onLoad() {
+
+  }
+}
+
+</script>
+<style lang="scss">
+.content {
+  padding: 10rpx;
+}
+
+.search {
+  align-items: center;
+  display: flex;
+  margin: 0 auto;
+  width: 680rpx;
+  .serch_content {
+    display: flex;
+    align-items: center;
+    border-radius: 300rpx;
+    color: #333;
+    width: 560rpx;
+    background: #efefef;
+    padding: 5rpx 12rpx;
+    height: 65rpx;
+    .search_input {
+      font-size: 28rpx;
+      width: 100%;
+    }
+  }
+  .icon-search {
+    font-size: 40rpx;
+  }
+  .btn {
+    width: 120rpx;
+    height: 65rpx;
+    font-size: 28rpx;
+    line-height: 65rpx;
+    margin-left: 20rpx;
+  }
+  .btn_search {
+    color: #fff;
+    background: #e2413c;
+  }
+  .icon-del {
+    height: 60rpx;
+    line-height: 60rpx;
+    width: 60rpx;
+    font-size: 40rpx;
+  }
+}
+
+</style>

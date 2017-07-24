@@ -1,0 +1,96 @@
+<style lang="scss">
+.good_list {
+  display: flex;
+  justify-content: space-between;
+  padding: 20rpx 0rpx;
+  border-bottom: 1px solid #efefef
+}
+
+.image_box {
+  image {
+    width: 180rpx;
+    height: 180rpx;
+  }
+}
+
+
+.product_name {
+  color: #414141;
+  font-size: 32rpx;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  word-break: break-all;
+}
+
+.product_rule {
+  font-size: 26rpx;
+  color: #757575;
+  padding-top: 16rpx;
+}
+
+.price {
+  color: #de0000;
+  font-size: 34rpx;
+  font-weight: 600;
+}
+
+.goods {
+  padding: 15rpx 12rpx;
+}
+
+.product_info {
+  padding-top: 20rpx;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+}
+
+.cost_price {
+  padding-left: 20rpx;
+}
+
+</style>
+<template>
+  <view class="good_list" wx:for="{{goodsList}}" wx:key="index">
+    <view class="image_box">
+      <image src="{{item.small_image}}"></image>
+    </view>
+    <view class="goods">
+      <view class="product_name">{{item.product_name}}</view>
+      <view class="product_rule">规格:{{item.brand_store_name}}</view>
+      <view class="product_info">
+        <view class="price">￥{{item.sale_price}}</view>
+        <view class="goods_num">x3</view>
+      </view>
+    </view>
+  </view>
+</template>
+<script>
+import wepy from 'wepy'
+
+export default class ShopItemList extends wepy.component {
+  props = {
+    goodsList: {
+      default: []
+    }
+  }
+
+  events = {
+    // 'index-broadcast': (...args) => {
+    //   let $event = args[args.length - 1]
+    //   console.log(`${this.$name} receive ${$event.name} from ${$event.source.name}`)
+    // }
+  }
+
+  methods = {
+
+  }
+
+  onLoad() {
+    console.log(this.goodsList)
+  }
+}
+
+</script>

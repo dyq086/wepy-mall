@@ -1,0 +1,155 @@
+view {
+  font-size: 30rpx;
+  color: #666;
+}
+
+page {
+  background: #f5f5f5;
+}
+
+.container {
+  position: relative;
+  background: #ffffff;
+}
+
+.no_data {
+  font-size: 40rpx;
+  width: 100%;
+  margin: 0 auto;
+  text-align: center;
+  color: #8b8b8b;
+  padding-top: 20rpx;
+  .iconfont {
+    font-size: 40rpx;
+  }
+}
+
+.loadMoreGif {
+  align-items: center;
+  display: flex;
+  justify-content: center;
+  margin: 15rpx auto;
+  width: 220rpx;
+  text {
+    font-size: 30rpx;
+    color: #999;
+    margin-left: 10rpx;
+  }
+  image {
+    width: 30rpx;
+    height: 30rpx;
+  }
+}
+
+.hidden {
+  display: none;
+}
+
+.tc {
+  text-align: center;
+}
+
+.tl {
+  text-align: left;
+}
+
+.tr {
+  text-align: right;
+}
+
+.c666 {
+  color: #666;
+}
+
+.c333 {
+  color: #333;
+}
+
+.c000 {
+  color: #000;
+}
+
+.c999 {
+  color: #999;
+}
+
+.cfff {
+  color: #ffffff;
+}
+
+.fz24 {
+  font-size: 24rpx;
+}
+
+.fz25 {
+  font-size: 25rpx;
+}
+
+.fz26 {
+  font-size: 26rpx;
+}
+
+.fz27 {
+  font-size: 27rpx;
+}
+
+.fz28 {
+  font-size: 28rpx;
+}
+
+.fz29 {
+  font-size: 29rpx;
+}
+
+.fz30 {
+  font-size: 30rpx;
+}
+
+.fz31 {
+  font-size: 31rpx;
+}
+
+.fz32 {
+  font-size: 32rpx;
+}
+
+.type_red {
+  background: #ea4a3a;
+  color: #fff;
+}
+
+.type_yellow {
+  background: #ff6a3c;
+  color: #fff;
+}
+
+.type_green {
+  background: #09bb07;
+  color: #fff;
+}
+
+.type_pick {
+  background: #ff4856;
+  color: #fff;
+  border: 1px solid #ff4856;
+}
+
+.type_empity {
+  color: #333;
+  border: 1px solid #cccccc;
+}
+
+.button {
+  font-size: 36rpx;
+  height: 95rpx;
+  line-height: 95rpx;
+  text-align: center;
+  margin: 0 auto;
+  width: 100%;
+  -moz-border-radius: 10rpx;
+  /* Firefox */
+  -webkit-border-radius: 10rpx;
+  /* Safari 和 Chrome */
+  border-radius: 10rpx;
+  /* Opera 10.5+, 以及使用了IE-CSS3的IE浏览器 */
+}

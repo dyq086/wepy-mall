@@ -1,0 +1,44 @@
+<!--换货专区-->
+<template>
+  <!--矩阵商品列表模块-->
+  <shopGridList :list.sync="list"></shopGridList>
+</template>
+<script>
+import wepy from 'wepy';
+import ShopGridList from '../components/shop_grid_list'
+import {
+  SYSTEM_INFO
+} from '../utils/constant';
+import {
+  bb
+} from '../api/data';
+export default class exchangeGoods extends wepy.page {
+  config = {
+    navigationBarTitleText: '换货专区',
+  }
+  components = {
+    shopGridList: ShopGridList
+  }
+  data = {
+    list: []
+  }
+  onLoad() {
+    let that = this;
+    that.list = bb.result.products;
+    console.log(bb.result.products)
+
+  }
+  computed = {
+
+  }
+  methods = {
+
+
+  }
+  events = {
+
+  }
+
+}
+
+</script>

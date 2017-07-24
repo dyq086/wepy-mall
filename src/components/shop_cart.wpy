@@ -1,0 +1,409 @@
+<style lang="sass">
+.goods-info {
+  border-bottom: 1px solid #eee;
+  display: flex;
+  justify-content: space-between;
+  padding: 70rpx 0 30rpx 0rpx;
+  box-sizing: border-box;
+  align-items: center;
+  position: relative;
+  .icon_check {
+    position: absolute;
+    width: 100%;
+    height: 165rpx;
+    line-height: 165rpx;
+  }
+  .img-box {
+    width: 160rpx;
+    height: 160rpx;
+    overflow: hidden;
+    margin-right: 20rpx;
+    background-color: #d8d8d8;
+    margin-left: 100rpx;
+  }
+
+  .text-box {
+    width: 440rpx;
+    position: relative;
+  }
+
+  .text-box .goods-title {
+    font-size: 28rpx;
+    color: #000;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+    padding: 10rpx 20rpx 5rpx 0;
+  }
+
+  .text-box .goods-label {
+    font-size: 26rpx;
+    color: #999;
+    height: 38rpx;
+    line-height: 38rpx;
+    margin: 8rpx 0 25rpx 0;
+  }
+
+  .text-box .goods-price {
+    font-size: 26rpx;
+    color: #e64340;
+  }
+
+  .text-box .buy-num {
+    width: 164rpx;
+    height: 48rpx;
+    line-height: 48rpx;
+    position: absolute;
+    right: 30rpx;
+    bottom: 0;
+    display: flex;
+    /*justify-content: space-between;*/
+    font-size: 24rpx;
+    text-align: center
+  }
+
+  .text-box .buy-num .jian-btn {
+    width: 48rpx;
+    height: 100%;
+    border-left: 1rpx solid #ccc;
+    border-bottom: 1rpx solid #ccc;
+    border-top: 1rpx solid #ccc;
+    border-bottom-left-radius: 6rpx;
+    border-top-left-radius: 6rpx;
+  }
+
+  .text-box .buy-num .jian-btn.disabled {
+    background-color: #f5f5f9;
+    border-left: 1rpx solid #eee;
+    border-bottom: 1rpx solid #eee;
+    border-top: 1rpx solid #eee;
+    color: #ccc;
+  }
+
+  .text-box .buy-num .jia-btn {
+    width: 48rpx;
+    height: 100%;
+    border-right: 1rpx solid #ccc;
+    border-bottom: 1rpx solid #ccc;
+    border-top: 1rpx solid #ccc;
+    border-bottom-right-radius: 6rpx;
+    border-top-right-radius: 6rpx;
+  }
+
+  .text-box .buy-num .jia-btn.disabled {
+    background-color: #f5f5f9;
+    border-right: 1rpx solid #eee;
+    border-bottom: 1rpx solid #eee;
+    border-top: 1rpx solid #eee;
+    color: #ccc;
+  }
+
+  .text-box .buy-num input {
+    width: 68rpx;
+    height: 48rpx;
+    min-height: 48rpx;
+    text-align: center;
+    font-size: 24rpx;
+    border: 1rpx solid #ccc;
+  }
+
+  .img-box .img {
+    width: 160rpx;
+    height: 160rpx;
+  }
+}
+
+
+
+.jiesuan-box {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  height: 100rpx;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  border-bottom: 1px solid #eee;
+  border-top: 1px solid #eee;
+  background-color: #fff;
+  z-index: 9999;
+}
+
+.jiesuan-box .to-pay-btn {
+  width: 240rpx;
+  text-align: center;
+  line-height: 100rpx;
+  background-color: #e64340;
+  font-size: 32rpx;
+  color: #ffffff;
+}
+
+.jiesuan-box .to-pay-btn.no-select {
+  background-color: #ccc;
+}
+
+.jiesuan-box .left-price {
+  display: flex;
+  width: 510rpx;
+  justify-content: space-between;
+  padding: 0 30rpx 0 20rpx;
+  font-size: 28rpx;
+  box-sizing: border-box;
+  align-items: center;
+}
+
+.jiesuan-box .total {
+  color: #e64340;
+}
+
+.list_box {
+  height: 250rpx;
+}
+.all_select_box{
+  width: 200rpx;
+  height: 100%;
+  display: flex;
+  align-items: center;
+}
+.all_select {
+  flex:1;
+  padding-left: 10rpx;
+}
+
+</style>
+<template name="cart-goods-list">
+  <view class="goodsList">
+    <repeat for="{{list}}" key="index" index="index" item="item">
+      <view class="list_box">
+        <swipeDelete :swipeData="item" @delItem.user="handleDelItem">
+          <!-- <view class="a-goods-conts {{item.ischecked? 'active':''}}"  > -->
+          <view class="goods-info">
+            <icon class="icon_check" type="success" color="{{item.ischecked?'red':'rgb(153,153,153)'}}" @tap.stop="selectTap" data-index="{{index}}" data-id="{{item.id}}" size="20" />
+            <view class="img-box">
+              <image src="{{item.thumLogo}}" class="img" />
+            </view>
+            <view class="text-box">
+              <view class="goods-title">{{item.goodsName}}</view>
+              <view class="goods-label">{{item.brandName}}</view>
+              <view class="goods-price">¥ {{item.price}}</view>
+              <view class="buy-num">
+                <view class="jian-btn {{item.num==1? 'disabled' : ''}}" catchtap="jianBtnTap" data-index="{{index}}" data-id="{{item.id}}">-</view>
+                <input type="number" value="{{item.num}}" disabled/>
+                <view class="jia-btn {{item.num==1000? 'disabled' : ''}}" catchtap="jiaBtnTap" data-index="{{index}}" data-id="{{item.id}}">+</view>
+              </view>
+            </view>
+          </view>
+          <!--   </view> -->
+        </swipeDelete>
+      </view>
+    </repeat>
+  </view>
+  <view class="jiesuan-box">
+    <view class="left-price">
+      <view @tap.stop="selectAll" class="all_select_box">
+        <icon type="success" size="20" color="{{allSelect?'red':'rgb(153,153,153)'}}" />
+        <view class="all_select">全选</view>
+      </view>
+      <view class="total" hidden="{{noSelect}}">合计：¥ {{totalPrice}}</view>
+    </view>
+    <view class="to-pay-btn {{noSelect?'no-select':''}}" hidden="{{!saveHidden}}" bindtap="toPayOrder">去结算</view>
+  </view>
+</template>
+<script>
+import wepy from 'wepy';
+import api from '../api/api';
+import tip from '../utils/tip';
+import {
+  USER_SPECICAL_INFO
+} from '../utils/constant';
+import {
+  bb
+} from '../api/data';
+import swipeDelete from './common/wepy-swipe-delete'
+export default class shopCart extends wepy.component {
+
+  components = {
+    swipeDelete
+  }
+  data = {
+    list: [],
+    noSelect: false,
+    saveHidden: true,
+    totalPrice: 0
+  }
+
+  //获取购物车商品列表
+  async getCartList() {
+    let that = this;
+    let userSpecialInfo = wepy.getStorageSync(USER_SPECICAL_INFO) || {};
+    let openId = userSpecialInfo.openid;
+    const json = await api.cartList({
+      query: {
+        openId: openId
+      }
+    });
+    if (json.data.code == 0) {
+      let data = json.data;
+      this.list = data.list;
+      this.totalPrice = data.totalPrice;
+    } else {
+      tip.error(json.data.msg)
+    }
+    that.$apply();
+  }
+
+  onLoad() {
+    let that = this;
+    //that.list = bb.result.products;
+    //console.log(bb.result.products)
+    //that.getCartList();
+  }
+
+  computed = {
+
+  }
+
+  async checkGoods(id, index, ischecked) {
+    let userSpecialInfo = wepy.getStorageSync(USER_SPECICAL_INFO) || {};
+    let openId = userSpecialInfo.openid;
+    const json = await api.cartCheck({
+      query: {
+        openId: openId,
+        id: id
+      }
+    });
+    if (json.data.code == 0) {
+      // 购物车数据
+      this.list[index].ischecked = !ischecked;
+      if (this.list[index].ischecked) {
+        this.totalPrice += parseInt(this.list[index].priceSubtotal);
+      } else {
+        this.totalPrice -= parseInt(this.list[index].priceSubtotal);
+      }
+    } else {
+      tip.error(json.data.msg)
+    }
+    this.$apply();
+  }
+
+  async reduceGoodNum(id, num, index) {
+    let userSpecialInfo = wepy.getStorageSync(USER_SPECICAL_INFO) || {};
+    let openId = userSpecialInfo.openid;
+    const json = await api.cartUpdateNum({
+      query: {
+        openId: openId,
+        id: id,
+        num: num
+      }
+    });
+    if (json.data.code == 0) {
+      // 购物车数据
+      this.list[index].num = num;
+      this.totalPrice = this.totalPrice - this.list[index].price;
+    } else {
+      tip.error(json.data.msg)
+    }
+    this.$apply();
+  }
+
+  async addGoodNum(id, num, index) {
+    let userSpecialInfo = wepy.getStorageSync(USER_SPECICAL_INFO) || {};
+    let openId = userSpecialInfo.openid;
+    const json = await api.cartUpdateNum({
+      query: {
+        openId: openId,
+        id: id,
+        num: num
+      }
+    });
+    if (json.data.code == 0) {
+      // 购物车数据
+      this.list[index].num = num;
+      this.totalPrice = parseInt(this.totalPrice) + parseInt(this.list[index].price);
+    } else {
+      tip.error(json.data.msg)
+    }
+    this.$apply();
+  }
+
+  async deleteGoods(itemData) {
+    var id = itemData.id;
+
+    let userSpecialInfo = wepy.getStorageSync(USER_SPECICAL_INFO) || {};
+    let openId = userSpecialInfo.openid;
+    const json = await api.cartDel({
+      query: {
+        openId: openId,
+        cartIdList:[id],
+      }
+    });
+
+    if (json.data.code == 0) {
+      // 购物车数据
+      let retList = [];
+      for (var i=0;i<this.list.length;i++) {
+        if (this.list[i].id==id) {
+          if (this.list[i].ischecked) {
+            this.totalPrice -= parseInt(this.list[i].priceSubtotal);
+          }
+          continue;
+        } else {
+          retList.push(this.list[i]);
+        }
+      }
+      this.list = retList;
+    } else {
+      tip.error(json.data.msg)
+    }
+    this.$apply();
+  }
+
+  methods = {
+    handleDelItem(itemData) {
+      this.deleteGoods(itemData);
+    },
+    selectTap(e) {
+      var id = e.currentTarget.dataset.id;
+      var index = parseInt(e.currentTarget.dataset.index);
+      var ischecked = this.list[index].ischecked;
+
+      this.checkGoods(id, index, ischecked);
+    },
+    selectAll() {
+      console.log("sele....");
+    },
+    getCartListMethod() {
+      this.getCartList();
+    },
+    jianBtnTap(e) {
+      var id = e.currentTarget.dataset.id;
+      var index = parseInt(e.currentTarget.dataset.index);
+      var num = this.list[index].num;
+      // 如果只有1件了，就不允许再减了
+      if (num > 1) {
+        num--;
+      } else {
+        return;
+      }
+      this.reduceGoodNum(id, num, index);
+    },
+    jiaBtnTap(e) {
+      var id = e.currentTarget.dataset.id;
+      var index = parseInt(e.currentTarget.dataset.index);
+      var num = this.list[index].num;
+      // 自增
+      num++;
+      this.addGoodNum(id, num, index);
+    },
+    toPayOrder() {
+      wepy.navigateTo({
+        url: "/pages/comfire_order"
+      })
+    }
+  }
+  events = {
+
+  }
+}
+
+</script>

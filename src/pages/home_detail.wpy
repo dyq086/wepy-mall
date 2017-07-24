@@ -1,0 +1,107 @@
+<!--发现商品-->
+<template>
+  <view class="item">
+    <view class="img_box">
+      <image class="discover_img"></image>
+    </view>
+    <view class="info">
+      <view class="title">中高端女装货源</view>
+      <view class="doc"><i class="lx">◆</i> 均价：100</view>
+      <view class="doc"><i class="lx">◆</i> 档位：高端</view>
+      <view class="doc"><i class="lx">◆</i> 做工：精致</view>
+    </view>
+  </view>
+  <view class="fifler">
+    <filterBar @currentType.user="currentType"></filterBar>
+  </view>
+  <view class="shop_list">
+    <!--矩阵商品列表模块-->
+    <shopGridList :list.sync="list"></shopGridList>
+    <!--加载更多时动画-->
+    <bottomLoadMore :show.sync="showLoading" message="正在加载"></bottomLoadMore>
+    <!--暂无数据显示-->
+    <placeholder :show.sync="is_empty" message="暂无发现数据"></placeholder>
+  </view>
+</template>
+<script>
+import wepy from 'wepy';
+import FilterBar from "../components/filter_bar"
+import ShopGridList from '../components/shop_grid_list'
+import BottomLoadMore from "../components/common/bottomLoadMore"
+import Placeholder from "../components/common/placeholder"
+import tip from '../utils/tip'
+import {
+  bb
+} from '../api/data';
+export default class HomeDetail extends wepy.page {
+  config = {
+    navigationBarTitleText: '发现商品',
+  }
+  data = {
+    list: [],
+    showLoading: false,
+    is_empty: false
+  }
+  components = {
+    filterBar: FilterBar,
+    shopGridList: ShopGridList,
+    bottomLoadMore: BottomLoadMore,
+    placeholder: Placeholder
+  }
+
+  onLoad() {
+    this.list = bb.result.products;
+    this.$apply();
+  }
+  computed = {
+
+  }
+  methods = {
+    currentType(obj) {
+      tip.success("状态:" + obj);
+    }
+  }
+
+  events = {
+
+  }
+
+}
+
+</script>
+<style lang="scss">
+page {
+  background: #fff;
+}
+
+.img_box {
+  width: 100%;
+  height: 370rpx;
+  background: #000;
+}
+
+.discover_img {
+  width: 100%;
+  height: 370rpx;
+}
+
+.info {
+  margin-top: 50rpx;
+  padding: 0rpx 30rpx;
+  .title {
+    margin-bottom: 20rpx;
+    color: #000;
+  }
+  .doc {
+    color: #000000;
+    padding-top: 15rpx;
+    display: flex;
+    align-items: center;
+    .lx {
+      font-size: 20rpx;
+      margin-right: 20rpx;
+    }
+  }
+}
+
+</style>

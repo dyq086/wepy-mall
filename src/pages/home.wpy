@@ -1,0 +1,195 @@
+<template>
+  <view class="container">
+    <swiper indicator-active-color="{{indicatorActiveColor}}" indicator-dots="{{indicatorDots}}" autoplay="{{autoplay}}" interval="{{interval}}" duration="{{duration}}">
+      <block wx:for="{{imgUrls}}" wx:key="key">
+        <swiper-item>
+          <image src="{{item}}" class="slide-image" />
+        </swiper-item>
+      </block>
+    </swiper>
+    <view class="pos">
+      <view class="search_read_only">
+        <navigator class="search_content" open-type="navigate" url="/pages/search">
+          <i class="iconfont icon-search"></i>
+          <view class="search_input">搜索商品</view>
+        </navigator>
+        <navigator class="message" url="/pages/messages">
+          <i class="iconfont icon-message cfff"></i>
+          <view class="doc cfff">消息</view>
+        </navigator>
+      </view>
+    </view>
+    <view class="nav_list">
+      <navigator open-type="navigate" url="/pages/sign_in">
+        <image src="../images/icon_nav_01.png" class="nav_icon"></image>
+        <view>签到有礼</view>
+      </navigator>
+      <navigator open-type="navigate" url="/pages/exchange_goods">
+        <image src="../images/icon_nav_02.png" class="nav_icon"></image>
+        <view>换货专区</view>
+      </navigator>
+      <navigator open-type="navigate" url="/pages/wholesale">
+        <image src="../images/icon_nav_03.png" class="nav_icon"></image>
+        <view>现货批发</view>
+      </navigator>
+      <navigator open-type="navigate" url="/pages/replenishment_goods">
+        <image src="../images/icon_nav_04.png" class="nav_icon"></image>
+        <view>我要补货</view>
+      </navigator>
+    </view>
+    <!--发现好商品模块-->
+    <discover :list.sync="discoverList"></discover>
+    <!--加载更多时动画-->
+    <bottomLoadMore :show.sync="showLoading" message="正在加载"></bottomLoadMore>
+    <!--暂无数据显示-->
+    <placeholder :show.sync="is_empty" message="暂无发现数据"></placeholder>
+  </view>
+</template>
+<script>
+import wepy from 'wepy';
+import api from '../api/api';
+import tip from '../utils/tip'
+import Discover from '../components/discover'
+import BottomLoadMore from "../components/common/bottomLoadMore"
+import Placeholder from "../components/common/placeholder"
+export default class Home extends wepy.page {
+  config = {
+    navigationBarTitleText: '首页',
+    navigationBarBackgroundColor: '#e42600',
+    navigationBarTextStyle: 'white',
+
+  }
+  components = {
+    discover: Discover,
+    bottomLoadMore: BottomLoadMore,
+    placeholder: Placeholder
+  }
+
+  data = {
+    imgUrls: [
+      '../images/image_demo.png',
+    ],
+    indicatorDots: true,
+    autoplay: true,
+    interval: 5000,
+    duration: 1000,
+    indicatorActiveColor: "#fff",
+    discoverList: [],
+
+    //是否有数据
+    is_empty: false,
+
+    //当前页面
+    currentPage: 1,
+
+    //总页数
+    page_total: 0,
+
+    //是否显示 底部loading
+    showLoading: true,
+
+    //防止重复加载
+    preventRepeatReuqest: false
+
+  }
+  async getDiscoverList(currentPage, size) {
+    let that = this;
+    const json = await api.hostGoodsList({
+      query: {
+        page: currentPage || 1,
+        size: size || 10
+      }
+    });
+    console.log("json==", json);
+    if (json.data.code == 0) {
+      that.discoverList = [...that.discoverList, ...json.data.list];
+      that.page_total = json.data.page_total;
+      if (json.data.page_total == 0) {
+        //暂无数据
+        that.is_empty = true;
+      }
+      that.$apply();
+    } else {
+      tip.error(json.data.msg);
+    }
+    that.showLoading = false;
+  }
+  onLoad() {
+    let that = this;
+    that.getDiscoverList();
+  }
+  computed = {
+
+  }
+  methods = {
+
+  }
+  events = {
+
+  }
+
+  //加载更多
+  onReachBottom() {
+    let that = this;
+    that.showLoading = true;
+    console.log(that.page_total + "===" + that.currentPage);
+    //判断总页数是否大于翻页数
+    if ((that.page_total) > that.currentPage) {
+      //防止重复加载
+      if (that.preventRepeatReuqest) {
+        return true;
+      }
+      that.preventRepeatReuqest = true;
+      that.currentPage++;
+      that.getDiscoverList(that.currentPage);
+      that.preventRepeatReuqest = false;
+    } else {
+      that.showLoading = false;
+    }
+
+
+  };
+
+}
+
+</script>
+<style lang="scss">
+.slide-image {
+  width: 100%;
+  height: 100%;
+}
+
+.pos {
+  position: absolute;
+  top: 0rpx;
+  left: 0;
+  right: 0;
+  .search_content {
+    background: #ffffff;
+  }
+  .message {
+    display: block;
+    text-align: center;
+    margin-left: 20rpx;
+  }
+  .doc {
+    font-size: 16rpx;
+    display: block;
+  }
+}
+
+.nav_list {
+  color: #404040;
+  display: flex;
+  font-size: 26rpx;
+  justify-content: space-between;
+  padding: 42rpx 50rpx;
+  .nav_icon {
+    height: 115rpx;
+    margin: 0 auto;
+    width: 115rpx;
+    margin-bottom: 28rpx;
+  }
+}
+
+</style>

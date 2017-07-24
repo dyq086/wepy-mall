@@ -1,0 +1,170 @@
+<template>
+  <view class="info">
+    <view class="header">
+      <view class="header_content">
+        <image class="avatarUrl" src="{{avatarUrl}}"></image>
+        <view class="nickName cfff">{{nickName}}</view>
+      </view>
+    </view>
+    <view class="info_block">
+      <navigator class="item" url="/pages/register">
+        <view>
+          <view class="item_content">
+            <image class="item_img" src="../images/icon_my_01.png"></image>
+            <view class="text" style="color:#fe2a2a">绑定手机号</view>
+          </view>
+          <view class="tip">绑定手机号可更好的让我们服务好您！</view>
+        </view>
+        <view class="arrow">&gt;</view>
+      </navigator>
+      <navigator class="item" url="/pages/order">
+        <view class="item_content">
+          <image class="item_img" src="../images/icon_my_02.png"></image>
+          <view class="text">全部订单</view>
+        </view>
+        <view class="arrow">&gt;</view>
+      </navigator>
+      <navigator class="item" url="/pages/points">
+        <view class="item_content">
+          <image class="item_img" src="../images/icon_my_03.png"></image>
+          <view class="text">我的积分</view>
+        </view>
+        <view class="arrow">&gt;</view>
+      </navigator>
+      <navigator class="item" url="/pages/collection?type=0">
+        <view class="item_content">
+          <image class="item_img" src="../images/icon_my_04.png"></image>
+          <view class="text">我的足迹</view>
+        </view>
+        <view class="arrow">&gt;</view>
+      </navigator>
+      <navigator class="item" url="/pages/collection?type=1">
+        <view class="item_content">
+          <image class="item_img" src="../images/icon_my_05.png"></image>
+          <view class="text">我的收藏</view>
+        </view>
+        <view class="arrow">&gt;</view>
+      </navigator>
+    </view>
+    <view class="info_block">
+      <navigator class="item" url="/pages/messages">
+        <view class="item_content">
+          <image class="item_img" src="../images/icon_my_06.png"></image>
+          <view class="text">我的消息</view>
+        </view>
+        <view class="arrow">&gt;</view>
+      </navigator>
+      <navigator class="item" url="/pages/setting">
+        <view class="item_content">
+          <image class="item_img" src="../images/icon_my_07.png"></image>
+          <view class="text">设置</view>
+        </view>
+        <view class="arrow">&gt;</view>
+      </navigator>
+    </view>
+  </view>
+</template>
+<script>
+import wepy from 'wepy';
+import api from '../api/api';
+import {
+  USER_INFO
+} from '../utils/constant';
+export default class Index extends wepy.page {
+  config = {
+    navigationBarTitleText: '我',
+  }
+  components = {
+
+  }
+
+  data = {
+    avatarUrl: "",
+    nickName: "",
+
+
+  }
+  onLoad() {
+    let that = this;
+    let userInfo = wepy.getStorageSync(USER_INFO);
+    that.avatarUrl = userInfo.avatarUrl;
+    that.nickName = userInfo.nickName;
+
+
+
+  }
+  computed = {
+
+  }
+  methods = {
+
+  }
+  events = {
+
+  }
+}
+
+</script>
+<style lang="sass">
+.header {
+  background: #ff6a3c;
+  height: 260rpx;
+  width: 100%;
+}
+
+.header_content {
+  width: 100%;
+  margin: 0 auto;
+  text-align: center;
+  padding-top: 48rpx;
+}
+
+.avatarUrl {
+  width: 122rpx;
+  height: 122rpx;
+  border-radius: 1000px;
+}
+
+.nickName {
+  font-size: 30rpx;
+  padding-top: 15rpx;
+}
+
+.info_block {
+  margin-top: 10rpx;
+  .item {
+    border-top: 1rpx solid #dbdbdb;
+    background: #fff;
+    padding: 34rpx 28rpx;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .item:last-child {
+    border-bottom: 1rpx solid #dbdbdb;
+  }
+  .item_content {
+    display: flex;
+    align-items: center;
+    .text {
+      margin-left: 20rpx;
+      color: #1a1a1a;
+    }
+  }
+  .item_img {
+    width: 42rpx;
+    height: 42rpx;
+  }
+  .arrow {
+    color: #cccccc;
+    font-size: 32rpx;
+  }
+  .tip {
+    color: #999;
+    font-size: 24rpx;
+    margin-top: 20rpx;
+    margin-left: 60rpx;
+  }
+}
+
+</style>

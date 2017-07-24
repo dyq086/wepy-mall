@@ -1,0 +1,137 @@
+<template>
+  <view class="top_search">
+    <view class="search_read_only">
+      <navigator class="search_content" url="/pages/search">
+        <i class="iconfont icon-search"></i>
+        <view class="search_input">搜索商品</view>
+      </navigator>
+    </view>
+  </view>
+  <view class="classify" style="height:{{windowHeight}}px">
+    <scroll-view class="classify_catetory" scroll-y scroll-with-animation="true" style="height:{{windowHeight}}px">
+      <view class="name {{index==3? 'active':''}}" wx:for="{{list.cate_lv1}}" wx:key="item">
+        {{item.name}}
+      </view>
+    </scroll-view>
+    <scroll-view class="classify_detail" scroll-y scroll-with-animation="true" style="height:{{windowHeight}}px">
+      <view class="classify_item" wx:for="{{list.current_node.children}}" wx:key="item">
+        <view class="title">{{item.name}}</view>
+        <view class="children">
+          <navigator hover-class="none" class="children_item" wx:for={{item.children}} wx:for-item="child" wx:key="index">
+            <image class="child_image" src="{{child.image}}"></image>
+            <view class="child_name">{{child.name}}</view>
+          </navigator>
+        </view>
+      </view>
+    </scroll-view>
+  </view>
+</template>
+<script>
+import wepy from 'wepy';
+import api from '../api/api';
+import {
+  aa
+} from '../api/data';
+import {
+  SYSTEM_INFO
+} from '../utils/constant';
+
+
+export default class Classify extends wepy.page {
+  config = {
+    navigationBarTitleText: '分类',
+  }
+  components = {
+
+  }
+
+  data = {
+    scrollTop: 100,
+    windowHeight: 0,
+    list: {}
+
+  }
+  onLoad() {
+    let that = this;
+    this.list = aa.data;
+    let systemInfo = wx.getStorageSync(SYSTEM_INFO);
+    this.windowHeight = systemInfo.windowHeight;
+    this.$apply();
+    console.log(aa)
+
+  }
+  computed = {
+
+  }
+  methods = {
+
+  }
+  events = {
+
+  }
+}
+
+</script>
+<style lang="sass">
+.search_read_only .search_content {
+  width: 100%;
+}
+
+.classify {
+  display: flex;
+  position: relative;
+  .classify_catetory {
+    width: 250rpx;
+    position: relative;
+    z-index: 1;
+    .name {
+      text-align: center;
+      height: 100rpx;
+      line-height: 100rpx;
+      font-size: 28rpx;
+      color: #666;
+    }
+    .active {
+      border-left: 6rpx solid #ff6a3c;
+      background: #fff;
+      color: #ff6a3c;
+    }
+  }
+  .classify_detail {
+    position: relative;
+    z-index: 999;
+    margin-left: -15rpx;
+    background: #fff;
+    padding: 15px 10px 10px 30px;
+    .classify_item {}
+    .title {
+      font-size: 30rpx;
+      color: #333;
+      margin-left: 25rpx;
+    }
+    .children {
+      display: flex;
+      flex-wrap: wrap;
+      margin: 20rpx 0rpx;
+    }
+    .child_image {
+      width: 60px;
+      height: 60px;
+    }
+    .child_name {
+      font-size: 26rpx;
+      color: #666;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      width: 170rpx;
+    }
+    .children_item {
+      height: 200rpx;
+      width: 170rpx;
+      text-align: center;
+    }
+  }
+}
+
+</style>

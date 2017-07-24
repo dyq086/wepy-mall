@@ -1,0 +1,103 @@
+<!--我的消息-->
+<template>
+  <view class="messages">
+    <scroll-view scroll-y="true" class="swiper-item-box" style="height:{{winHeight}}px">
+      <view class="list_block">
+        <view class="list_item">
+          <view class="list_header">
+            <i class="iconfont icon-message"></i>
+            <view class="header_title">
+              <text class="time">6月28号</text>
+              <text class="doc">安卓版本推出</text>
+            </view>
+          </view>
+          <view class="list_content">
+            按服装行业的子行业去细分，男装与女装营业额皆有升幅，营收与净利润双双涨势良好的服装服饰企业比比皆是，男装如九牧王，女装如歌力思；童装企业也表现不错，如经过2012—2016年快速成长期后的安奈儿，2017年在童装行业更具竞争力；自2014年体育产业迎来新风口，众多服装企业紧抓政策向好的良机，加足劲发力体育运动服装服饰市场，到2016年，运动服装品牌的理念和产品与消费市场越来越贴合，因此品牌收益自然好，诸如李宁、安踏等
+          </view>
+          <view class="list_footer">
+            2017-10-01 11:00
+          </view>
+        </view>
+      </view>
+    </scroll-view>
+  </view>
+</template>
+<script>
+import wepy from 'wepy';
+import {
+  SYSTEM_INFO
+} from '../utils/constant';
+export default class Messages extends wepy.page {
+  config = {
+    navigationBarTitleText: '我的消息',
+  }
+  components = {
+
+  }
+  data = {
+    list: [],
+    winHeight: 0
+  }
+  onLoad() {
+    let that = this;
+
+    //设置滚动高度
+    let systemInfo = wepy.getStorageSync(SYSTEM_INFO);
+    that.winHeight = systemInfo.windowHeight;
+
+  }
+  computed = {
+
+  }
+  methods = {
+
+
+  }
+  events = {
+
+  }
+
+}
+
+</script>
+<style lang="scss">
+.list_block {
+  padding: 27rpx;
+}
+
+.list_item {
+  background: #fff;
+  padding: 0rpx 28rpx;
+  border-radius: 20rpx;
+}
+
+.list_header {
+  font-size: 28rpx;
+  padding: 20rpx 0rpx;
+  border-bottom: 1px solid #e6e6e6;
+  display: flex;
+  align-items: center;
+  .time {
+    color: #000;
+  }
+  .doc {
+    color: #000;
+    margin-left: 10rpx;
+  }
+}
+
+.list_content {
+  font-size: 26rpx;
+  color: #f71e1e;
+  padding-top: 23rpx;
+}
+
+.list_footer {
+  text-align: right;
+  font-size: 22rpx;
+  color: #999999;
+  height: 70rpx;
+  line-height: 70rpx;
+}
+
+</style>

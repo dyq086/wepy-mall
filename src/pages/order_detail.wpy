@@ -1,0 +1,231 @@
+<!--订单详情-->
+<template>
+  <view class="order_detail">
+    <view class="order_state">
+      <view class="left">
+        <i class="iconfont icon-complete"></i>
+      </view>
+      <view class="center">
+        <view class="state_doc">您的订单已进入库房，准备出库</view>
+        <view class="state_time">2017-10-10 17:30</view>
+      </view>
+      <view class="right">
+        <view>&gt;</view>
+      </view>
+    </view>
+    <view class="order_state">
+      <view class="left">
+        <view class="unpaid">
+          <i class="iconfont icon-wait"></i>
+          <text class="unpaid_doc">等待付款</text>
+        </view>
+      </view>
+      <view class="right">
+        <text class="time_doc">剩余时间:</text>
+        <text class="time_num">59:30:30</text>
+      </view>
+    </view>
+    <view class="address_block">
+      <view class="name">
+        <text class="title"> 收货人:</text>
+        <text class="content">邓先生&gt;&gt;18676138688</text>
+      </view>
+      <view class="address">
+        <text class="title"> 收货地址:</text>
+        <text class="content">广州市天河区东圃时代TIT广场 </text>
+      </view>
+    </view>
+    <view class="goods_block">
+      <shopItemList :goodsList.sync="list"></shopItemList>
+    </view>
+    <view class="info_block">
+      <view class="item">
+        <text class="title">订单编号:</text>
+        <text class="content">123467899</text>
+      </view>
+      <view class="item">
+        <text class="title">提交时间:</text>
+        <text class="content">2017-10-10 17:30</text>
+      </view>
+      <view class="item">
+        <text class="title">支付方式:</text>
+        <text class="content">微信支付</text>
+      </view>
+      <view class="item">
+        <text class="title">付款时间:</text>
+        <text class="content">2017-10-10 17:30</text>
+      </view>
+    </view>
+    <view class="footer">
+      <view class="money">应付款:
+        <text class="receive_money">18800</text>
+      </view>
+      <view class="btn_group">
+        <view class="btn" @tap="goLogistics">查看物流</view>
+        <view class="btn type_pick dsh" @tap="goPay">待收货</view>
+        <!--  <view class="btn" @tap="delOrder">删除订单</view> -->
+      </view>
+    </view>
+  </view>
+</template>
+<script>
+import wepy from 'wepy';
+import tip from '../utils/tip'
+import ShopItemList from '../components/shop_item_list'
+import {
+  bb
+} from '../api/data';
+export default class OrderDetail extends wepy.page {
+  config = {
+    navigationBarTitleText: '订单详情',
+  }
+  data = {
+    list: []
+  }
+  components = {
+    shopItemList: ShopItemList
+  }
+
+  onLoad() {
+    let that = this;
+    that.list = bb.result.products;
+    console.log(bb.result.products)
+  }
+  computed = {
+
+  }
+  methods = {
+    delOrder() {
+      tip.success("删除订单")
+    },
+    goLogistics() {
+      tip.success("查看物流")
+    },
+    goPay() {
+      tip.success("支付订单")
+    }
+  }
+
+  events = {
+
+  }
+
+}
+
+</script>
+<style lang="scss">
+.order_detail {
+  position: relative;
+}
+
+.order_state {
+  padding: 35rpx 24rpx;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 10rpx;
+  background: #fff;
+  .iconfont {
+    font-size: 40rpx;
+    color: #6a6a6a;
+  }
+  .state_time {
+    padding-top: 24rpx;
+  }
+  .center {
+    flex: 1;
+    margin-left: 50rpx;
+  }
+  .right {
+    display: flex;
+    align-items: center;
+  }
+  .unpaid {
+    margin-left: 50rpx;
+    .unpaid_doc {
+      margin-left: 10rpx;
+    }
+  }
+  .time_doc {
+    font-size: 26rpx;
+    color: #999;
+  }
+  .time_num {
+    font-size: 26rpx;
+    margin-right: 50rpx;
+  }
+}
+
+.address_block {
+  padding: 30rpx;
+  background: #fff;
+  margin-top: 10rpx;
+  .address {
+    padding-top: 20rpx;
+  }
+  .title {
+    color: #858585;
+  }
+  .content {
+    color: #000;
+    padding-left: 24rpx;
+  }
+}
+
+.goods_block {
+  margin-top: 10rpx;
+  background: #fff;
+}
+
+.info_block {
+  margin-top: 10rpx;
+  padding: 18rpx;
+  background: #fff;
+  .item {
+    padding-top: 40rpx;
+    .title {
+      font-size: 28rpx;
+    }
+    .content {
+      color: #808080;
+      font-size: 28rpx;
+    }
+  }
+}
+
+.footer {
+  position: fixed;
+  bottom: 0rpx;
+  height: 92rpx;
+  background: #fff;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 18rpx;
+  border-top: 1px solid #e6e6e6;
+  .btn_group {
+    display: flex;
+    margin-right: 30rpx;
+    .btn {
+      padding: 20rpx 20rpx;
+      border: 1px solid #cccccc;
+      text-align: center;
+      margin: 0 auto;
+      width: 180rpx;
+      -moz-border-radius: 10rpx;
+      /* Firefox */
+      -webkit-border-radius: 10rpx;
+      /* Safari 和 Chrome */
+      border-radius: 10rpx;
+    }
+    .dsh {
+      margin-left: 20rpx;
+    }
+  }
+  .receive_money {
+    color: #ff4856;
+  }
+}
+
+</style>

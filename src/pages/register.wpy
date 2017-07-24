@@ -1,0 +1,112 @@
+<!--绑定手机-->
+<template>
+  <form bindsubmit="formSubmit">
+    <view class="section">
+      <view class="section_title">手机号</view>
+      <input name="phone" type="number" placeholder="请输入手机号码" maxlength="11" focus="true" />
+    </view>
+    <view class="section">
+      <view class="section_title">验证码</view>
+      <input class="code" name="code" type="number" placeholder="请输入验证码" />
+      <view class="btn send_code">
+        <text wx:if="{{sendMsgDisabled}}">{{time+'秒后获取'}}</text>
+        <text @tap="sendCode" wx:else="{{sendMsgDisabled}}">发送验证码</text>
+      </view>
+    </view>
+    <view class="btn_comfire">
+      <button class="button type_yellow" formType="submit">完成</button>
+    </view>
+  </form>
+</template>
+<script>
+import wepy from 'wepy';
+import api from '../api/api';
+import tip from '../utils/tip'
+export default class Register extends wepy.page {
+  config = {
+    navigationBarTitleText: '绑定手机',
+  }
+  components = {}
+
+  data = {
+    sendMsgDisabled: false,
+    time: 60
+  }
+  onLoad() {
+    let that = this;
+
+
+  }
+  computed = {
+
+  }
+  methods = {
+    sendCode() {
+      let that = this;
+      that.sendMsgDisabled = true;
+      let interval = setInterval(() => {
+        if ((that.time--) <= 0) {
+          that.time = 10;
+          that.sendMsgDisabled = false;
+          clearInterval(interval);
+          that.$apply();
+        }
+        that.$apply();
+      }, 1000);
+    },
+    formSubmit(e) {
+      let phone = e.detail.value.phone;
+      let code = e.detail.value.code;
+      if (phone == "") {
+        tip.alert("输入手机号码");
+        return false;
+      }
+      if (code == "") {
+        tip.alert("输入验证码");
+        return false;
+
+      }
+
+      console.log('form发生了submit事件，携带数据为：', e.detail.value)
+    }
+  }
+}
+
+</script>
+<style lang="scss">
+.section {
+  display: flex;
+  align-items: center;
+  padding: 20rpx 30rpx;
+  border-bottom: 1px solid #dbdbdb;
+  background: #fff;
+  .section_title {
+    color: #1a1a1a;
+    padding-right: 75rpx;
+  }
+  .btn {
+    padding: 15rpx 10rpx;
+    border: 1px solid #000000;
+    -moz-border-radius: 5rpx;
+    /* Firefox */
+    -webkit-border-radius: 5rpx;
+    /* Safari 和 Chrome */
+    border-radius: 5rpx;
+    /* Opera 10.5+, 以及使用了IE-CSS3的IE浏览器 */
+    color: #000000;
+  }
+  .send_code {
+    margin-left: 40rpx;
+  }
+}
+
+.btn_comfire {
+  margin-top: 64rpx;
+  padding: 0 24rpx;
+}
+
+.code {
+  width: 300rpx;
+}
+
+</style>

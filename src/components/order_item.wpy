@@ -1,0 +1,144 @@
+<!--订单列表模块-->
+<template>
+  <view class="order_item">
+    <repeat for="{{orderList}}">
+      <view class="list" wx:key="index">
+        <view class="order_list_top">
+          <view class="left">
+            <view class="title">订单号：
+              <text class="order_doc">{{item.order_id}}</text>
+            </view>
+            <view class="title mt10">提交时间：
+              <text class="order_doc">2017-10-01 12:00</text>
+            </view>
+          </view>
+          <view class="order_state">待支付</view>
+        </view>
+        <view class="order_list_center">
+          <shopItemList :goodsList.sync="item.children"></shopItemList>
+        </view>
+        <view class="order_list_footer">
+          <view class="reveiveMoney c333">应付款：
+            <text class="num">18888.0</text>
+          </view>
+          <view class="btn_group">
+            <view class="btn btn_del" @tap="delOrder">删除订单</view>
+            <view class="btn btn_pay" @tap="payMoney">立即付款</view>
+          </view>
+        </view>
+      </view>
+    </repeat>
+  </view>
+</template>
+<script>
+import wepy from 'wepy'
+import tip from '../utils/tip'
+import ShopItemList from '../components/shop_item_list'
+export default class orderItem extends wepy.component {
+
+  props = {
+    orderList: {
+      default: []
+    }
+  }
+
+  components = {
+    shopItemList: ShopItemList
+  }
+
+  events = {
+
+  }
+
+  methods = {
+    async delOrder() {
+      await tip.confirm('是否删除订单');
+      console.log("删除成功")
+    },
+
+    async payMoney() {
+      tip.success('支付成功');
+      wx.navigateTo({
+        url: '/pages/pay_success?order_id=112312312321'
+      })
+    }
+  }
+
+  onLoad() {
+
+  }
+}
+
+</script>
+<style lang="scss">
+.order_item {
+  padding: 10rpx 0rpx;
+  background: #f7f7f7;
+  margin-bottom: 30rpx;
+  .title {
+    font-size: 26rpx;
+    color: #333;
+  }
+  .order_doc {
+    font-size: 26rpx;
+    color: #808080;
+  }
+  .mt10 {
+    margin-top: 10rpx;
+  }
+  .order_state {
+    color: #ff4856;
+    font-size: 32rpx;
+  }
+  .order_list_top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+  }
+  .order_list_footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 20rpx;
+    .num {
+      color: #ff4856;
+    }
+  }
+  .order_list_top {
+    padding-bottom: 26rpx;
+    border-bottom: 1px solid #efefef
+  }
+  .list {
+    background: #fff;
+    padding: 30rpx;
+    margin-top: 15rpx;
+  }
+  .btn_group {
+    display: flex;
+    align-items: center;
+    .btn {
+      font-size: 30rpx;
+      padding: 22rpx 35rpx;
+      text-align: center;
+      margin: 0 auto;
+      width: 100%;
+      -moz-border-radius: 15rpx;
+      /* Firefox */
+      -webkit-border-radius: 15rpx;
+      /* Safari 和 Chrome */
+      border-radius: 15rpx;
+      /* Opera 10.5+, 以及使用了IE-CSS3的IE浏览器 */
+    }
+    .btn_del {
+      color: #333;
+      border: 1px solid #ccc;
+    }
+    .btn_pay {
+      background: #ff4856;
+      color: #fff;
+      margin-left: 20rpx;
+    }
+  }
+}
+
+</style>

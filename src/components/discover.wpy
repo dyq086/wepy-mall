@@ -1,0 +1,95 @@
+<template>
+    <view class="bc">
+        <view class="discover">
+            <view class="discover_title_doc">发现好商品</view>
+        </view>
+        <view class="discover_list">
+            <navigator class="item" open-type="navigate" url="xxx" wx:for="{{list}}" wx:key="item">
+                <image class="discover_img" src="{{item.logo}}"></image>
+                <view class="info">
+                    <view>均价：100</view>
+                    <view>档位：高端</view>
+                    <view>做工：精致</view>
+                </view>
+        </view>
+        </navigator>
+    </view>
+    </view>
+</template>
+<script>
+import wepy from 'wepy';
+import api from '../api/api';
+
+export default class Discover extends wepy.component {
+
+    props = {
+        list: []
+    }
+
+    data = {
+
+    }
+    onLoad() {
+        let that = this;
+        console.log(this.list)
+    }
+    getList() {
+        console.log("调用getList方法6666666")
+    }
+    computed = {
+
+    }
+    methods = {}
+
+}
+</script>
+<style lang="sass">
+.discover {
+    text-align: center;
+    font-size: 30rpx;
+    padding: 30rpx 0rpx;
+    position: relative;
+}
+
+.discover_title_doc {
+    display: inline-block;
+    position: relative;
+    z-index: 999;
+    width: 190rpx;
+    background: #f7f7f7;
+}
+
+.discover:before {
+    content: '';
+    height: 1rpx;
+    width: 460rpx;
+    position: absolute;
+    background: #dbdbdb;
+    top: 50rpx;
+    margin: 0 auto;
+    left: 0;
+    right: 0;
+}
+
+.discover_list {
+    .discover_img {
+        width: 100%;
+        height: 360rpx;
+    }
+    .info {
+        padding: 20rpx;
+        color: #000000;
+        font-size: 26rpx;
+        line-height: 35rpx;
+    }
+    .item {
+        background: #fff;
+        padding: 15rpx;
+        margin-bottom: 15rpx;
+    }
+}
+
+.bc {
+    background: #f7f7f7;
+}
+</style>

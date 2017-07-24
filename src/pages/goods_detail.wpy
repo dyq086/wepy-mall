@@ -1,0 +1,635 @@
+<template>
+  <view style="height:{{winHeight}}rpx;overflow:hidden">
+    <import src="../plugins/wxParse/wxParse.wxml" />
+    <!--index.wxml-->
+    <swiper indicator-dots="true" autoplay="true" interval="5000" duration="500" indicator-active-color="#ffc452" indicator-color="#efefef" class="swiper">
+      <block wx:for="{{detail.photoList}}" key="item" item="item" wx:key="key">
+        <swiper-item>
+          <image src="{{item.photo}}" class="slide-image" />
+        </swiper-item>
+      </block>
+    </swiper>
+    <view class="details-msg">
+      <view class="details-title">{{detail.name}}</view>
+      <view class="details_pinfo">
+        <view class="jby">
+          <text class="price">￥{{detail.price}}</text>
+          <view class="baoyou">满{{detail.freeShipNum}}件包邮</view>
+        </view>
+        <view class="order_time">
+          <timer :startTime.sync="startTime" :endTime.sync="endTime"></timer>
+        </view>
+      </view>
+    </view>
+    <view class="order_num">
+      <view class="doc">规定单数:
+        <text class="num">{{detail.minBuyNum}}件成团</text>
+      </view>
+      <view class="doc">订单中:
+        <text class="num">已拼{{detail.saleCount}}件</text>
+      </view>
+    </view>
+    <view class="block">
+      <view class="block_title">拼货流程</view>
+      <view class="block_content">
+        <view class="process">
+          下单结束
+          <i class="iconfont icon-next"></i> 拼货结束
+          <i class="iconfont icon-next"></i> 上新采购
+          <i class="iconfont icon-next"></i> 商品质检
+          <i class="iconfont icon-next"></i> 商品发货
+        </view>
+        <view class="doc">
+          部分商品因为货源紧张可能存在断货，如采购失败，我们会第一时间为您退款。
+        </view>
+      </view>
+    </view>
+    <view class="spacing"></view>
+    <view class="block">
+      <view class="block_title">抢购说明</view>
+      <view class="block_content">
+        <view class="doc">
+          拼团规则为24小时一场，每日21点开始。下单后尽快支付，拼货结 束后未支付的订单将自动取消。拼货结束前您可以主动取消订单， 结束后不可取消，商品正常情况下3天内发货，超过7天，将自动退 款。
+        </view>
+      </view>
+    </view>
+    <view class="spacing"></view>
+    <view class="block">
+      <view class="block_title">商品信息</view>
+      <view class="block_content">
+        <view class="table">
+          <view class="th" wx:for="{{detail.attrList}}" key="item" item="item" wx:key="key">
+            <view wx:for="{{item}}" key="item" item="item" wx:key="key">{{item.attrName}}:{{item.attrVal}}</view>
+          </view>
+        </view>
+      </view>
+    </view>
+    <view class="spacing"></view>
+    <view class="block">
+      <view class="block_title">商品详情</view>
+    </view>
+    <view class="big_images">
+      <view class="doc">
+        <view class="wxParse-p">
+          <template is="wxParse" data="{{wxParseData:detailInfo.nodes}}" />
+        </view>
+      </view>
+    </view>
+    <view class="detail-bottom">
+      <view class="item">
+        <i class="iconfont icon-message"></i>
+        <view class="doc">客服</view>
+      </view>
+      <view class="item">
+        <i class="iconfont icon-collection"></i>
+        <view class="doc">收藏</view>
+      </view>
+      <view class="sy-bottom btn_cart" @tap="takeCart">加入购物车</view>
+      <view class="sy-bottom btn_order" @tap="takeOrder">立即购买</view>
+    </view>
+    <view class="over_model {{hidden?'hidden':''}}"></view>
+    <view class="panle_model {{hidden?'hidden':''}}" animation="{{animationData}}">
+      <view class="model_content">
+        <view class="head_box">
+          <view class="img_wrap">
+            <image class="goods_img" />
+          </view>
+          <view class="product_wrap">
+            <view class="product_name">夏季女装宽松显瘦短款百搭体恤上衣韩版夏装流苏短袖t恤女学生夏</view>
+            <view class="price">￥ 129.00</view>
+          </view>
+        </view>
+        <scroll-view scroll-y="true" style="height:400rpx">
+          <view class="rule_box">
+            <view class="title">颜色</view>
+            <view class="items">
+              <view class="item active">笑脸字母（白）</view>
+              <view class="item">红色</view>
+              <view class="item">红色</view>
+              <view class="item">红色</view>
+              <view class="item">红色</view>
+              <view class="item">红色</view>
+              <view class="item">红色</view>
+              <view class="item">红色</view>
+              <view class="item">红色</view>
+              <view class="item">红色</view>
+            </view>
+          </view>
+          <view class="rule_box">
+            <view class="title">尺码</view>
+            <view class="items">
+              <view class="item active">S</view>
+              <view class="item">M</view>
+              <view class="item">L</view>
+            </view>
+          </view>
+          <view class="num_box">
+            <view class="title">数量</view>
+            <view class="stock">库存:234件</view>
+            <view class="buy-num">
+              <view class="jian-btn {{item.number==1? 'disabled' : ''}}" catchtap="jianBtnTap" data-index="{{index}}">-</view>
+              <input type="number" value="{{item.number}}" disabled/>
+              <view class="jia-btn {{item.number==10? 'disabled' : ''}}" catchtap="jiaBtnTap" data-index="{{index}}">+</view>
+            </view>
+          </view>
+        </scroll-view>
+        <view class="colse_model" @tap="closeModel"><i class="iconfont icon-close"></i></view>
+      </view>
+      <view class="comfire_btn">确定</view>
+    </view>
+  </view>
+</template>
+<script>
+import wepy from 'wepy'
+import {
+  SYSTEM_INFO,
+  USER_SPECICAL_INFO
+} from '../utils/constant';
+import tip from '../utils/tip'
+import api from '../api/api';
+import Timer from "../components/common/timer"
+import WxParse from "../plugins/wxParse/wxParse"
+export default class goodsDetail extends wepy.page {
+  config = {
+    navigationBarTitleText: '商品详情'
+  }
+  components = {
+    timer: Timer
+  }
+
+  data = {
+    winWidth: 0,
+    winHeight: '100%',
+    goodsId: 0,
+    detail: {},
+    good_bigimg: [],
+
+    //订单活动开始时间（格式yy-mm-dd 或者 yy/mm/dd ）
+    //startTime: "2017-07-15 16:00:00",
+    startTime: "",
+
+    //订单活动结束时间（格式yy-mm-dd 或者 yy/mm/dd ）
+    //endTime: "2017-07-21 16:04:00"
+    endTime: "",
+
+    hidden: true,
+
+    //动画效果
+    animationData: ""
+  }
+  onLoad(option) {
+    let that = this;
+    that.detail = {};
+    that.$apply();
+    //接收上一个页面传过来的参数
+    that.goodsId = option.id;
+    that.getGoodsDetail();
+  }
+  onShow() {
+    //创建动画
+    var animation = wx.createAnimation({
+      transformOrigin: "50% 50%",
+      duration: 200,
+      timingFunction: "linear",
+      delay: 0
+    })
+    this.animation = animation;
+  }
+  onReachBottom() {
+    let that = this;
+    if (that.good_bigimg.length == 0) {
+      that.good_bigimg = that.detail.good_bigimg;
+      that.$apply();
+    }
+  }
+  async getGoodsDetail() {
+    let that = this;
+    //const json = await api.getGoodsDetail({
+    const json = await api.goodsDetail({
+      query: {
+        id: that.goodsId
+      }
+    });
+    let time = {};
+    if (json.data.code == 0) {
+      let data = json.data.data;
+      that.detail = data;
+      WxParse.wxParse('detailInfo', 'html', that.detail.detailInfo, this);
+      time.endTime = that.detail.validEndTime;
+      time.startTime = that.detail.startTime;
+      /*time.startTime ="2017-07-15 16:00:00";
+      time.endTime = "2017-07-21 16:04:00";*/
+    } else {
+      tip.error(json.data.msg)
+    }
+    that.$apply();
+    this.$invoke('timer', 'initTimer', time);
+  }
+  computed = {
+
+  }
+
+  events = {
+
+  }
+
+  //加入购物车
+  async doTakeCart() {
+    let that = this;
+    let userSpecialInfo = wepy.getStorageSync(USER_SPECICAL_INFO) || {};
+    let openId = userSpecialInfo.openid;
+    const json = await api.addCart({
+      query: {
+        openId: 'oeuj50Ky1L5vLbw5UcOYkkV4awdM',
+        goodsId: that.goodsId,
+        goodsSkuId: ''
+      }
+    });
+
+    if (json.data.code == 0) {
+      tip.success("成功加入购物车")
+    } else {
+      tip.error(json.data.msg)
+    }
+  }
+
+  //立即购买
+  async doTakeOrder() {
+    let that = this;
+    let userSpecialInfo = wepy.getStorageSync(USER_SPECICAL_INFO) || {};
+    let openId = userSpecialInfo.openid;
+    const json = await api.addCart({
+      query: {
+        openId: openId,
+        goodsId: that.goodsId,
+        goodsSkuId: ''
+      }
+    });
+    if (json.data.code == 0) {
+      wepy.navigateTo({
+        url: "/pages/comfire_order?goodsId=" + that.goodsId
+      })
+    } else {
+      tip.error(json.data.msg)
+    }
+
+  }
+
+  methods = {
+    takeOrder() {
+      this.doTakeOrder();
+    },
+    takeCart() {
+      this.animation.height('773rpx').step();
+      this.setData({
+        animationData: this.animation.export()
+      })
+      setTimeout(() => {
+        this.hidden = false;
+        let systemInfo = wepy.getStorageSync(SYSTEM_INFO);
+        this.winHeight = systemInfo.windowHeight;
+        this.$apply();
+      }, 100)
+      this.doTakeCart();
+    },
+    closeModel() {
+      this.winHeight = "100%";
+      this.animation.height(0).step();
+      this.setData({
+        animationData: this.animation.export()
+      })
+      setTimeout(() => {
+        this.hidden = true;
+        this.$apply();
+      }, 100)
+    }
+  }
+
+}
+
+</script>
+<style lang="scss">
+.swiper {
+  height: 662rpx;
+}
+
+.slide-image {
+  width: 100%;
+  height: 100%;
+}
+
+.big_images {
+  height: 100%;
+  display: block;
+  margin-bottom: 90rpx;
+  image {
+    width: 100%;
+  }
+}
+
+.details-msg {
+  border-top: 1px solid #ededed;
+  padding: 30rpx 30rpx;
+  background: #fff;
+  .details-title {
+    overflow: hidden;
+    width: 100%;
+    box-sizing: border-box;
+    position: relative;
+    font-size: 34rpx;
+    color: #333;
+  }
+  .details-introduction {
+    color: #999;
+    font-size: 28rpx;
+    line-height: 40rpx;
+    margin-top: 20rpx;
+  }
+  .details_pinfo {
+    padding-top: 60rpx;
+    padding-bottom: 54rpx;
+    position: relative;
+    display: flex;
+    .price {
+      color: #f73c3c;
+      font-size: 45rpx;
+    }
+    .baoyou {
+      color: #808080;
+      font-size: 28rpx;
+      margin-top: 20rpx;
+    }
+
+    .order_time {
+      position: absolute;
+      right: 170rpx;
+      top: 40rpx;
+    }
+  }
+}
+
+.order_num {
+  background: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 108rpx;
+  border-top: 1px solid #efefef;
+  border-bottom: 1px solid #efefef;
+  padding: 0 30rpx;
+  .doc {
+    color: #808080;
+    .num {
+      color: #f73c3c;
+    }
+  }
+}
+
+.block {
+  padding: 27rpx 0rpx;
+  background: #fff;
+  .block_title {
+    color: #000;
+    height: 30rpx;
+    line-height: 30rpx;
+    border-left: 6px solid #f73c3c;
+    padding-left: 20rpx;
+  }
+  .block_content {
+    padding: 38rpx 22rpx;
+    .process {
+      font-size: 25rpx;
+      margin: 0 auto;
+      border: 1px solid #999999;
+      padding: 10rpx;
+      border-radius: 200px;
+      text-align: center;
+      margin-bottom: 25rpx;
+      color: #808080;
+    }
+    .doc {
+      color: #808080;
+      font-size: 26rpx;
+      line-height: 30rpx;
+    }
+  }
+  .table {
+    margin: 0 auto;
+    margin-top: -24rpx;
+    .th {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 24rpx;
+    }
+    .tr {
+      font-size: 26rpx;
+      color: #808080;
+      text-align: left;
+      flex: 1;
+    }
+  }
+}
+
+.detail-bottom {
+  width: 100%;
+  border-top: 1px solid #ededed;
+  position: fixed;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  background: #fff;
+  z-index: 1001;
+  .sy-bottom {
+    padding: 15rpx 60rpx;
+    height: 60rpx;
+    line-height: 60rpx;
+    font-size: 30rpx;
+  }
+  .btn_order {
+    background: #ff4856;
+    color: #fff;
+  }
+  .btn_cart {
+    color: #fff;
+    background: #ff6e30;
+  }
+  .item:first-child {
+    border-right: 1px solid #efefef;
+  }
+  .item {
+    flex: 1;
+    text-align: center;
+    .doc {
+      font-size: 26rpx;
+    }
+  }
+}
+
+.over_model {
+  position: fixed;
+  overflow: hidden;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 999;
+  width: 100%;
+  height: 100%;
+  top: 0;
+}
+
+.head_box {
+  display: flex;
+  align-items: center;
+  border-bottom: 1px solid #efefef;
+  padding-bottom: 26rpx;
+  .img_wrap {
+    height: 200rpx;
+    width: 200rpx;
+    background: #000;
+  }
+  .goods_img {
+    height: 200rpx;
+    width: 200rpx;
+    background: #000;
+  }
+  .product_wrap {
+    padding: 20rpx;
+  }
+  .product_name {
+    color: #666;
+  }
+  .price {
+    color: #e11500;
+    font-size: 36rpx;
+    padding-top: 32rpx;
+  }
+}
+
+.rule_box {
+  border-bottom: 1px solid #efefef;
+  padding-bottom: 26rpx;
+  .title {
+    color: #4c4c4c;
+    font-size: 32rpx;
+    margin-top: 26rpx;
+  }
+  .items {
+    display: flex;
+    flex-wrap: wrap;
+    margin-top: 28rpx;
+    margin-left: -20rpx;
+  }
+  .item {
+    padding: 15rpx 28rpx;
+    background: #e6e6e6;
+    color: #000;
+    margin-left: 20rpx;
+    margin-top: 20rpx;
+    border-radius: 10rpx;
+  }
+  .active {
+    background: #ed394a;
+    color: #fff;
+  }
+}
+
+.num_box {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 30rpx 0rpx;
+  .title {
+    color: #4c4c4c;
+    font-size: 32rpx;
+  }
+}
+
+.buy-num {
+  width: 164rpx;
+  height: 48rpx;
+  line-height: 48rpx;
+  display: flex;
+  font-size: 24rpx;
+  text-align: center;
+  .jian-btn {
+    width: 48rpx;
+    height: 100%;
+    border-left: 1rpx solid #ccc;
+    border-bottom: 1rpx solid #ccc;
+    border-top: 1rpx solid #ccc;
+    border-bottom-left-radius: 6rpx;
+    border-top-left-radius: 6rpx;
+  }
+
+  .jian-btn.disabled {
+    background-color: #f5f5f9;
+    border-left: 1rpx solid #eee;
+    border-bottom: 1rpx solid #eee;
+    border-top: 1rpx solid #eee;
+    color: #ccc;
+  }
+
+  .jia-btn {
+    width: 48rpx;
+    height: 100%;
+    border-right: 1rpx solid #ccc;
+    border-bottom: 1rpx solid #ccc;
+    border-top: 1rpx solid #ccc;
+    border-bottom-right-radius: 6rpx;
+    border-top-right-radius: 6rpx;
+  }
+
+  .jia-btn.disabled {
+    background-color: #f5f5f9;
+    border-right: 1rpx solid #eee;
+    border-bottom: 1rpx solid #eee;
+    border-top: 1rpx solid #eee;
+    color: #ccc;
+  }
+
+  input {
+    width: 68rpx;
+    height: 48rpx;
+    min-height: 48rpx;
+    text-align: center;
+    font-size: 24rpx;
+    border: 1rpx solid #ccc;
+  }
+}
+
+.panle_model {
+  position: absolute;
+  height: 0rpx;
+  width: 100%;
+  z-index: 1002;
+  background: #fff;
+  bottom: 0;
+}
+
+.model_content {
+  padding: 20rpx;
+  position: relative;
+}
+
+.colse_model {
+  position: absolute;
+  right: 10rpx;
+  top: 10rpx;
+  .icon-close {
+    color: #e11500;
+    font-size: 32rpx;
+  }
+}
+
+.comfire_btn {
+  height: 100rpx;
+  line-height: 100rpx;
+  width: 100%;
+  background: #ff6e30;
+  text-align: center;
+  color: #fff;
+  position: absolute;
+  bottom: 0;
+  z-index: 10003;
+}
+
+</style>

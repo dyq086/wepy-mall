@@ -1,0 +1,116 @@
+<template>
+  <view class="address">
+    <repeat for="{{addressList}}" key="index" index="index" item="item">
+      <view class="list_box">
+        <swipeDelete :swipeData="item" @delItem.user="handleDelItem">
+          <view class="address_list">
+            <view class="title">
+              <view class="user_info">
+                <text class="name">邓先生</text>
+                <text class="phone">13719477521</text>
+              </view>
+              <view class="active_address">
+                <text class="defult" wx:if="{{index==0}}"> [默认]</text>
+                广州市天河区东圃时代TIT广场
+              </view>
+            </view>
+            <view class="arrow" @tap="edit"><i class="iconfont icon-edit"></i></view>
+          </view>
+        </swipeDelete>
+      </view>
+    </repeat>
+  </view>
+  <view class="add_wrap">
+    <view class="button type_red" @tap="add">新增地址</view>
+  </view>
+</template>
+<script>
+import wepy from 'wepy'
+import SwipeDelete from './common/wepy-swipe-delete'
+import tip from '../utils/tip'
+export default class AddressList extends wepy.component {
+  props = {
+    addressList: {
+      default: [{
+        style: 0
+      }, {
+        style: 0
+      }],
+      type: Object
+    }
+  }
+  components = {
+    swipeDelete: SwipeDelete
+  }
+
+  data = {
+
+  }
+  methods = {
+    add() {
+      //0 列表 1新增 2编辑
+      this.$emit('currentPage', 1);
+    },
+    edit() {
+      //0 列表 1新增 2编辑
+      this.$emit('currentPage', 2);
+    },
+    //左滑删除
+    handleDelItem(itemData) {
+      console.log(itemData)
+    }
+  }
+
+  onLoad() {}
+}
+
+</script>
+<style lang="scss">
+.list_box {
+  height: 150rpx;
+}
+
+.address {
+  .list_box:last-child {
+    border-bottom: 1px solid #efefef;
+  }
+  .address_list {
+    display: flex;
+    justify-content: space-between;
+    height: 150rpx;
+    align-items: center;
+    padding: 0rpx 0px 0px 35rpx;
+    border-top: 1px solid #efefef;
+    .title {
+      color: #000;
+    }
+    .arrow {
+      height: 150rpx;
+      line-height: 150rpx;
+      width: 150rpx;
+      text-align: center;
+      color: #9a9a9a;
+    }
+    .user_info {
+      color: #1a1a1a;
+    }
+    .active_address {
+      margin-top: 20rpx;
+    }
+    .defult {
+      color: #ea4a3a;
+    }
+  }
+}
+
+.add_wrap {
+  display: block;
+  width: 95%;
+  left: 0;
+  right: 0;
+  position: absolute;
+  bottom: 20rpx;
+  margin: 0 auto;
+}
+
+</style>

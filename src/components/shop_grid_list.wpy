@@ -1,0 +1,106 @@
+<!--商品列表模块-->
+<template>
+  <scroll-view scroll-y="true" class="swiper-item-box">
+    <view class="shop_item">
+      <navigator class="list" wx:for="{{list}}" wx:key="item" url="/pages/goods_detail?id={{item.id}}">
+        <view class="image_box">
+          <image src="{{item.thumLogo}}"></image>
+        </view>
+        <view class="goods">
+          <view class="product_name">{{item.name}}</view>
+          <view class="product_info">
+            <view class="price">￥{{item.price}}</view>
+            <view class="cost_price">￥{{item.marketPrice}}</view>
+            <view class="sale_num">销量{{item.saleCount}}件</view>
+          </view>
+        </view>
+      </navigator>
+    </view>
+  </scroll-view>
+</template>
+<script>
+import wepy from 'wepy'
+
+export default class ShopGridList extends wepy.component {
+  props = {
+    list: []
+  }
+
+  events = {
+
+  }
+
+  methods = {
+
+  }
+
+  onLoad() {
+
+  }
+}
+
+</script>
+<style lang="scss">
+.shop_item {
+  padding: 0rpx 15rpx;
+  background: #f7f7f7;
+  display: flex;
+  flex-wrap: wrap;
+  padding-bottom: 30rpx;
+}
+
+.list:nth-child(odd) {
+  margin-right: 15rpx;
+}
+
+.list {
+  background: #fff;
+  width: 355rpx;
+  margin-top: 15rpx;
+  .image_box {
+    image {
+      width: 100%;
+      height: 345rpx;
+    }
+  }
+  .product_name {
+    color: #1a1a1a;
+    font-size: 30rpx;
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    word-break: break-all;
+  }
+  .price {
+    color: #de0000;
+    font-size: 28rpx;
+    font-weight: 600;
+  }
+  .cost_price {
+    color: #666666;
+    font-size: 24rpx;
+    text-decoration: line-through;
+    font-weight: 600;
+  }
+  .sale_num {
+    color: #666666;
+    font-size: 22rpx;
+  }
+  .goods {
+    padding: 15rpx 12rpx;
+  }
+  .product_info {
+    padding-top: 20rpx;
+    display: flex;
+    align-items: flex-end;
+  }
+  .cost_price {
+    padding-left: 20rpx;
+  }
+  .sale_num {
+    padding-left: 60rpx;
+  }
+}
+
+</style>

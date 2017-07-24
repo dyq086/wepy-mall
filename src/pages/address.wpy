@@ -1,0 +1,65 @@
+<!--地址管理-->
+<template>
+  <view class="{{currentPage==0?'':'hidden'}}">
+    <addressList :list.sync="address_list" @currentPage.user="getCurrentPage"></addressList>
+  </view>
+  <view class="{{currentPage==1?'':'hidden'}}">
+    <addressAdd @currentPage.user="getCurrentPage"></addressAdd>
+  </view>
+  <view class="{{currentPage==2?'':'hidden'}}">
+    <addressEdit @currentPage.user="getCurrentPage"></addressEdit>
+  </view>
+</template>
+<script>
+import wepy from 'wepy';
+import AddressList from "../components/address_list"
+import AddressAdd from "../components/address_add"
+import AddressEdit from "../components/address_edit"
+export default class Address extends wepy.page {
+  config = {
+    navigationBarTitleText: '地址管理',
+  }
+  data = {
+    address_list: [],
+
+    //显示当前组件 0 列表 1新增 2编辑
+    currentPage: 0
+
+  }
+  components = {
+    addressList: AddressList,
+    addressAdd: AddressAdd,
+    addressEdit: AddressEdit
+  }
+
+  onLoad() {
+
+  }
+  computed = {
+
+  }
+  methods = {
+    getCurrentPage(cur) {
+      this.currentPage = cur;
+    }
+  }
+  onUnload() {
+    // if (this.currentPage !== 0) {
+    //   wx.navigateTo({
+    //     url: "/pages/address"
+    //   })
+    // }
+  }
+  events = {
+
+  }
+
+}
+
+</script>
+<style lang="scss">
+.hidden {
+  display: none;
+}
+
+</style>

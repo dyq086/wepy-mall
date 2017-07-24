@@ -1,0 +1,40 @@
+<style lang="scss">
+
+
+</style>
+<template>
+  <pointsRule></pointsRule>
+</template>
+<script>
+import wepy from 'wepy';
+import api from '../api/api';
+import PointsRule from '../components/points_rule'
+export default class PointsRules extends wepy.page {
+  config = {
+    navigationBarTitleText: '积分说明',
+  }
+  components = {
+    pointsRule: PointsRule
+  }
+
+  data = {
+
+  }
+
+
+  onLoad() {
+    let that = this;
+
+  }
+  computed = {
+
+  }
+  methods = {
+
+  }
+  events = {
+
+  }
+}
+
+</script>

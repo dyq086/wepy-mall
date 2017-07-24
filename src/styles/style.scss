@@ -1,0 +1,39 @@
+.search_read_only {
+  align-items: center;
+  display: flex;
+  margin: 0 auto;
+  width: 650rpx;
+  .search_content {
+    display: flex;
+    align-items: center;
+    border-radius: 300rpx;
+    color: #999;
+    width: 500rpx;
+    background: #efefef;
+    padding: 0rpx 32rpx;
+    height: 65rpx;
+    margin: 0 auto;
+    .search_input {
+      font-size: 28rpx;
+      width: 100%;
+    }
+  }
+  .icon-search {
+    font-size: 40rpx;
+  }
+  .icon-message {
+    font-size: 50rpx;
+  }
+}
+
+.top_search {
+  padding: 20rpx 0rpx;
+  background:#fff;
+}
+
+.spacing {
+  height: 20rpx;
+  width: 100%;
+  overflow: hidden;
+  background-color: #f5f5f5;
+}

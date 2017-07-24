@@ -1,0 +1,139 @@
+<!--支付成功-->
+<template>
+  <view class="pay_success">
+    <view class="icon">
+      <view><i class="iconfont icon-success"></i></view>
+      <view class="success_doc">恭喜支付成功</view>
+    </view>
+    <view class="pay_type">
+      <view class="block">
+        <i class="iconfont icon-paytype"></i>
+        <view class="title fz24">支付方式</view>
+        <view class="type fz24">微信支付</view>
+      </view>
+    </view>
+    <view class="pay_money">
+      <view class="block">
+        <i class="iconfont icon-money"></i>
+        <view class="title fz24">支付金额</view>
+        <view class="type fz24">￥88888.0</view>
+      </view>
+    </view>
+    <view class="pay_btn">
+      <view class="block btn_group">
+        <view class="btn order_detail" @tap="goOrderDetail">查看订单</view>
+        <view class="btn get_store" @tap="goIndex">继续购物</view>
+      </view>
+    </view>
+  </view>
+</template>
+<script>
+import wepy from 'wepy';
+import api from '../api/api';
+import tip from '../utils/tip'
+export default class paySuccess extends wepy.page {
+  config = {
+    navigationBarTitleText: '支付成功',
+  }
+  data = {
+
+  }
+  components = {
+
+  }
+
+  onLoad(option) {
+    tip.success('支付成功,接收的参数为' + option.order_id);
+  }
+  computed = {
+
+  }
+  methods = {
+    goOrderDetail() {
+      wepy.navigateTo({
+        url: "/pages/order_detail"
+      })
+    },
+    goIndex() {
+      wepy.switchTab({
+        url: "/pages/home"
+      })
+    }
+  }
+
+  events = {
+
+  }
+
+}
+
+</script>
+<style lang="scss">
+.pay_success {
+  background: #fff;
+  padding-bottom: 50rpx;
+  .pay_btn,
+  .pay_type,
+  .pay_money {
+    display: flex;
+    width: 100%;
+  }
+  .icon {
+    margin: 0 auto;
+    text-align: center;
+    padding-top: 100rpx;
+  }
+  .block {
+    margin: 0 auto;
+    text-align: center;
+    display: flex;
+    align-items: center;
+  }
+  .icon-success {
+    color: #ea4a3a;
+    font-size: 150rpx;
+  }
+
+  .success_doc {
+    color: #1a1a1a;
+  }
+  .type {
+    color: #ea4a3a;
+    margin-left: 20rpx;
+  }
+  .pay_type {
+    padding-top: 84rpx;
+  }
+  .pay_money {
+    padding-top: 25rpx;
+  }
+  .btn_group {
+    display: flex;
+    align-items: center;
+    padding-top: 100rpx;
+    .btn {
+      font-size: 30rpx;
+      padding: 22rpx 55rpx;
+      text-align: center;
+      margin: 0 auto;
+      width: 100%;
+      -moz-border-radius: 10rpx;
+      /* Firefox */
+      -webkit-border-radius: 10rpx;
+      /* Safari 和 Chrome */
+      border-radius: 10rpx;
+      /* Opera 10.5+, 以及使用了IE-CSS3的IE浏览器 */
+    }
+    .order_detail {
+      color: #333;
+      border: 1px solid #ccc;
+    }
+    .get_store {
+      background: #ed601b;
+      color: #fff;
+      margin-left: 85rpx;
+    }
+  }
+}
+
+</style>

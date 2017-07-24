@@ -1,0 +1,115 @@
+<style lang="scss">
+.block {
+  background: #fff;
+}
+
+.list_item {
+  display: flex;
+  align-items: center;
+  border-top: 1px solid #efefef;
+  padding: 35rpx 20rpx;
+  .title {
+    margin-right: 20rpx;
+  }
+  .input {
+    flex: 1;
+    input {
+      color: #333;
+    }
+  }
+}
+
+.btn_box {
+  margin-top: 64rpx;
+  padding: 0 24rpx;
+}
+
+</style>
+<template>
+  <form bindsubmit="formSubmit">
+    <view class="block">
+      <view class="list_item">
+        <view class="title">收货人姓名:</view>
+        <view class="input">
+          <input type="text" name="name" value="{{editInfo.name}}">
+        </view>
+      </view>
+      <view class="list_item">
+        <view class="title">联系电话:</view>
+        <view class="input">
+          <input type="text" name="tel" value="{{editInfo.tel}}">
+        </view>
+      </view>
+      <view class="list_item">
+        <view class="title">所在地区:</view>
+        <view class="input">
+          省市区
+        </view>
+      </view>
+      <view class="list_item">
+        <view class="title">详细地址:</view>
+        <view class="input">
+          <input type="text" name="address" value="{{editInfo.address}}">
+        </view>
+      </view>
+      <view class="list_item">
+        <view class="title">设置默认地址:</view>
+        <view class="input tr" @tap="changeCheckBoxState">
+          <icon type="success" size="20" color="{{editInfo.isDefult? 'red':'#999'}}" />
+        </view>
+      </view>
+    </view>
+    <view class="btn_box">
+      <button class="button type_red" formType="submit">修改</button>
+    </view>
+  </form>
+</template>
+<script>
+import wepy from 'wepy'
+import tip from '../utils/tip'
+export default class AddressEdit extends wepy.component {
+
+  data = {
+    isCheck: false,
+    editInfo: {
+      default: {},
+      type: Object
+    }
+
+  }
+  methods = {
+    changeCheckBoxState() {
+      this.isCheck = !this.isCheck;
+    },
+    formSubmit(e) {
+
+      let name = e.detail.value.name;
+      let tel = e.detail.value.tel;
+
+      //0 列表 1新增 2编辑 (显示列表)
+      this.$emit('currentPage', 0);
+
+
+      if (name == "") {
+        tip.alert("输入收件人姓名");
+        return false;
+      }
+      if (tel == "") {
+        tip.alert("输入联系电话");
+        return false;
+
+      }
+
+      console.log('form发生了submit事件，携带数据为：', e.detail.value)
+    }
+  }
+
+  onLoad() {
+
+    //请求接口
+
+
+  }
+}
+
+</script>

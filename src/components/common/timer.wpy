@@ -1,0 +1,189 @@
+<template>
+  <view wx:if="{{isShow}}">
+    <view class="hold hold1">
+      <view class="pie pie1" style="transform: rotate({{rotate1}}deg);"></view>
+    </view>
+    <view class="hold hold2">
+      <view class="pie pie2" style="transform: rotate({{rotate2}}deg);"></view>
+    </view>
+    <view class="bg"></view>
+    <view class="time_box">
+      <view class="time">{{strH}}:{{strM}}:{{strS}}</view>
+      <view class="over">订单结束</view>
+    </view>
+  </view>
+</template>
+<script>
+import wepy from 'wepy'
+export default class Timer extends wepy.component {
+  props = {
+    startTime: {
+      default: ""
+    },
+    endTime: {
+      default: ""
+    }
+  }
+  data = {
+    hour: 0,
+    minute: 0,
+    second: 0,
+    totalDay: 0,
+    isShow: false
+  }
+
+  onLoad() {
+
+  }
+
+  methods = {
+    initTimer(val) {
+      console.log(val);
+      let interval = setInterval(() => {
+        if ((--this.second) < 0) {
+          this.minute--;
+          this.second = 59;
+          this.$apply();
+        }
+
+        if (this.minute < 0) {
+          this.hour--;
+          this.minute = 59;
+          this.$apply();
+        }
+        if (this.hour < 0) {
+          this.minute = 0;
+          this.second = 0;
+          this.isShow = false;
+          this.$apply();
+          clearInterval(interval);
+        }
+        this.$apply();
+      }, 1000);
+      let date = new Date();
+      this.startTime = val.startTime;
+      this.endTime = val.endTime;
+      //开始时间(.replace(/(-)/g, '/')解决ios 不兼容问题)
+      let startDay = new Date(this.startTime.replace(/(-)/g, '/'));
+      //结束时间
+      let endDay = new Date(this.endTime.replace(/(-)/g, '/'));
+
+      //总共时间(单位s)
+      let totalDay = Math.floor((endDay - startDay) / 1000);
+
+
+      // 计算时会发生隐式转换，调用valueOf()方法，转化成时间戳的形式
+      let days = (endDay - date) / 1000 / 3600 / 24;
+
+
+      //计算是当前时间是否在区间内
+      if (startDay < date && date < endDay) {
+        this.isShow = true;
+      }
+
+      let day = Math.floor(days);
+      let hours = (days - day) * 24;
+      let hour = Math.floor(hours);
+      let minutes = (hours - hour) * 60;
+      let minute = Math.floor(minutes);
+      let seconds = (minutes - minute) * 60;
+      let second = Math.floor(seconds);
+
+      //赋值
+      this.hour = day * 24 + hour;
+      this.minute = minute;
+      this.second = second;
+      this.totalDay = totalDay;
+
+      this.$apply();
+    }
+  }
+
+  computed = {
+    strH() {
+      return this.hour < 10 ? "0" + this.hour : this.hour;
+    },
+    strM() {
+      return this.minute < 10 ? "0" + this.minute : this.minute;
+    },
+    strS() {
+      return this.second < 10 ? "0" + this.second : this.second;
+    },
+    total() {
+      return (this.hour * 60 * 60) + (this.minute * 60) + this.second;
+    },
+    rotate1() {
+      let a = 360 - (360 / this.totalDay) * this.total;
+      return a < 180 ? a : 180
+    },
+    rotate2() {
+      let b = 360 - (360 / this.totalDay) * this.total;
+      return b > 180 ? b - 180 : 0
+    }
+  }
+
+}
+
+</script>
+<style lang="scss">
+.pie {
+  width: 160rpx;
+  height: 160rpx;
+  background-color: #ffd4d4;
+  border-radius: 1000px;
+  position: absolute;
+}
+
+.pie1 {
+  clip: rect(-10rpx, 160rpx, 160rpx, 80rpx);
+}
+
+.pie2 {
+  clip: rect(-10rpx, 80rpx, 200rpx, -10rpx);
+}
+
+.hold {
+  width: 160rpx;
+  height: 160rpx;
+  position: absolute;
+  z-index: 1;
+}
+
+.hold1 {
+  clip: rect(-10rpx, 160rpx, 160rpx, 80rpx);
+}
+
+.hold2 {
+  clip: rect(-10rpx, 80rpx, 200rpx, -10rpx);
+}
+
+.bg {
+  width: 160rpx;
+  height: 160rpx;
+  background: red;
+  border-radius: 1000px;
+  position: absolute;
+}
+
+.time_box {
+  width: 149rpx;
+  height: 149rpx;
+  margin: 6rpx;
+  background: #fff;
+  border-radius: 100rpx;
+  position: absolute;
+  z-index: 1;
+  text-align: center;
+
+  .time {
+    margin-top: 40rpx;
+    color: #fe7070;
+    font-size: 32rpx;
+  }
+  .over {
+    font-size: 26rpx;
+    color: #808080;
+  }
+}
+
+</style>
