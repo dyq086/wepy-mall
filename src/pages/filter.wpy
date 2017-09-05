@@ -1,7 +1,7 @@
 <!--筛选-->
 <template>
   <view class="filter">
-    <view class="block">
+    <!--<view class="block">
       <view class="title">品类</view>
       <view class="item_box">
         <view class="item active">女款休闲裤(12)<i class="iconfont icon-bottom-check"></i></view>
@@ -12,7 +12,7 @@
         <view class="item">女款休闲裤(12)</view>
         <view class="item">女款休闲裤(12)</view>
       </view>
-    </view>
+    </view>-->
     <view class="block">
       <view class="title">尺码</view>
       <view class="item_box">
@@ -64,7 +64,7 @@ export default class Filter extends wepy.page {
 }
 
 </script>
-<style lang="scss">
+<style lang="less">
 page {
   background: #fff;
 }

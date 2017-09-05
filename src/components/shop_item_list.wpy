@@ -1,4 +1,4 @@
-<style lang="scss">
+<style lang="less">
 .good_list {
   display: flex;
   justify-content: space-between;
@@ -38,6 +38,37 @@
 
 .goods {
   padding: 15rpx 12rpx;
+  .order_footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 20rpx;
+  }
+  .order_state {
+      color: #ff4856;
+      font-size: 32rpx;
+    }
+  .btn_group {
+      display: flex;
+      align-items: right;
+    .btn {
+        font-size: 25rpx;
+        padding: 10rpx 10rpx;
+        text-align: center;
+        margin: 0 auto;
+        width: 100%;
+        -moz-border-radius: 15rpx;
+        /* Firefox */
+        -webkit-border-radius: 15rpx;
+        /* Safari 和 Chrome */
+        border-radius: 15rpx;
+        /* Opera 10.5+, 以及使用了IE-CSS3的IE浏览器 */
+      }
+    .btn_del {
+        color: #333;
+        border: 1px solid #ccc;
+      }
+    }
 }
 
 .product_info {
@@ -53,28 +84,50 @@
 
 </style>
 <template>
-  <view class="good_list" wx:for="{{goodsList}}" wx:key="index">
+<repeat for="{{list}}" key="index" index="index" item="item">
+  <view class="good_list">
     <view class="image_box">
-      <image src="{{item.small_image}}"></image>
+      <image src="{{item.goodsThumLogo}}"></image>
     </view>
     <view class="goods">
-      <view class="product_name">{{item.product_name}}</view>
-      <view class="product_rule">规格:{{item.brand_store_name}}</view>
+      <view class="product_name">{{item.goodsName}}</view>
+      <view class="product_rule">规格:{{item.goodsSkuVals}}</view>
       <view class="product_info">
-        <view class="price">￥{{item.sale_price}}</view>
-        <view class="goods_num">x3</view>
+        <view class="price">￥{{item.price}}</view>
+        <view class="goods_num">x{{item.num}}</view>
       </view>
+
+      <view class="order_footer">
+        <view class="btn_group">
+          <view class="btn btn_del" @tap.stop="refund" data-id="{{item.id}}" wx:if="{{item.status==4 && item.refundStatus==0}}">申请退货</view>
+        </view>
+        <view class="order_state" wx:if="{{item.refundStatus==1}}">
+          <view>退货中</view>
+        </view>
+        <view class="order_state" wx:if="{{item.refundStatus==2}}">
+          <view>退款成功</view>
+        </view>
+      </view>
+
     </view>
   </view>
+</repeat>
 </template>
 <script>
 import wepy from 'wepy'
+import tip from '../utils/tip';
+import api from '../api/api';
+import {
+  SYSTEM_INFO,
+  USER_SPECICAL_INFO
+} from '../utils/constant';
 
 export default class ShopItemList extends wepy.component {
   props = {
     goodsList: {
       default: []
-    }
+    },
+    list:[]
   }
 
   events = {
@@ -84,12 +137,60 @@ export default class ShopItemList extends wepy.component {
     // }
   }
 
-  methods = {
+  async applyRefund(itemId) {
+    let userSpecialInfo = wepy.getStorageSync(USER_SPECICAL_INFO) || {};
+    let openId = userSpecialInfo.openid;
 
+    const json = await api.refundApply({
+      query:{
+        openId: openId,
+        orderItemId: itemId
+      }
+    });
+    if (json.data.code==0) {
+      wx.showModal({
+        title: '提示',
+        content: '你的退货申请已提交,等待审批!',
+        showCancel: false,
+        success: function(res) {
+          if (res.confirm) {
+          } else if (res.cancel) {
+          }
+        }
+      })
+    } else {
+      tip.error(json.data.msg);
+    }
+  }
+
+  methods = {
+    refreshList(val){
+      if (val==undefined) return;
+      console.log("val.....",val);
+      this.list = val;
+      this.$apply();
+    },
+    refund(e) {
+      let itemId = e.currentTarget.dataset.id;
+      let that = this;
+      wx.showModal({
+        title: '提示',
+        content: '确定要退货吗?',
+        success: function(res) {
+          if (res.confirm) {
+            that.applyRefund(itemId);
+          } else if (res.cancel) {
+            console.log('用户点击取消');
+          }
+        }
+      })
+    }
   }
 
   onLoad() {
-    console.log(this.goodsList)
+    this.list=[];
+    console.log("加载list============");
+    console.log(this.list)
   }
 }
 

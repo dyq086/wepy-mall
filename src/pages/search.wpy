@@ -4,21 +4,21 @@
     <view wx:if="{{list.length>0}}">
       <filterBar @currentType.user="currentType"></filterBar>
       <!--矩阵商品列表模块-->
-      <shopGridList :list.sync="list"></shopGridList>
+      <shopGridList :purchasetype.sync="purchasetype" :list.sync="list"></shopGridList>
       <!--加载更多时动画-->
       <bottomLoadMore :show.sync="showLoading" message="正在加载"></bottomLoadMore>
       <!--暂无数据显示-->
       <placeholder :show.sync="is_empty" message="暂无发现数据"></placeholder>
     </view>
-    <view class="history" wx:else>
+    <view class="history {{show?'':'hidden'}}" wx:else>
       <view class="doc">历史记录</view>
       <view class="lable">
-        <view class="child">上衣</view>
-        <view class="child">衬衫</view>
-        <view class="child">裙子</view>
+        <view wx:for="{{keywordhisList}}" wx:key="item" @tap.stop="selHisKeyWord" data-id="{{item.id}}">
+          <view class="child {{item.sel=='1' ?'active':''}}">{{item.keyword}}</view>
+        </view>
       </view>
       <view class="btn_box">
-        <view class="button type_empity">清除历史记录</view>
+        <view class="button type_empity" @tap.stop="clearHis">清除历史记录</view>
       </view>
     </view>
   </view>
@@ -28,8 +28,9 @@ import wepy from 'wepy';
 import api from '../api/api';
 import tip from '../utils/tip'
 import {
-  bb
-} from '../api/data';
+  SYSTEM_INFO,
+  USER_SPECICAL_INFO
+} from '../utils/constant';
 import Searchs from '../components/search'
 import FilterBar from "../components/filter_bar"
 import ShopGridList from '../components/shop_grid_list'
@@ -50,28 +51,205 @@ export default class Search extends wepy.page {
   data = {
     list: [],
     showLoading: false,
-    is_empty: false
+    purchasetype: 1,
+    is_empty: false,
+    //当前页面
+    currentPage: 1,
+    //总页数
+    page_total: 0,
+    keyword: "",
+    keywordhisList: [],
+    cateCode: "",
+    show:true,
+    sort: -1,
+    title: ""
   }
-  onLoad() {
-    let that = this;
+
+  async getKeyWordHisList() {
+    let userSpecialInfo = wepy.getStorageSync(USER_SPECICAL_INFO) || {};
+    let openId = userSpecialInfo.openid;
+    const json = await api.searchKeywordList({
+      query: {
+        openId: openId
+      }
+    });
+    if (json.data.code == 0) {
+      this.keywordhisList = json.data.list;
+    }
+    this.$apply();
+  }
+
+  setTitle(title) {
+    wepy.setNavigationBarTitle({
+      title: title
+    })
+  }
+
+  onLoad(option) {
+    this.list = [];
+    this.cateCode = option.cateCode;
+    if (this.cateCode!=undefined && this.cateCode.length>0) {//分类进入
+      this.$invoke('search', 'show', "0");
+      this.show = false;
+      this.doSearchGoods(this.cateCode);
+      this.title = ""+option.title;
+      this.setTitle(""+option.title);
+    } else {//搜索进入
+      this.$invoke('search', 'show', "1");
+      this.show = true;
+      this.getKeyWordHisList();
+    }
   }
   computed = {
 
   }
-  methods = {
-    doSearch(val) {
-      tip.success("搜索：" + val);
-      this.list = bb.result.products;
-      this.$apply();
-    },
-    currentType(obj) {
-      tip.success("状态:" + obj);
+
+  async doSearchGoods(keyword,currentPage,size) {
+    let that = this;
+    const json = await api.getGoodsList({
+      query: {
+        page: currentPage || 1,
+        size: size || 10,
+        searchKeyWords: this.keyword,
+        cateCode: this.cateCode||"",
+        sort : this.sort
+      }
+    });
+    if (json.data.code == 0) {
+      that.list = [...that.list, ...json.data.list];
+      that.page_total = json.data.page_total;
+      if (json.data.page_total == 0) {
+        //暂无数据
+        that.is_empty = true;
+      }
+
+    } else {
+      tip.error(json.data.msg);
+    }
+    that.showLoading = false;
+    that.$apply();
+
+    if (keyword.length>0) {
+      let userSpecialInfo = wepy.getStorageSync(USER_SPECICAL_INFO) || {};
+      let openId = userSpecialInfo.openid;
+      const resultJson = await api.addSearchKeyword({
+        query: {
+          openId: openId,
+          keyword: keyword
+        }
+      });
     }
   }
+
+  async clearUserKeywords() {
+    let userSpecialInfo = wepy.getStorageSync(USER_SPECICAL_INFO) || {};
+    let openId = userSpecialInfo.openid;
+    const json = await api.clearSearchKeyword({
+      query: {
+        openId: openId
+      }
+    });
+    if (json.data.code == 0) {
+      this.keywordhisList = [];
+    } else {
+      tip.error(json.data.msg);
+    }
+    this.$apply();
+  }
+  methods = {
+    doSearch(val) {
+      this.list = [];
+      this.is_empty = false;
+      //tip.success("搜索：" + val);
+      this.showLoading = true;
+      this.keyword = val;
+      this.doSearchGoods(val);
+
+      //this.list = bb.result.products;
+      //this.$apply();
+    },
+    currentType(obj) {
+      //tip.success("状态:" + obj);
+      var name = obj.name;
+      var type = obj.type;
+      if (name=="zhonghe") {
+        this.sort = -1;
+      } else if (name=="sale") {
+        this.sort = 3;
+      } else if (name=="price") {
+        if (type=="desc") {
+          this.sort = 2;
+        } else if (type=="asc") {
+          this.sort = 1;
+        }
+      }
+      this.list = [];
+      this.is_empty = false;
+      this.showLoading = true;
+      //this.$invoke('search', 'show', "0");
+      this.show = false;
+      this.doSearchGoods(this.keyword);
+    },
+    selHisKeyWord(e) {
+      console.log(e);
+      var id = e.currentTarget.dataset.id;
+      var hisKeyword = "";
+      for (var i=0; i<this.keywordhisList.length; i++) {
+        this.keywordhisList[i].sel = 0;
+        if (id==this.keywordhisList[i].id) {
+          hisKeyword = this.keywordhisList[i].keyword;
+          this.keywordhisList[i].sel = 1;
+        }
+      }
+      if (hisKeyword.length>0) {
+        this.keyword = hisKeyword;
+        this.doSearchGoods(hisKeyword);
+      }
+    },
+    clearHis() {
+      this.clearUserKeywords();
+    },
+    onShareAppMessage: function (res) {
+      if (res.from === 'button') {
+        // 来自页面内转发按钮
+        console.log(res.target)
+      }
+      return {
+        title: this.detail.name,
+        path: '/pages/search?cateCode='+this.cateCode+'&title='+this.title,
+        success: function(res) {
+          // 转发成功
+        },
+        fail: function(res) {
+          // 转发失败
+        }
+      }
+    }
+  }
+
+  //加载更多
+  onReachBottom() {
+    let that = this;
+    that.showLoading = true;
+    console.log(that.page_total + "===" + that.currentPage);
+    //判断总页数是否大于翻页数
+    if ((that.page_total) > that.currentPage) {
+      //防止重复加载
+      if (that.preventRepeatReuqest) {
+        return true;
+      }
+      that.preventRepeatReuqest = true;
+      that.currentPage++;
+      that.doSearchGoods("",that.currentPage);
+      that.preventRepeatReuqest = false;
+    } else {
+      that.showLoading = false;
+    }
+  };
 }
 
 </script>
-<style lang="scss">
+<style lang="less">
 .history {
   padding: 20px 27px;
 }
@@ -93,6 +271,7 @@ export default class Search extends wepy.page {
     border-radius: 300rpx;
     margin-left: 20rpx;
     font-size: 26rpx;
+    margin-top: 5rpx;
     color: #000;
   }
 }
@@ -106,4 +285,8 @@ export default class Search extends wepy.page {
   }
 }
 
+.active {
+  border: 1px solid #f23737;
+  color: #f23737;
+}
 </style>

@@ -1,9 +1,9 @@
-<style lang="scss">
+<style lang="less">
 
 
 </style>
 <template>
-  <scroll-view scroll-y="true" class="swiper-item-box" style="height:{{winHeight}}px">
+  <scroll-view scroll-y="true" class="swiper-item-box" style="height:{{winHeight}}px" bindscrolltolower="onReachBottom">
     <!-- 积分记录 -->
     <pointsDetail :is_empty.sync="is_empty" :list.sync="list"></pointsDetail>
     <!--加载更多时动画-->
@@ -36,34 +36,41 @@ export default class PointsMore extends wepy.page {
     winHeight: 0,
     list: [],
     is_empty: false,
-    showLoading: false
+    showLoading: false,
+    //当前页面
+    currentPage: 1,
+    //总页数
+    page_total: 0,
+    //是否显示 底部loading
+    showLoading: true,
+    //防止重复加载
+    preventRepeatReuqest: false
   }
 
-   async getUserPoint() {
-    console.log("dffff");
-        let that = this;
-        let userSpecialInfo = wepy.getStorageSync(USER_SPECICAL_INFO) || {};
-        let openId = userSpecialInfo.openid;
-        const json = await api.pointInfo({
-          query: {
-            openId: openId,
-            pageNo:1,
-            pageSize:10
-          }
-        });
-        if (json.data.code == 0) {
-          that.list = json.data.list;
-          console.log("dffff+"+that.list);
-          that.$apply();
-        } else {
-          tip.error(json.data.msg)
-        }
-        that.showLoading = false;
+  async getUserPoint(currentPage, size) {
+    let that = this;
+    let userSpecialInfo = wepy.getStorageSync(USER_SPECICAL_INFO) || {};
+    let openId = userSpecialInfo.openid;
+    const json = await api.pointInfo({
+      query: {
+        openId: openId,
+        page: currentPage || 1,
+        size: size || 10
       }
-
+    });
+    if (json.data.code == 0) {
+      that.list = [...that.list, ...json.data.list];
+      that.page_total = json.data.page_total;
+      that.$apply();
+    } else {
+      tip.error(json.data.msg)
+    }
+    that.showLoading = false;
+  }
 
   onLoad() {
     let that = this;
+    that.list=[];
     let systemInfo = wepy.getStorageSync(SYSTEM_INFO);
     that.winHeight = systemInfo.windowHeight;
     that.getUserPoint();
@@ -78,6 +85,27 @@ export default class PointsMore extends wepy.page {
   events = {
 
   }
+  //加载更多
+  onReachBottom() {
+    console.log("ddddddddddddddd");
+    let that = this;
+    that.showLoading = true;
+    console.log(that.page_total + "===" + that.currentPage);
+    //判断总页数是否大于翻页数
+    if ((that.page_total) > that.currentPage) {
+      console.log(" //判断总页数是否大于翻页数");
+      //防止重复加载
+      if (that.preventRepeatReuqest) {
+        return true;
+      }
+      that.preventRepeatReuqest = true;
+      that.currentPage++;
+      that.getUserPoint(that.currentPage);
+      that.preventRepeatReuqest = false;
+    } else {
+      that.showLoading = false;
+    }
+  };
 }
 
 </script>

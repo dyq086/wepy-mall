@@ -1,31 +1,77 @@
 <!--换货专区-->
 <template>
   <!--矩阵商品列表模块-->
-  <shopGridList :list.sync="list"></shopGridList>
+  <shopGridList :purchasetype.sync="purchasetype" :list.sync="list"></shopGridList>
+  <bottomLoadMore :show.sync="showLoading" message="正在加载"></bottomLoadMore>
+  <!--暂无数据显示-->
+  <placeholder :show.sync="is_empty" message="暂无发现数据"></placeholder>
 </template>
 <script>
 import wepy from 'wepy';
 import ShopGridList from '../components/shop_grid_list'
 import {
-  SYSTEM_INFO
+  SYSTEM_INFO,
+  USER_SPECICAL_INFO
 } from '../utils/constant';
-import {
-  bb
-} from '../api/data';
+import tip from '../utils/tip';
+import api from '../api/api';
+import BottomLoadMore from "../components/common/bottomLoadMore"
+import Placeholder from "../components/common/placeholder"
+
 export default class exchangeGoods extends wepy.page {
   config = {
     navigationBarTitleText: '换货专区',
   }
   components = {
-    shopGridList: ShopGridList
+    shopGridList: ShopGridList,
+    bottomLoadMore: BottomLoadMore,
+    placeholder: Placeholder
   }
   data = {
-    list: []
+    list: [],
+    purchasetype: 1,
+    //是否有数据
+    is_empty: false,
+    //当前页面
+    currentPage: 1,
+    //总页数
+    page_total: 0,
+    //是否显示 底部loading
+    showLoading: true,
+    //防止重复加载
+    preventRepeatReuqest: false
   }
+
+  async getMyOrderGoodsList(currentPage,size) {
+    let userSpecialInfo = wepy.getStorageSync(USER_SPECICAL_INFO) || {};
+    let openId = userSpecialInfo.openid;
+    const json = await api.goodsUserOrderList({
+      query: {
+        page: currentPage || 1,
+        size: size || 10,
+        openId: openId,
+        type: 'refund'
+      }
+    });
+    if (json.data.code == 0) {
+      this.list = [...this.list, ...json.data.list];
+      this.page_total = json.data.page_total;
+      if (json.data.page_total == 0) {
+        //暂无数据
+        this.is_empty = true;
+      }
+    } else {
+      tip.error(json.data.msg);
+    }
+    this.showLoading = false;
+    this.$apply();
+  }
+
   onLoad() {
-    let that = this;
-    that.list = bb.result.products;
-    console.log(bb.result.products)
+    this.list = [];
+    this.getMyOrderGoodsList();
+    /*that.list = bb.result.products;
+    console.log(bb.result.products)*/
 
   }
   computed = {

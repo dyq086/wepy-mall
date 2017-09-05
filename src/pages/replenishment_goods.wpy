@@ -7,23 +7,31 @@
   <swiper current="{{currentTab}}" class="swiper-box" duration="300" style="height:{{winHeight - 31}}px" bindchange="bindChange">
     <swiper-item wx:for="{{tabList}}" wx:key="index">
       <!--矩阵商品列表模块-->
-      <shopGridList :list.sync="list"></shopGridList>
+      <scroll-view scroll-y="true" class="swiper-item-box" style="height:{{winHeight - 31}}px" bindscrolltolower="onReachBottom">
+      <shopGridList :purchasetype.sync="purchasetype" :list.sync="list"></shopGridList>
+      <!--加载更多时动画-->
+      <bottomLoadMore :show.sync="showLoading" message="正在加载"></bottomLoadMore>
+      <!--暂无数据显示-->
+      <placeholder :show.sync="is_empty" message="暂无待补货数据"></placeholder>
+      </scroll-view>
     </swiper-item>
   </swiper>
 </template>
-<style type="scss">
+<style type="less">
   .tab_box{ padding: 0rpx 60rpx; background: #fff;}
 </style>
 <script>
 import wepy from 'wepy';
-import Tab from '../components/tab'
+import Tab from '../components/tab';
+import api from '../api/api';
+import tip from '../utils/tip'
+import BottomLoadMore from "../components/common/bottomLoadMore"
+import Placeholder from "../components/common/placeholder"
 import {
-  SYSTEM_INFO
+  SYSTEM_INFO,
+  USER_SPECICAL_INFO
 } from '../utils/constant';
 import ShopGridList from '../components/shop_grid_list'
-import {
-  bb
-} from '../api/data';
 export default class replenishmentGoods extends wepy.page {
   config = {
     navigationBarTitleText: '我要补货',
@@ -31,20 +39,62 @@ export default class replenishmentGoods extends wepy.page {
   components = {
     tab: Tab,
     shopGridList: ShopGridList,
-
+    bottomLoadMore: BottomLoadMore,
+    placeholder: Placeholder
   }
   data = {
+    purchasetype : 2, //类型:1-商品订单;2-商品补单;
     currentTab: 0,
     winHeight: 0,
     tabList: ["快速补货", "申请记录", "待补货"],
-    list: []
+    list: [],
+    //是否有数据
+    is_empty: false,
+    //当前页面
+    currentPage: 1,
+    //总页数
+    page_total: 0,
+    //是否显示 底部loading
+    showLoading: true,
+    //防止重复加载
+    preventRepeatReuqest: false
   }
+
+  async getMyOrderGoodsList(currentPage,size) {
+    let userSpecialInfo = wepy.getStorageSync(USER_SPECICAL_INFO) || {};
+    let openId = userSpecialInfo.openid;
+    const json = await api.goodsUserOrderList({
+      query: {
+        page: currentPage || 1,
+        size: size || 4,
+        openId: openId,
+        type: 'finish',
+        doType:this.currentTab
+      }
+    });
+    if (json.data.code == 0) {
+      this.list = [...this.list, ...json.data.list];
+      this.page_total = json.data.page_total;
+      if (json.data.page_total == 0) {
+        //暂无数据
+        this.is_empty = true;
+      }
+    } else {
+      tip.error(json.data.msg);
+    }
+    this.showLoading = false;
+    this.$apply();
+  }
+
   onLoad() {
     let that = this;
     let systemInfo = wx.getStorageSync(SYSTEM_INFO);
     that.winHeight = systemInfo.windowHeight;
-    that.list = bb.result.products;
-    console.log(bb.result.products)
+    this.list = [];
+    this.is_empty = false;
+    this.getMyOrderGoodsList();
+    /*that.list = bb.result.products;
+    console.log(bb.result.products)*/
   }
   computed = {
 
@@ -53,21 +103,49 @@ export default class replenishmentGoods extends wepy.page {
     getCurrentTab(cur, evt) {
       let that = this;
       that.currentTab = cur;
+      //this.getMyOrderGoodsList();
       that.$apply();
     },
-    /** 
-     * 滑动切换tab 
+    /**
+     * 滑动切换tab
      */
     bindChange(e) {
       let that = this;
       that.currentTab = e.detail.current;
+      this.list = [];
+      this.currentPage = 1;
+      this.page_total = 0;
+      this.is_empty = false;
+      this.getMyOrderGoodsList();
       that.$apply();
     },
-
   }
   events = {
 
   }
+
+  //加载更多
+  onReachBottom() {
+    console.log("加载更多");
+    let that = this;
+    that.showLoading = true;
+    console.log(that.page_total + "232===" + that.currentPage);
+    //判断总页数是否大于翻页数
+    if ((that.page_total) > that.currentPage) {
+      //防止重复加载
+      if (that.preventRepeatReuqest) {
+        return true;
+      }
+      that.preventRepeatReuqest = true;
+      that.currentPage++;
+      console.log(this.currentTab);
+      this.getMyOrderGoodsList(this.currentPage);
+      that.preventRepeatReuqest = false;
+    } else {
+      that.showLoading = false;
+    }
+  };
+
 
 }
 

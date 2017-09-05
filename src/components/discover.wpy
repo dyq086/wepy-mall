@@ -1,15 +1,13 @@
 <template>
     <view class="bc">
-        <view class="discover">
+        <!--<view class="discover">
             <view class="discover_title_doc">发现好商品</view>
-        </view>
+        </view>-->
         <view class="discover_list">
-            <navigator class="item" open-type="navigate" url="xxx" wx:for="{{list}}" wx:key="item">
+            <navigator class="item" open-type="navigate" wx:for="{{list}}" wx:key="item" url="/pages/home_detail?code={{item.code}}" >
                 <image class="discover_img" src="{{item.logo}}"></image>
-                <view class="info">
-                    <view>均价：100</view>
-                    <view>档位：高端</view>
-                    <view>做工：精致</view>
+                <view class="info" wx:for="{{item.attrs}}" wx:key="item">
+                    <view>{{item.attrName.attrName}}：</view><view wx:for="{{item.attrValList}}" wx:key="item">{{item.attrVal}} </view>
                 </view>
         </view>
         </navigator>
@@ -43,7 +41,7 @@ export default class Discover extends wepy.component {
 
 }
 </script>
-<style lang="sass">
+<style lang="less">
 .discover {
     text-align: center;
     font-size: 30rpx;
@@ -74,13 +72,15 @@ export default class Discover extends wepy.component {
 .discover_list {
     .discover_img {
         width: 100%;
-        height: 360rpx;
+        height: 390rpx;
     }
     .info {
-        padding: 20rpx;
+        padding: 5rpx;
         color: #000000;
         font-size: 26rpx;
         line-height: 35rpx;
+        display: flex;
+        align-items: center;
     }
     .item {
         background: #fff;

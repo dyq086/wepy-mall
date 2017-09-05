@@ -1,0 +1,296 @@
+<template>
+  <view wx:if="{{show}}" class="cascade_box">
+    <view class="cascade_hei" animation="{{animationData.fadeAnim}}"></view>
+    <view class="cascade_find" animation="{{animationData.showAnim}}">
+      <view class="cascade_header">
+        <text class='quxiao' @tap="cancelPicker">取消</text>
+        <text class="queren" @tap="onAddressPick">确认</text>
+      </view>
+      <picker-view value="{{defaultValue}}" indicator-style="height: 80rpx;font-size: 38rpx" style="width: 100%; height: 400rpx;" bindchange="bindChange">
+        <picker-view-column class="pvc">
+          <view wx:for="{{provinces}}" wx:key='this' style="line-height: 80rpx;text-align:center;">{{item.name}}</view>
+        </picker-view-column>
+        <picker-view-column class="pvc">
+          <view wx:for="{{cities}}" wx:key='this' style="line-height: 80rpx;text-align:center;">{{item.name}}</view>
+        </picker-view-column>
+        <picker-view-column class="pvc">
+          <view wx:for="{{areas}}" wx:key='this' style="line-height: 80rpx;text-align:center;">{{item.name}}</view>
+        </picker-view-column>
+      </picker-view>
+    </view>
+  </view>
+</template>
+<script>
+import wepy from 'wepy'
+import regions from '../../utils/regions.js';
+
+export default class AreaPicker extends wepy.component {
+  data = {
+    provinces: [], //获取到的所有的省
+    cities: [], //选择的该省的所有市
+    areas: [], //选择的该市的所有区县
+    defaultValue: [0, 0, 0],
+    selectedRegion: [0, 0, 0],
+    animationData: {},
+    show: false,
+  }
+
+  setAddressPickerValue(province, city, area) {
+    this.province = province;
+    this.city = city;
+    this.area = area;
+    this.$apply();
+  }
+
+  showPicker() {
+    const fadeAnim = wepy.createAnimation({
+      duration: 500,
+      timingFunction: 'ease',
+    });
+    this.fadeAnim = fadeAnim;
+
+    const showAnim = wepy.createAnimation({
+      duration: 500,
+      timingFunction: 'ease',
+    });
+    this.showAnim = showAnim;
+
+    fadeAnim.backgroundColor('#000').opacity(0.5).step();
+    showAnim.bottom(0 + 'rpx').step();
+    this.show = true;
+    this.animationData = {
+      fadeAnim: fadeAnim.export(),
+      showAnim: showAnim.export(),
+    };
+
+    this.$apply();
+  }
+
+  hidePicker() {
+    this.fadeAnim.backgroundColor('#fff').opacity(0).step();
+    this.showAnim.bottom(-600 + 'rpx').step();
+
+
+    this.show = false;
+    this.animationData = {
+      fadeAnim: this.fadeAnim.export(),
+      showAnim: this.showAnim.export(),
+    };
+
+    this.$apply();
+
+  }
+
+  //点击事件，点击弹出选择页
+  openAddressPicker() {
+    this.initAddressPicker();
+    this.showPicker();
+  }
+
+
+  methods = {
+    //取消按钮
+    cancelPicker() {
+      //这里也是动画，然其高度变为0
+      this.hidePicker();
+    },
+    //确认按钮
+    onAddressPick() {
+      //一样是动画，级联选择页消失，效果和取消一样
+      this.hidePicker();
+      const [provinceIndex, cityIndex, areaIndex] = this.selectedRegion;
+      const { provinces, cities, areas } = this;
+      this.province = provinces[provinceIndex];
+      this.city = cities[cityIndex];
+      this.area = areas[areaIndex] || {};
+      if (!this.area) {
+        this.area.name = "";
+        this.code.code = "";
+      }
+      this.$emit("areaArray", this.province, this.city, this.area)
+      this.$apply();
+    },
+    //滚动选择的时候触发事件
+    bindChange(e) {
+      //这里是获取picker-view内的picker-view-column 当前选择的是第几项
+      const _this = this;
+      const val = e.detail.value;
+      this.cities = regions[val[0]].cities;
+      this.areas = regions[val[0]].cities[val[1]].areas;
+      //省变化，市区分别选中第一个
+      if (this.selectedRegion[0] != val[0]) {
+        this.selectedRegion = [val[0], 0, 0];
+        //市变化，区选中第一个
+      } else if (this.selectedRegion[1] != val[1]) {
+        this.selectedRegion = [val[0], val[1], 0];
+        //区变化，省市不变
+      } else {
+        this.selectedRegion = val;
+      }
+      //
+
+      this.defaultValue = this.selectedRegion;
+
+      this.$apply();
+    }
+  }
+
+
+
+
+
+
+  //这里是判断省市名称的显示
+  initAddressPicker(selected) {
+    const that = this;
+
+    let provinces = [];
+    let cities = [];
+    let areas = [];
+    let defaultValue = selected || [0, 0, 0];
+
+    const { province, city, area } = this;
+
+    //遍历所有的省，将省的名字存到provinces这个数组中
+    for (let i = 0; i < regions.length; i++) {
+      provinces.push({ name: regions[i].name, code: regions[i].code });
+    }
+
+
+    //检查传入的省编码是否有，有的话，选中column第一个游标为province index
+    provinces.some((item, index) => {
+      if (province && item.code == province.code) {
+        defaultValue[0] = index;
+        return true;
+      }
+    });
+
+
+    const rCities = regions[defaultValue[0]].cities;
+
+    if (rCities) { //这里判断这个省级里面有没有市（如数据中的香港、澳门等就没有写市）
+      //填充cities数组
+      for (let i = 0; i < rCities.length; i++) {
+        cities.push({ name: rCities[i].name, code: rCities[i].code });
+      }
+      //这里是判断这个选择的省里面，有没有相应的下标为cityCode的市，因为这里的下标是前一次选择后的下标，
+      //比如之前选择的一个省有10个市，我刚好滑到了第十个市，现在又重新选择了省，但是这个省最多只有5个市，
+      //但是这时候的cityCode为9，而这里的市根本没有那么多，所以会报错
+      const hasCity = cities.some((item, index) => {
+        if (city && item.code == city.code) {
+          defaultValue[1] = index;
+          return true;
+        }
+      });
+
+
+      console.log('执行了区级判断');
+
+      const rAreas = rCities[defaultValue[1]].areas;
+
+      if (rAreas) { //这里是判断选择的这个市在数据里面有没有区县
+        for (let i = 0; i < rAreas.length; i++) {
+          areas.push({
+            name: rAreas[i].name,
+            code: rAreas[i].code
+          });
+        }
+        areas.some((item, index) => {
+          if (area && item.code == area.code) {
+            defaultValue[2] = index;
+            return true;
+          }
+        }); //这里是判断选择的这个市里有没有下标为areaCode的区县，道理同上面市的选择
+      } else {
+        //如果这个市里面没有区县，那么把这个市的名字就赋值给areas这个数组
+        areas.push(cities[defaultValue[1]]);
+      }
+    } else {
+      //如果该省级没有市，那么就把省的名字作为市和区的名字
+      cities.push(provinces[defaultValue[0]]);
+      areas.push(provinces[defaultValue[0]]);
+    }
+
+
+    //选择成功后把相应的数组赋值给相应的变量
+
+
+    this.provinces = provinces;
+    this.cities = cities;
+    this.areas = areas;
+    this.defaultValue = defaultValue;
+    this.selectedRegion = defaultValue;
+    this.$apply();
+
+
+
+  }
+
+  onLoad() {
+
+  }
+};
+
+</script>
+<style lang="less">
+.cascade_box {
+  font-size: 32rpx;
+  width: 100%;
+  height: 100vh;
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  z-index: 99999;
+}
+
+.cascade_hei {
+  width: 100%;
+  height: 100vh;
+  background: #fff;
+  opacity: 0;
+}
+
+.cascade_find {
+  width: 100%;
+  height: 600rpx;
+  position: fixed;
+  bottom: -600rpx;
+  left: 0;
+  background: #fff;
+  z-index: 99999;
+}
+
+.quxiao,
+.queren {
+  display: block;
+  position: absolute;
+  width: 100rpx;
+  height: 80rpx;
+  line-height: 80rpx;
+  /*background: #00f;*/
+  text-align: center;
+  color: #0CBB0A
+}
+
+.quxiao {
+  color: #939393;
+}
+
+.queren {
+  right: 0;
+  top: 0;
+}
+
+.pvc {
+  font-size: 38rpx;
+}
+
+.cascade_header {
+  height: 80rpx;
+  width: 100%;
+  margin-bottom: 20rpx;
+}
+
+</style>

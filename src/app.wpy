@@ -1,4 +1,4 @@
-<style lang="sass">
+<style lang="less">
 @import "./styles/base";
 @import "./styles/icon";
 @import "./styles/style";
@@ -10,7 +10,9 @@ import 'wepy-async-function'
 import {
   USER_SPECICAL_INFO,
   USER_INFO,
-  SYSTEM_INFO
+  SYSTEM_INFO,
+  ADDRESS_ID,
+  SEL_CLASS_CODE
 } from "./utils/constant";
 import {
   wxJsCode2Session,
@@ -33,6 +35,7 @@ export default class extends wepy.app {
       'pages/replenishment_goods',
       'pages/register',
       'pages/order',
+      'pages/reorder',
       'pages/pay_success',
       'pages/points',
       'pages/points_more',
@@ -40,11 +43,12 @@ export default class extends wepy.app {
       'pages/collection',
       'pages/messages',
       'pages/setting',
-      "pages/goods_detail",
-      "pages/comfire_order",
-      "pages/address",
-      "pages/order_detail",
-      "pages/filter"
+      'pages/goods_detail',
+      'pages/comfire_order',
+      'pages/address',
+      'pages/order_detail',
+      'pages/filter',
+      'pages/logistics'
     ],
     window: {
       backgroundTextStyle: 'dark',
@@ -87,8 +91,7 @@ export default class extends wepy.app {
   globalData = {
     userInfo: null,
     appid: 'wx6b121941b200ea50',
-    secret: '36a76b0682bd2c3f1541fd012fac66f5'
-
+    secret: '36a76b0682bd2c3f1541fd012fac66f5',
   }
 
   constructor() {
@@ -138,7 +141,7 @@ export default class extends wepy.app {
             }
           } else {
             let obj = {};
-            obj.openid = "oeuj50Ky1L5vLbw5UcOYkkV4awdM";
+            obj.openid = "oeuj50KHMqsh5kYZYWQJuwmY5yG0";
             obj.expires_in = "7200";
             //存储openid 
             wepy.setStorageSync(USER_SPECICAL_INFO, obj);

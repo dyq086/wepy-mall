@@ -18,7 +18,7 @@ export default class Placeholder extends wepy.component {
     };
 }
 </script>
-<style lang="scss">
+<style lang="less">
 .loadMoreGif {
     margin: 15rpx auto;
     width: 220rpx;

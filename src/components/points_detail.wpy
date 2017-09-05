@@ -3,7 +3,8 @@
   <view class="detai-content">
     <view class="detai-list" wx:for="{{list}}" wx:key="item">
       <view class="detai-left">
-        <view class="detai-name">每日签到获得</view>
+        <view class="detai-name" wx:if="{{item.isdeleted==0}}">每日签到获得</view>
+        <view class="detai-name" wx:if="{{item.isdeleted==2}}">连续签到7天获得</view>
         <view class="detai-time">{{item.signTime}}</view>
       </view>
       <view class="detail-right">
@@ -48,7 +49,7 @@ export default class PointsDetail extends wepy.component {
 }
 
 </script>
-<style lang="scss">
+<style lang="less">
 .detai-content {
   background: #fff;
   margin-top: 10rpx;

@@ -1,6 +1,6 @@
-<style lang="scss">
+<style lang="less">
 .setting {
- 
+
 }
 
 .list_block {
@@ -34,11 +34,11 @@
       <view class="list_block">
         <view class="item_bock">
           <view class="title">昵称</view>
-          <view class="item_content">樱桃小丸子</view>
+          <view class="item_content">{{userInfo.nickName}}</view>
         </view>
         <view class="item_bock">
           <view class="title">我的手机</view>
-          <view class="item_content">1809989878</view>
+          <view class="item_content">{{userInfo.mobile}}</view>
         </view>
         <view class="item_bock">
           <view class="title">收货地址</view>
@@ -51,8 +51,10 @@
 </template>
 <script>
 import wepy from 'wepy';
+import api from '../api/api';
 import {
-  SYSTEM_INFO
+  SYSTEM_INFO,
+  USER_SPECICAL_INFO
 } from '../utils/constant';
 export default class Messages extends wepy.page {
   config = {
@@ -62,8 +64,27 @@ export default class Messages extends wepy.page {
 
   }
   data = {
-    list: [],
+    userInfo: {},
     winHeight: 0
+  }
+  async getUserInfo(phone,code) {
+    let that = this;
+    let userSpecialInfo = wepy.getStorageSync(USER_SPECICAL_INFO) || {};
+    let openId = userSpecialInfo.openid;
+    const json = await api.getUserInfo({
+      query: {
+        openId: openId
+      }
+    });
+    if (json.data.code == 0) {
+      this.userInfo=json.data.user;
+      console.log("===================")
+      console.log(that.userInfo);
+      that.$apply();
+    } else {
+      tip.error(json.data.msg)
+    }
+    that.showLoading = false;
   }
   onLoad() {
     let that = this;
@@ -71,7 +92,7 @@ export default class Messages extends wepy.page {
     //设置滚动高度
     let systemInfo = wepy.getStorageSync(SYSTEM_INFO);
     that.winHeight = systemInfo.windowHeight;
-
+    this.getUserInfo();
   }
   computed = {
 

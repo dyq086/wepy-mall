@@ -1,5 +1,5 @@
 <template>
-  <view class="content">
+  <view wx:if="{{show==1}}" class="content">
     <view class="search">
       <view class="serch_content">
         <i class="iconfont icon-search"></i>
@@ -15,7 +15,8 @@
 import wepy from 'wepy';
 export default class Search extends wepy.component {
   data = {
-    search_input_value: ''
+    search_input_value: '',
+    show : 1
   }
 
   events = {
@@ -38,6 +39,10 @@ export default class Search extends wepy.component {
     delText() {
       this.search_input_value = "";
       this.$apply();
+    },
+    show(param){
+      this.show = param;
+      this.$apply();
     }
   }
 
@@ -47,7 +52,7 @@ export default class Search extends wepy.component {
 }
 
 </script>
-<style lang="scss">
+<style lang="less">
 .content {
   padding: 10rpx;
 }
@@ -80,6 +85,8 @@ export default class Search extends wepy.component {
     font-size: 28rpx;
     line-height: 65rpx;
     margin-left: 20rpx;
+    padding-left: 5rpx;
+    padding-right: 5rpx;
   }
   .btn_search {
     color: #fff;

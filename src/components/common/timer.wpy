@@ -8,9 +8,22 @@
     </view>
     <view class="bg"></view>
     <view class="time_box">
-      <view class="time">{{strH}}:{{strM}}:{{strS}}</view>
+      <view class="time">{{strD>=0?strD+"天":""}}{{strH}}:{{strM}}:{{strS}}</view>
       <view class="over">订单结束</view>
     </view>
+  </view>
+  <view wx:if="{{!isShow}}">
+    <view class="hold hold1">
+    <view class="pie pie1" style="transform: rotate({{rotate1}}deg);"></view>
+    </view>
+    <view class="hold hold2">
+    <view class="pie pie2" style="transform: rotate({{rotate2}}deg);"></view>
+    </view>
+    <view class="bg"></view>
+    <view class="time_box">
+    <view class="time_zero">{{endTxt}}</view>
+    <view class="over">订单结束</view>
+  </view>
   </view>
 </template>
 <script>
@@ -25,41 +38,31 @@ export default class Timer extends wepy.component {
     }
   }
   data = {
+    day: 0,
     hour: 0,
     minute: 0,
     second: 0,
     totalDay: 0,
-    isShow: false
+    isShow: false,
+    interval: {},
+    endTxt:"\n00:00:00"
   }
 
   onLoad() {
-
+    this.isShow = false;
+    this.day = 0;
+    this.hour = 0;
+    this.minute = 0;
+    this.second = 0;
+    this.totalDay = 0;
+    this.startTime = "";
+    this.endTime = "";
+    clearInterval(this.interval);
   }
 
   methods = {
     initTimer(val) {
       console.log(val);
-      let interval = setInterval(() => {
-        if ((--this.second) < 0) {
-          this.minute--;
-          this.second = 59;
-          this.$apply();
-        }
-
-        if (this.minute < 0) {
-          this.hour--;
-          this.minute = 59;
-          this.$apply();
-        }
-        if (this.hour < 0) {
-          this.minute = 0;
-          this.second = 0;
-          this.isShow = false;
-          this.$apply();
-          clearInterval(interval);
-        }
-        this.$apply();
-      }, 1000);
       let date = new Date();
       this.startTime = val.startTime;
       this.endTime = val.endTime;
@@ -90,16 +93,53 @@ export default class Timer extends wepy.component {
       let second = Math.floor(seconds);
 
       //赋值
-      this.hour = day * 24 + hour;
+      this.day = day;
+      //this.hour = day * 24 + hour;
+      this.hour = hour;
       this.minute = minute;
       this.second = second;
       this.totalDay = totalDay;
+
+      this.interval = setInterval(() => {
+        if ((--this.second) < 0) {
+          this.minute--;
+          this.second = 59;
+          this.$apply();
+        }
+
+        if (this.minute < 0) {
+          this.hour--;
+          this.minute = 59;
+          this.$apply();
+        }
+        if (this.hour < 0) {
+          this.minute = 0;
+          this.second = 0;
+          this.isShow = false;
+          this.$apply();
+          clearInterval(this.interval);
+        }
+        this.$apply();
+      }, 1000);
 
       this.$apply();
     }
   }
 
+  onUnload() {
+    console.log("onUnload....");
+    clearInterval(this.interval);
+  }
+
+  onHide() {
+    console.log("onHide....");
+    clearInterval(this.interval);
+  }
+
   computed = {
+    strD() {
+      return this.day;
+    },
     strH() {
       return this.hour < 10 ? "0" + this.hour : this.hour;
     },
@@ -125,7 +165,7 @@ export default class Timer extends wepy.component {
 }
 
 </script>
-<style lang="scss">
+<style lang="less">
 .pie {
   width: 160rpx;
   height: 160rpx;
@@ -174,8 +214,15 @@ export default class Timer extends wepy.component {
   position: absolute;
   z-index: 1;
   text-align: center;
+  line-height:35rpx;
+
 
   .time {
+    margin-top: 20rpx;
+    color: #fe7070;
+    font-size: 32rpx;
+  }
+  .time_zero {
     margin-top: 40rpx;
     color: #fe7070;
     font-size: 32rpx;

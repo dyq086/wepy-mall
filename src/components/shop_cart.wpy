@@ -1,176 +1,3 @@
-<style lang="sass">
-.goods-info {
-  border-bottom: 1px solid #eee;
-  display: flex;
-  justify-content: space-between;
-  padding: 70rpx 0 30rpx 0rpx;
-  box-sizing: border-box;
-  align-items: center;
-  position: relative;
-  .icon_check {
-    position: absolute;
-    width: 100%;
-    height: 165rpx;
-    line-height: 165rpx;
-  }
-  .img-box {
-    width: 160rpx;
-    height: 160rpx;
-    overflow: hidden;
-    margin-right: 20rpx;
-    background-color: #d8d8d8;
-    margin-left: 100rpx;
-  }
-
-  .text-box {
-    width: 440rpx;
-    position: relative;
-  }
-
-  .text-box .goods-title {
-    font-size: 28rpx;
-    color: #000;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    overflow: hidden;
-    padding: 10rpx 20rpx 5rpx 0;
-  }
-
-  .text-box .goods-label {
-    font-size: 26rpx;
-    color: #999;
-    height: 38rpx;
-    line-height: 38rpx;
-    margin: 8rpx 0 25rpx 0;
-  }
-
-  .text-box .goods-price {
-    font-size: 26rpx;
-    color: #e64340;
-  }
-
-  .text-box .buy-num {
-    width: 164rpx;
-    height: 48rpx;
-    line-height: 48rpx;
-    position: absolute;
-    right: 30rpx;
-    bottom: 0;
-    display: flex;
-    /*justify-content: space-between;*/
-    font-size: 24rpx;
-    text-align: center
-  }
-
-  .text-box .buy-num .jian-btn {
-    width: 48rpx;
-    height: 100%;
-    border-left: 1rpx solid #ccc;
-    border-bottom: 1rpx solid #ccc;
-    border-top: 1rpx solid #ccc;
-    border-bottom-left-radius: 6rpx;
-    border-top-left-radius: 6rpx;
-  }
-
-  .text-box .buy-num .jian-btn.disabled {
-    background-color: #f5f5f9;
-    border-left: 1rpx solid #eee;
-    border-bottom: 1rpx solid #eee;
-    border-top: 1rpx solid #eee;
-    color: #ccc;
-  }
-
-  .text-box .buy-num .jia-btn {
-    width: 48rpx;
-    height: 100%;
-    border-right: 1rpx solid #ccc;
-    border-bottom: 1rpx solid #ccc;
-    border-top: 1rpx solid #ccc;
-    border-bottom-right-radius: 6rpx;
-    border-top-right-radius: 6rpx;
-  }
-
-  .text-box .buy-num .jia-btn.disabled {
-    background-color: #f5f5f9;
-    border-right: 1rpx solid #eee;
-    border-bottom: 1rpx solid #eee;
-    border-top: 1rpx solid #eee;
-    color: #ccc;
-  }
-
-  .text-box .buy-num input {
-    width: 68rpx;
-    height: 48rpx;
-    min-height: 48rpx;
-    text-align: center;
-    font-size: 24rpx;
-    border: 1rpx solid #ccc;
-  }
-
-  .img-box .img {
-    width: 160rpx;
-    height: 160rpx;
-  }
-}
-
-
-
-.jiesuan-box {
-  display: flex;
-  justify-content: space-between;
-  width: 100%;
-  height: 100rpx;
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  border-bottom: 1px solid #eee;
-  border-top: 1px solid #eee;
-  background-color: #fff;
-  z-index: 9999;
-}
-
-.jiesuan-box .to-pay-btn {
-  width: 240rpx;
-  text-align: center;
-  line-height: 100rpx;
-  background-color: #e64340;
-  font-size: 32rpx;
-  color: #ffffff;
-}
-
-.jiesuan-box .to-pay-btn.no-select {
-  background-color: #ccc;
-}
-
-.jiesuan-box .left-price {
-  display: flex;
-  width: 510rpx;
-  justify-content: space-between;
-  padding: 0 30rpx 0 20rpx;
-  font-size: 28rpx;
-  box-sizing: border-box;
-  align-items: center;
-}
-
-.jiesuan-box .total {
-  color: #e64340;
-}
-
-.list_box {
-  height: 250rpx;
-}
-.all_select_box{
-  width: 200rpx;
-  height: 100%;
-  display: flex;
-  align-items: center;
-}
-.all_select {
-  flex:1;
-  padding-left: 10rpx;
-}
-
-</style>
 <template name="cart-goods-list">
   <view class="goodsList">
     <repeat for="{{list}}" key="index" index="index" item="item">
@@ -183,8 +10,16 @@
               <image src="{{item.thumLogo}}" class="img" />
             </view>
             <view class="text-box">
-              <view class="goods-title">{{item.goodsName}}</view>
-              <view class="goods-label">{{item.brandName}}</view>
+              <view class="goods-title">
+                <navigator url="/pages/goods_detail?id={{item.goodsId}}">
+                  {{item.goodsName}}
+                </navigator>
+              </view>
+              <!--  -->
+              <view class="lable">
+                <view class="goods-lable">{{item.goodsSkuValName}}</view>
+                <view class="bo-label" wx:if="{{item.type==2}}">补货</view>
+              </view>
               <view class="goods-price">¥ {{item.price}}</view>
               <view class="buy-num">
                 <view class="jian-btn {{item.num==1? 'disabled' : ''}}" catchtap="jianBtnTap" data-index="{{index}}" data-id="{{item.id}}">-</view>
@@ -198,7 +33,16 @@
       </view>
     </repeat>
   </view>
-  <view class="jiesuan-box">
+  <view class="empty_cart" wx:if="{{list.length==0}}">
+    <image src="../images/empty_cart.png" class="empty_cart_img"></image>
+    <view class="empty_cart_text">购物车还是空的</view>
+    <view class="shop_btn">
+      <view class="block btn_group">
+        <view class="btn get_store" @tap="goIndex">去逛逛</view>
+      </view>
+    </view>
+  </view>
+  <view class="jiesuan-box" wx:if="{{list.length>0}}">
     <view class="left-price">
       <view @tap.stop="selectAll" class="all_select_box">
         <icon type="success" size="20" color="{{allSelect?'red':'rgb(153,153,153)'}}" />
@@ -209,201 +53,441 @@
     <view class="to-pay-btn {{noSelect?'no-select':''}}" hidden="{{!saveHidden}}" bindtap="toPayOrder">去结算</view>
   </view>
 </template>
+
 <script>
-import wepy from 'wepy';
-import api from '../api/api';
-import tip from '../utils/tip';
-import {
-  USER_SPECICAL_INFO
-} from '../utils/constant';
-import {
-  bb
-} from '../api/data';
-import swipeDelete from './common/wepy-swipe-delete'
-export default class shopCart extends wepy.component {
-
-  components = {
-    swipeDelete
-  }
-  data = {
-    list: [],
-    noSelect: false,
-    saveHidden: true,
-    totalPrice: 0
-  }
-
-  //获取购物车商品列表
-  async getCartList() {
-    let that = this;
-    let userSpecialInfo = wepy.getStorageSync(USER_SPECICAL_INFO) || {};
-    let openId = userSpecialInfo.openid;
-    const json = await api.cartList({
-      query: {
-        openId: openId
-      }
-    });
-    if (json.data.code == 0) {
-      let data = json.data;
-      this.list = data.list;
-      this.totalPrice = data.totalPrice;
-    } else {
-      tip.error(json.data.msg)
+  import wepy from 'wepy';
+  import api from '../api/api';
+  import tip from '../utils/tip';
+  import {
+    USER_SPECICAL_INFO
+  } from '../utils/constant';
+  import swipeDelete from './common/wepy-swipe-delete'
+  export default class shopCart extends wepy.component {
+    components = {
+      swipeDelete
     }
-    that.$apply();
-  }
-
-  onLoad() {
-    let that = this;
-    //that.list = bb.result.products;
-    //console.log(bb.result.products)
-    //that.getCartList();
-  }
-
-  computed = {
-
-  }
-
-  async checkGoods(id, index, ischecked) {
-    let userSpecialInfo = wepy.getStorageSync(USER_SPECICAL_INFO) || {};
-    let openId = userSpecialInfo.openid;
-    const json = await api.cartCheck({
-      query: {
-        openId: openId,
-        id: id
-      }
-    });
-    if (json.data.code == 0) {
-      // 购物车数据
-      this.list[index].ischecked = !ischecked;
-      if (this.list[index].ischecked) {
-        this.totalPrice += parseInt(this.list[index].priceSubtotal);
-      } else {
-        this.totalPrice -= parseInt(this.list[index].priceSubtotal);
-      }
-    } else {
-      tip.error(json.data.msg)
+    data = {
+      list: [],
+      noSelect: false,
+      saveHidden: true,
+      totalPrice: 0,
+      operating: false
     }
-    this.$apply();
-  }
-
-  async reduceGoodNum(id, num, index) {
-    let userSpecialInfo = wepy.getStorageSync(USER_SPECICAL_INFO) || {};
-    let openId = userSpecialInfo.openid;
-    const json = await api.cartUpdateNum({
-      query: {
-        openId: openId,
-        id: id,
-        num: num
-      }
-    });
-    if (json.data.code == 0) {
-      // 购物车数据
-      this.list[index].num = num;
-      this.totalPrice = this.totalPrice - this.list[index].price;
-    } else {
-      tip.error(json.data.msg)
-    }
-    this.$apply();
-  }
-
-  async addGoodNum(id, num, index) {
-    let userSpecialInfo = wepy.getStorageSync(USER_SPECICAL_INFO) || {};
-    let openId = userSpecialInfo.openid;
-    const json = await api.cartUpdateNum({
-      query: {
-        openId: openId,
-        id: id,
-        num: num
-      }
-    });
-    if (json.data.code == 0) {
-      // 购物车数据
-      this.list[index].num = num;
-      this.totalPrice = parseInt(this.totalPrice) + parseInt(this.list[index].price);
-    } else {
-      tip.error(json.data.msg)
-    }
-    this.$apply();
-  }
-
-  async deleteGoods(itemData) {
-    var id = itemData.id;
-
-    let userSpecialInfo = wepy.getStorageSync(USER_SPECICAL_INFO) || {};
-    let openId = userSpecialInfo.openid;
-    const json = await api.cartDel({
-      query: {
-        openId: openId,
-        cartIdList:[id],
-      }
-    });
-
-    if (json.data.code == 0) {
-      // 购物车数据
-      let retList = [];
-      for (var i=0;i<this.list.length;i++) {
-        if (this.list[i].id==id) {
-          if (this.list[i].ischecked) {
-            this.totalPrice -= parseInt(this.list[i].priceSubtotal);
-          }
-          continue;
-        } else {
-          retList.push(this.list[i]);
+    //获取购物车商品列表
+    async getCartList() {
+      let that = this;
+      let userSpecialInfo = wepy.getStorageSync(USER_SPECICAL_INFO) || {};
+      let openId = userSpecialInfo.openid;
+      const json = await api.cartList({
+        query: {
+          openId: openId
         }
-      }
-      this.list = retList;
-    } else {
-      tip.error(json.data.msg)
-    }
-    this.$apply();
-  }
-
-  methods = {
-    handleDelItem(itemData) {
-      this.deleteGoods(itemData);
-    },
-    selectTap(e) {
-      var id = e.currentTarget.dataset.id;
-      var index = parseInt(e.currentTarget.dataset.index);
-      var ischecked = this.list[index].ischecked;
-
-      this.checkGoods(id, index, ischecked);
-    },
-    selectAll() {
-      console.log("sele....");
-    },
-    getCartListMethod() {
-      this.getCartList();
-    },
-    jianBtnTap(e) {
-      var id = e.currentTarget.dataset.id;
-      var index = parseInt(e.currentTarget.dataset.index);
-      var num = this.list[index].num;
-      // 如果只有1件了，就不允许再减了
-      if (num > 1) {
-        num--;
+      });
+      if (json.data.code == 0) {
+        let data = json.data;
+        this.list = data.list;
+        this.totalPrice = data.totalPrice;
       } else {
-        return;
+        tip.error(json.data.msg)
       }
-      this.reduceGoodNum(id, num, index);
-    },
-    jiaBtnTap(e) {
-      var id = e.currentTarget.dataset.id;
-      var index = parseInt(e.currentTarget.dataset.index);
-      var num = this.list[index].num;
-      // 自增
-      num++;
-      this.addGoodNum(id, num, index);
-    },
-    toPayOrder() {
-      wepy.navigateTo({
-        url: "/pages/comfire_order"
-      })
+      that.$apply();
+    }
+    onLoad() {
+      let that = this;
+      this.operating = false;
+      //that.list = bb.result.products;
+      //console.log(bb.result.products)
+      //that.getCartList();
+    }
+    computed = {}
+    async checkGoods(id, index, ischecked) {
+      let userSpecialInfo = wepy.getStorageSync(USER_SPECICAL_INFO) || {};
+      let openId = userSpecialInfo.openid;
+      const json = await api.cartCheck({
+        query: {
+          openId: openId,
+          id: id
+        }
+      });
+      if (json.data.code == 0) {
+        // 购物车数据
+        this.list[index].ischecked = !ischecked;
+        if (this.list[index].ischecked) {
+          this.totalPrice += parseInt(this.list[index].priceSubtotal);
+        } else {
+          this.totalPrice -= parseInt(this.list[index].priceSubtotal);
+        }
+      } else {
+        tip.error(json.data.msg)
+      }
+      this.$apply();
+    }
+    async reduceGoodNum(id, num, index) {
+      let userSpecialInfo = wepy.getStorageSync(USER_SPECICAL_INFO) || {};
+      let openId = userSpecialInfo.openid;
+      const json = await api.cartUpdateNum({
+        query: {
+          openId: openId,
+          id: id,
+          num: num
+        }
+      });
+      if (json.data.code == 0) {
+        // 购物车数据
+        this.list[index].num = num;
+        this.totalPrice = this.totalPrice - this.list[index].price;
+        this.operating = false;
+      } else {
+        tip.error(json.data.msg)
+      }
+      this.$apply();
+    }
+    async addGoodNum(id, num, index) {
+      let userSpecialInfo = wepy.getStorageSync(USER_SPECICAL_INFO) || {};
+      let openId = userSpecialInfo.openid;
+      const json = await api.cartUpdateNum({
+        query: {
+          openId: openId,
+          id: id,
+          num: num
+        }
+      });
+      if (json.data.code == 0) {
+        // 购物车数据
+        this.list[index].num = num;
+        this.totalPrice = parseInt(this.totalPrice) + parseInt(this.list[index].price);
+        this.operating = false;
+      } else {
+        tip.error(json.data.msg)
+      }
+      this.$apply();
+    }
+    async deleteGoods(itemData) {
+      var id = itemData.id;
+      let userSpecialInfo = wepy.getStorageSync(USER_SPECICAL_INFO) || {};
+      let openId = userSpecialInfo.openid;
+      const json = await api.cartDel({
+        query: {
+          openId: openId,
+          cartIdList: [id],
+        }
+      });
+      if (json.data.code == 0) {
+        // 购物车数据
+        let retList = [];
+        for (var i = 0; i < this.list.length; i++) {
+          if (this.list[i].id == id) {
+            if (this.list[i].ischecked) {
+              this.totalPrice -= parseInt(this.list[i].priceSubtotal);
+            }
+            continue;
+          } else {
+            retList.push(this.list[i]);
+          }
+        }
+        this.list = retList;
+      } else {
+        tip.error(json.data.msg)
+      }
+      this.$apply();
+    }
+    methods = {
+      handleDelItem(itemData) {
+        this.deleteGoods(itemData);
+      },
+      selectTap(e) {
+        var id = e.currentTarget.dataset.id;
+        var index = parseInt(e.currentTarget.dataset.index);
+        var ischecked = this.list[index].ischecked;
+        this.checkGoods(id, index, ischecked);
+      },
+      selectAll() {
+        console.log("sele....");
+      },
+      getCartListMethod() {
+        this.getCartList();
+      },
+      jianBtnTap(e) {
+        if (this.operating) {
+          return;
+        }
+        this.operating = true;
+        var id = e.currentTarget.dataset.id;
+        var index = parseInt(e.currentTarget.dataset.index);
+        var num = this.list[index].num;
+        // 如果只有1件了，就不允许再减了
+        if (num > 1) {
+          num--;
+        } else {
+          return;
+        }
+        this.reduceGoodNum(id, num, index);
+      },
+      jiaBtnTap(e) {
+        if (this.operating) {
+          return;
+        }
+        this.operating = true;
+        var id = e.currentTarget.dataset.id;
+        var index = parseInt(e.currentTarget.dataset.index);
+        var num = this.list[index].num;
+        // 自增
+        num++;
+        this.addGoodNum(id, num, index);
+      },
+      toPayOrder() {
+        let purType = 1,
+          prePurType = 1;
+        let bOneType = true;
+        let index = 0;
+        for (var i = 0; i < this.list.length; i++) {
+          if (this.list[i].ischecked) {
+            purType = this.list[i].type;
+            if (index > 0) {
+              if (purType != prePurType) {
+                bOneType = false;
+                break;
+              }
+            }
+            prePurType = purType;
+            index++;
+          }
+        }
+        if (!bOneType) {
+          tip.alert("先把补货的商品结算!");
+          return;
+        }
+        wepy.navigateTo({
+          url: "/pages/comfire_order?purchasetype=" + purType
+        })
+      },
+      goIndex() {
+        wepy.switchTab({
+          url: "/pages/home"
+        })
+      }
+    }
+    events = {}
+  }
+</script>
+
+<style lang="less">
+  .goods-info {
+    border-bottom: 1px solid #eee;
+    display: flex;
+    justify-content: space-between;
+    padding: 70rpx 0 30rpx 0rpx;
+    box-sizing: border-box;
+    align-items: center;
+    position: relative;
+    .icon_check {
+      position: absolute;
+      width: 100%;
+      height: 165rpx;
+      line-height: 165rpx;
+    }
+    .img-box {
+      width: 160rpx;
+      height: 160rpx;
+      overflow: hidden;
+      margin-right: 20rpx;
+      background-color: #d8d8d8;
+      margin-left: 100rpx;
+    }
+    .text-box {
+      width: 440rpx;
+      position: relative;
+    }
+    .text-box .goods-title {
+      font-size: 28rpx;
+      color: #000;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      overflow: hidden;
+      padding: 10rpx 20rpx 5rpx 0;
+    }
+    .text-box .lable {
+      font-size: 26rpx;
+      color: #999;
+      height: 38rpx;
+      line-height: 38rpx;
+      margin: 8rpx 0 25rpx 0;
+    }
+    .lable {
+      display: flex;
+      align-items: center;
+      .goods-label {
+        font-size: 26rpx;
+      }
+      .goods-lable {
+        font-size: 26rpx
+      }
+      .bo-label {
+        font-size: 24rpx;
+        background: #e64340;
+        padding: 2rpx 10rpx;
+        color:#fff;
+        border-radius: 2rpx;
+        margin-left: 10rpx;
+
+      }
+    }
+    .text-box .goods-price {
+      font-size: 26rpx;
+      color: #e64340;
+    }
+    .text-box .buy-num {
+      width: 164rpx;
+      height: 48rpx;
+      line-height: 48rpx;
+      position: absolute;
+      right: 30rpx;
+      bottom: 0;
+      display: flex;
+      /*justify-content: space-between;*/
+      font-size: 24rpx;
+      text-align: center
+    }
+    .text-box .buy-num .jian-btn {
+      width: 48rpx;
+      height: 100%;
+      border-left: 1rpx solid #ccc;
+      border-bottom: 1rpx solid #ccc;
+      border-top: 1rpx solid #ccc;
+      border-bottom-left-radius: 6rpx;
+      border-top-left-radius: 6rpx;
+    }
+    .text-box .buy-num .jian-btn.disabled {
+      background-color: #f5f5f9;
+      border-left: 1rpx solid #eee;
+      border-bottom: 1rpx solid #eee;
+      border-top: 1rpx solid #eee;
+      color: #ccc;
+    }
+    .text-box .buy-num .jia-btn {
+      width: 48rpx;
+      height: 100%;
+      border-right: 1rpx solid #ccc;
+      border-bottom: 1rpx solid #ccc;
+      border-top: 1rpx solid #ccc;
+      border-bottom-right-radius: 6rpx;
+      border-top-right-radius: 6rpx;
+    }
+    .text-box .buy-num .jia-btn.disabled {
+      background-color: #f5f5f9;
+      border-right: 1rpx solid #eee;
+      border-bottom: 1rpx solid #eee;
+      border-top: 1rpx solid #eee;
+      color: #ccc;
+    }
+    .text-box .buy-num input {
+      width: 68rpx;
+      height: 48rpx;
+      min-height: 48rpx;
+      text-align: center;
+      font-size: 24rpx;
+      border: 1rpx solid #ccc;
+    }
+    .img-box .img {
+      width: 160rpx;
+      height: 160rpx;
     }
   }
-  events = {
-
+  .jiesuan-box {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    height: 100rpx;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    border-bottom: 1px solid #eee;
+    border-top: 1px solid #eee;
+    background-color: #fff;
+    z-index: 9999;
   }
-}
-
-</script>
+  .jiesuan-box .to-pay-btn {
+    width: 240rpx;
+    text-align: center;
+    line-height: 100rpx;
+    background-color: #e64340;
+    font-size: 32rpx;
+    color: #ffffff;
+  }
+  .jiesuan-box .to-pay-btn.no-select {
+    background-color: #ccc;
+  }
+  .jiesuan-box .left-price {
+    display: flex;
+    width: 510rpx;
+    justify-content: space-between;
+    padding: 0 30rpx 0 20rpx;
+    font-size: 28rpx;
+    box-sizing: border-box;
+    align-items: center;
+  }
+  .jiesuan-box .total {
+    color: #e64340;
+  }
+  .list_box {
+    height: 250rpx;
+  }
+  .all_select_box {
+    width: 200rpx;
+    height: 100%;
+    display: flex;
+    align-items: center;
+  }
+  .all_select {
+    flex: 1;
+    padding-left: 10rpx;
+  }
+  .empty_cart {
+    margin-top: 100rpx;
+    .shop_btn {
+      display: flex;
+      width: 100%;
+    }
+    .block {
+      margin: 0 auto;
+      text-align: center;
+      display: flex;
+      align-items: center;
+    }
+    .btn_group {
+      display: flex;
+      align-items: center;
+      padding-top: 100rpx;
+      .btn {
+        font-size: 30rpx;
+        padding: 22rpx 55rpx;
+        text-align: center;
+        margin: 0 auto;
+        width: 100%;
+        -moz-border-radius: 10rpx;
+        /* Firefox */
+        -webkit-border-radius: 10rpx;
+        /* Safari 和 Chrome */
+        border-radius: 10rpx;
+        /* Opera 10.5+, 以及使用了IE-CSS3的IE浏览器 */
+      }
+      .get_store {
+        background: #ed601b;
+        color: #fff;
+        margin-left: 1rpx;
+      }
+    }
+  }
+  .empty_cart_img {
+    width: 220rpx;
+    height: 177rpx;
+    display: block;
+    margin: 0 auto;
+  }
+  .empty_cart_text {
+    font-size: 32rpx;
+    color: #999;
+    margin-top: 20rpx;
+    text-align: center;
+  }
+</style>

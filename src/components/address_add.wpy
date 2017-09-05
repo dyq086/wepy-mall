@@ -1,7 +1,8 @@
-<style lang="scss">
-.block{
-  background:#fff;
+<style lang="less">
+.block {
+  background: #fff;
 }
+
 .list_item {
   display: flex;
   align-items: center;
@@ -30,25 +31,26 @@
       <view class="list_item">
         <view class="title">收货人姓名:</view>
         <view class="input">
-          <input type="text" name="name">
+          <input type="text" name="receiverName" value="">
         </view>
       </view>
       <view class="list_item">
         <view class="title">联系电话:</view>
         <view class="input">
-          <input type="text" name="tel">
+          <input type="text" name="mobile">
         </view>
       </view>
       <view class="list_item">
         <view class="title">所在地区:</view>
         <view class="input">
-          省市区
+          <view @tap="openAddressPicker">{{province ? province.name : '省'}} - {{city ? city.name : '市' }} - {{area ? area.name : '区' }}</view>
+          <areaPicker @areaArray.user="areaPickerArray"></areaPicker>
         </view>
       </view>
       <view class="list_item">
         <view class="title">详细地址:</view>
         <view class="input">
-          <input type="text" name="address">
+          <input type="text" name="addressDetail">
         </view>
       </view>
       <view class="list_item">
@@ -64,42 +66,108 @@
   </form>
 </template>
 <script>
-import wepy from 'wepy'
-import tip from '../utils/tip'
+import wepy from 'wepy';
+import tip from '../utils/tip';
+import api from "../api/api";
+import {
+  USER_SPECICAL_INFO
+} from '../utils/constant';
+import AreaPicker from "./common/wepy-area-picker"
 export default class AddressAdd extends wepy.component {
   data = {
+    isDefult: false,
+    province: '',
+    city: '',
+    area: '',
+    provinceCode: '',
+    cityCode: '',
+    areaCode: ''
+  }
 
-    isDefult: false
+  components = {
+    areaPicker: AreaPicker
+  }
 
+  async addAddress(address) {
+
+    let that = this;
+    console.log("=======province=======");
+    console.log(that.province);
+    let userSpecialInfo = wepy.getStorageSync(USER_SPECICAL_INFO) || {};
+    let isDefult = 0;
+    if (this.isDefult) {
+      isDefult = 1;
+    }
+    let openId = userSpecialInfo.openid;
+    console.log("address:");
+    console.log(address);
+    const json = await api.saveAddress({
+      query: {
+        openId: openId,
+        address: address,
+        isDef: isDefult,
+        province:that.provinceCode,
+        city:that.cityCode,
+        area:that.areaCode
+      }
+    });
+    if (json.data.code == 0) {
+      //0 列表 1新增 2编辑 (显示列表)
+      this.$emit('currentPage', 0);
+      this.$emit('refreshAddList', 'hehe');
+    } else {
+      tip.error(json.data.msg)
+    }
+    that.showLoading = false;
   }
   methods = {
     changeCheckBoxState() {
       this.isDefult = !this.isDefult;
     },
+    up() {
+      this.$emit('upup', 'hehe'); //主动触发upup方法，'hehe'为向父组件传递的数据
+    },
     formSubmit(e) {
 
-      let name = e.detail.value.name;
-      let tel = e.detail.value.tel;
+      let receiverName = e.detail.value.receiverName;
+      let mobile = e.detail.value.mobile;
+      let addressDetail = e.detail.value.addressDetail;
 
-      //0 列表 1新增 2编辑 (显示列表)
-      this.$emit('currentPage', 0);
-
-
-      if (name == "") {
+      if (receiverName == "") {
         tip.alert("输入收件人姓名");
         return false;
       }
-      if (tel == "") {
+      if (mobile == "") {
         tip.alert("输入联系电话");
         return false;
 
       }
+      if (addressDetail == "") {
+        tip.alert("输入详细地址");
+        return false;
+      }
+      this.addAddress(e.detail.value);
+    },
+    openAddressPicker() {
+      this.$invoke('areaPicker', 'openAddressPicker');
+    },
+    areaPickerArray(province, city, area) {
+      console.log("ddddddddd11111111");
+      this.province = province;
+      this.city = city;
+      this.area = area;
 
-      console.log('form发生了submit事件，携带数据为：', e.detail.value)
+      this.provinceCode = province.code;
+      this.cityCode = city.code;
+      this.areaCode = area.code;
+      console.log(this.provinceCode);
+      this.$apply();
     }
   }
 
-  onLoad() {}
+  onLoad() {
+
+  }
 }
 
 </script>

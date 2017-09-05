@@ -2,7 +2,7 @@
 <template>
   <scroll-view scroll-y="true" class="swiper-item-box">
     <view class="shop_item">
-      <navigator class="list" wx:for="{{list}}" wx:key="item" url="/pages/goods_detail?id={{item.id}}">
+      <navigator class="list" wx:for="{{list}}" wx:key="item" url="/pages/goods_detail?id={{item.id}}&purchasetype={{purchasetype}}">
         <view class="image_box">
           <image src="{{item.thumLogo}}"></image>
         </view>
@@ -23,7 +23,10 @@ import wepy from 'wepy'
 
 export default class ShopGridList extends wepy.component {
   props = {
-    list: []
+    list: [],
+    purchasetype: {
+      default: 1  //类型:1-商品订单;2-商品补单;
+    }
   }
 
   events = {
@@ -40,7 +43,7 @@ export default class ShopGridList extends wepy.component {
 }
 
 </script>
-<style lang="scss">
+<style lang="less">
 .shop_item {
   padding: 0rpx 15rpx;
   background: #f7f7f7;
@@ -74,7 +77,7 @@ export default class ShopGridList extends wepy.component {
   }
   .price {
     color: #de0000;
-    font-size: 28rpx;
+    font-size: 35rpx;
     font-weight: 600;
   }
   .cost_price {
@@ -99,7 +102,7 @@ export default class ShopGridList extends wepy.component {
     padding-left: 20rpx;
   }
   .sale_num {
-    padding-left: 60rpx;
+    padding-left: 20rpx;
   }
 }
 

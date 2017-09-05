@@ -9,7 +9,7 @@
         <view class="jf_num cfff">
           <view class='jf_title'>我的积分</view>
           <view class='jf_title mt25'><i class="iconfont icon-jifen"></i>
-            <view class="cfff">2590</view>
+            <view class="cfff">{{userPoint}}</view>
           </view>
         </view>
         <view class="btn_jf_rule" @tap="jfRule">积分说明</view>
@@ -47,7 +47,8 @@ export default class Points extends wepy.page {
     list: [],
     is_empty: false,
     avatarUrl: "",
-    nickName: ""
+    nickName: "",
+    userPoint: 0
   }
   async getUserPoint() {
       let that = this;
@@ -56,12 +57,13 @@ export default class Points extends wepy.page {
       const json = await api.pointInfo({
         query: {
           openId: openId,
-          pageNo:"1",
-          pageSize:"3"
+          page:"1",
+          size:"10"
         }
       });
       if (json.data.code == 0) {
         that.list = json.data.list;
+        this.userPoint = json.data.userPoint;
         that.$apply();
       } else {
         tip.error(json.data.msg)
@@ -75,9 +77,7 @@ export default class Points extends wepy.page {
     // }
   }
 
-
   onLoad() {
-    console.log("points.....");
     let that = this;
     let systemInfo = wepy.getStorageSync(SYSTEM_INFO);
     let userInfo = wepy.getStorageSync(USER_INFO);
@@ -109,7 +109,7 @@ export default class Points extends wepy.page {
 }
 
 </script>
-<style lang="scss">
+<style lang="less">
 .points {
   position: relative;
   background: #f2f2f2;
@@ -191,6 +191,7 @@ export default class Points extends wepy.page {
   .right {
     color: #a3a3a3;
     font-size: 24rpx;
+    line-height: 76rpx;
     margin: 30rpx 0rpx;
   }
 }

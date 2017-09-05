@@ -1,19 +1,24 @@
 <!--订单详情-->
 <template>
   <view class="order_detail">
-    <view class="order_state">
+  <navigator class="item_content" url="/pages/logistics?orderNo={{orderNo}}">
+    <view class="order_state" wx:if="{{obj.status==2 || obj.status==1}}">
       <view class="left">
         <i class="iconfont icon-complete"></i>
       </view>
+
       <view class="center">
-        <view class="state_doc">您的订单已进入库房，准备出库</view>
-        <view class="state_time">2017-10-10 17:30</view>
+        <view class="state_doc">{{expressFlowInfo.flowName}}</view>
+        <view class="state_time">{{expressFlowInfo.updateTime}}</view>
       </view>
+
       <view class="right">
         <view>&gt;</view>
       </view>
+
     </view>
-    <view class="order_state">
+  </navigator>
+    <view class="order_state" wx:if="{{obj.status==0}}">
       <view class="left">
         <view class="unpaid">
           <i class="iconfont icon-wait"></i>
@@ -28,11 +33,11 @@
     <view class="address_block">
       <view class="name">
         <text class="title"> 收货人:</text>
-        <text class="content">邓先生&gt;&gt;18676138688</text>
+        <text class="content">{{obj.receiverName}}\t\t{{obj.receiverPhone}}</text>
       </view>
       <view class="address">
         <text class="title"> 收货地址:</text>
-        <text class="content">广州市天河区东圃时代TIT广场 </text>
+        <text class="content">{{obj.receiverAddress}} </text>
       </view>
     </view>
     <view class="goods_block">
@@ -41,29 +46,32 @@
     <view class="info_block">
       <view class="item">
         <text class="title">订单编号:</text>
-        <text class="content">123467899</text>
+        <text class="content">{{obj.orderNo}}</text>
       </view>
       <view class="item">
         <text class="title">提交时间:</text>
-        <text class="content">2017-10-10 17:30</text>
+        <text class="content">{{obj.createTime}}</text>
       </view>
       <view class="item">
         <text class="title">支付方式:</text>
         <text class="content">微信支付</text>
       </view>
-      <view class="item">
+      <view class="item" wx:if="{{obj.payStatus==1}}">
         <text class="title">付款时间:</text>
-        <text class="content">2017-10-10 17:30</text>
+        <text class="content">{{obj.payedTime}}</text>
       </view>
     </view>
     <view class="footer">
       <view class="money">应付款:
-        <text class="receive_money">18800</text>
+        <text class="receive_money">{{obj.goodsPrices}}</text>
       </view>
       <view class="btn_group">
-        <view class="btn" @tap="goLogistics">查看物流</view>
-        <view class="btn type_pick dsh" @tap="goPay">待收货</view>
-        <!--  <view class="btn" @tap="delOrder">删除订单</view> -->
+
+        <view class="btn" @tap="goLogistics" wx:if="{{obj.status==2}}" data-id="{{obj.orderNo}}">查看物流</view>
+        <view class="btn type_pick dsh" @tap="completion" wx:if="{{obj.status==2}}" data-id="{{obj.orderNo}}">待收货</view>
+        <view class="btn type_pick dsh" @tap="payMoney" wx:if="{{obj.status==0}}" data-id="{{obj.orderNo}}" data-orderno="{{obj.payOrderNo}}">立即付款</view>
+<!--<view class="btn" @tap="delOrder" wx:if="{{obj.status==0 || obj.status==4}}" data-id="{{obj.orderNo}}">删除订单</view>-->
+        <!--<view class="btn type_pick dsh" @tap="refund" wx:if="{{obj.status==4}}" data-id="{{obj.orderNo}}">申请退货</view>-->
       </view>
     </view>
   </view>
@@ -72,37 +80,166 @@
 import wepy from 'wepy';
 import tip from '../utils/tip'
 import ShopItemList from '../components/shop_item_list'
+import api from '../api/api'
 import {
-  bb
-} from '../api/data';
+  SYSTEM_INFO,
+  USER_SPECICAL_INFO
+} from '../utils/constant';
 export default class OrderDetail extends wepy.page {
   config = {
     navigationBarTitleText: '订单详情',
   }
   data = {
-    list: []
+    obj: {},
+    orderNo:"",
+    flag:"",
+    list:[],
+    orderExpress:{},
+    expressFlowInfo:{}
   }
+
+  async getOrderInfo(currentPage,size) {
+    let that = this;
+    let userSpecialInfo = wepy.getStorageSync(USER_SPECICAL_INFO) || {};
+    const json = await api.getOrderInfo({
+      query: {
+        orderNo: this.orderNo
+      }
+    });
+    if (json.data.code == 0) {
+      this.obj=json.data.obj;
+      that.list=[];
+      that.list = [...that.list, ...json.data.obj.orderItemList];
+      that.$invoke('shopItemList', 'refreshList', that.list);
+
+      console.log("========list返回数据========");
+      console.log(that.list);
+      console.log(json.data.obj.orderItemList);
+    } else {
+      tip.error(json.data.msg)
+    }
+
+    that.$apply();
+  }
+
+  async editOrderInfo(orderNo,flag) {
+    let that = this;
+    let userSpecialInfo = wepy.getStorageSync(USER_SPECICAL_INFO) || {};
+    const json = await api.editOrderInfo({
+      query: {
+        orderNo: orderNo,
+        flag:flag
+      }
+    });
+    if (json.data.code == 0) {
+      console.log("===========lzz返回数据=========")
+      console.log(json.data.errerTips);
+      /*that.list = [...that.list, ...json.data.errerTips.orderItemList];
+      that.$invoke('shopItemList', 'refreshList', that.list);
+      console.log(json.data.errerTips.orderItemList);
+      console.log(that.list);*/
+      if (this.flag==2) {//删除
+
+      }
+    } else {
+      tip.error(json.data.msg)
+    }
+    that.$apply();
+  }
+
+  async getOrderExpressInfo() {
+    console.log("orderNo")
+    let that = this;
+    let userSpecialInfo = wepy.getStorageSync(USER_SPECICAL_INFO) || {};
+    const json = await api.orderExpressInfo({
+      query: {
+        orderNo: this.orderNo
+      }
+    });
+    if (json.data.code == 0) {
+      that.orderExpress=json.data.orderExpress;
+      that.expressFlowInfo=json.data.expressFlowInfo;
+      console.log("========list返回数据========");
+      console.log(that.list);
+    } else {
+      tip.error(json.data.msg)
+    }
+
+    that.$apply();
+  }
+
   components = {
     shopItemList: ShopItemList
   }
-
-  onLoad() {
+  onLoad(options) {
     let that = this;
-    that.list = bb.result.products;
+    //that.list = bb.result.products;
+    this.orderNo=options.orderNo;
+    that.getOrderInfo();
+    that.getOrderExpressInfo();
     console.log(bb.result.products)
+    console.log("=========options==========");
+    console.log(options.id);
   }
   computed = {
 
   }
   methods = {
-    delOrder() {
-      tip.success("删除订单")
+    async delOrder(e) {
+      this.flag=2;
+      this.orderNo = e.currentTarget.dataset.id;
+      await tip.confirm('是否删除订单');
+      console.log(this.flag);
+      this.editOrderInfo(this.orderNo,this.flag);
+      console.log("删除成功")
     },
-    goLogistics() {
-      tip.success("查看物流")
+    async completion(e) {
+      this.flag=3;
+      this.orderNo = e.currentTarget.dataset.id;
+      await tip.confirm('是否确认收货');
+      this.editOrderInfo(this.orderNo,this.flag);
+      console.log("完成")
     },
-    goPay() {
-      tip.success("支付订单")
+    async goLogistics() {
+      tip.confirm('查看物流');
+    },
+    async payMoney(e) {
+      let tradeNo = e.currentTarget.dataset.tradeno;
+      let userSpecialInfo = wepy.getStorageSync(USER_SPECICAL_INFO) || {};
+      let openId = userSpecialInfo.openid;
+
+      const pay = await api.toPay({
+        query:{
+          openId: openId,
+          orderNo: tradeNo
+        }
+      });
+      if (pay.data.code==0) {
+        //以下是微信支付
+        wx.requestPayment({
+          appId: pay.data.appId,
+          timeStamp: pay.data.timeStamp,
+          nonceStr: pay.data.nonceStr,
+          package: pay.data.package,
+          signType: 'MD5',
+          paySign: pay.data.paySign,
+          success: function (res) {
+            console.log('pay', res)
+            setTimeout(() => {
+              //支付成功 关闭loadding 跳转到支付成功页面
+              tip.loaded();
+              wepy.navigateTo({
+                url: "/pages/pay_success?orderNo="+tradeNo
+              })
+            }, 2000)
+          },
+          fail: function (res) {
+            tip.alert('支付失败');
+          }
+        })
+      } else {
+        tip.alert('支付失败');
+      }
     }
   }
 
@@ -113,7 +250,7 @@ export default class OrderDetail extends wepy.page {
 }
 
 </script>
-<style lang="scss">
+<style lang="less">
 .order_detail {
   position: relative;
 }

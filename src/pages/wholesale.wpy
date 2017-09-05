@@ -1,7 +1,7 @@
 <!--现货批发-->
 <template>
   <!--矩阵商品列表模块-->
-  <shopGridList :list.sync="list"></shopGridList>
+  <shopGridList :purchasetype.sync="purchasetype" :list.sync="list"></shopGridList>
     <!--加载更多时动画-->
     <bottomLoadMore :show.sync="showLoading" message="正在加载"></bottomLoadMore>
     <!--暂无数据显示-->
@@ -14,12 +14,9 @@ import api from '../api/api';
 import tip from '../utils/tip'
 import BottomLoadMore from "../components/common/bottomLoadMore"
 import Placeholder from "../components/common/placeholder"
-import {
-    bb
-} from '../api/data';
 export default class wholesale extends wepy.page {
   config = {
-    navigationBarTitleText: '现货批发',
+    navigationBarTitleText: '特价专区',
   }
   components = {
     shopGridList: ShopGridList,
@@ -28,6 +25,7 @@ export default class wholesale extends wepy.page {
   }
   data = {
     list: [],
+    purchasetype: 1,
     //是否有数据
     is_empty: false,
     //当前页面
@@ -42,13 +40,14 @@ export default class wholesale extends wepy.page {
 
     async getGoodList(currentPage, size) {
       let that = this;
-      const json = await api.getGoodsList({
+      //const json = await api.getGoodsList({
+      const json = await api.hostGoodsList({
         query: {
           page: currentPage || 1,
-          size: size || 10
+          size: size || 10,
+          locationFlag: 101
         }
       });
-      console.log("json==", json);
       if (json.data.code == 0) {
         that.list = [...that.list, ...json.data.list];
         that.page_total = json.data.page_total;
@@ -56,14 +55,15 @@ export default class wholesale extends wepy.page {
           //暂无数据
           that.is_empty = true;
         }
-        that.$apply();
       } else {
         tip.error(json.data.msg);
       }
       that.showLoading = false;
+      that.$apply();
     }
     onLoad() {
         let that = this;
+        that.list = [];
         //that.list = bb.result.products;
         //console.log(bb.result.products)
         that.getGoodList();

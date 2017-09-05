@@ -1,10 +1,10 @@
 <!--筛选栏-->
 <template>
   <view class="filter">
-    <view class="nav {{currentType=='zonghe' ? 'active' : ''}}" data-current="zonghe" @tap="orderBy">综合</view>
-    <view class="nav  {{currentType=='sale' ? 'active' : ''}}" data-current="sale" @tap="orderBy">销量</view>
+    <view class="nav {{currentType=='zonghe' ? 'nav_active' : ''}}" data-current="zonghe" @tap="orderBy">综合</view>
+    <view class="nav  {{currentType=='sale' ? 'nav_active' : ''}}" data-current="sale" @tap="orderBy">销量</view>
     <view class="grid nav">
-      <view class="price {{currentType=='price' ? 'active' : ''}}" data-current="price" @tap.stop="orderBy">价格</view>
+      <view class="price {{currentType=='price' ? 'nav_active' : ''}}" data-current="price" @tap.stop="orderBy">价格</view>
       <view>
         <view class="arrow_up {{arrowType=='desc' ? 'arrow_up_red' : 'arrow_up_gray'}}"></view>
         <!-- 向下的三角形 -->
@@ -70,7 +70,7 @@ export default class exchangeGoods extends wepy.component {
 }
 
 </script>
-<style lang="sass">
+<style lang="less">
 .filter {
   display: flex;
   align-items: center;
@@ -79,9 +79,9 @@ export default class exchangeGoods extends wepy.component {
   .nav {
     color: #000000;
     font-size: 26rpx;
-    padding: 12px 28px;
+    padding: 12px 20px;
   }
-  .active {
+  .nav_active {
     color: #f03939;
   }
   .icon-filter {

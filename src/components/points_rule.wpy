@@ -1,20 +1,20 @@
 <!--积分规则-->
 <template>
   <view class="jf_rule">
-    <view class="title tc">素洁商城积分规则</view>
-    <view class="jf_jz_title tc">积分价值</view>
+    <view class="title tc">素洁服装厂积分规则</view>
+    <!--<view class="jf_jz_title tc">积分价值</view>-->
     <view class="jf_content">
-      <view class="sec_title">积分社区的价值</view>
-      <view class="jf_ins">小e们听过各种社区互动获得的积分可以用于提升小嗨的等级，等级越高开启的社区特权越多。</view>
+      <view class="sec_title">1.签到积分规则 </view>
+      <view class="jf_ins">亲，每天签到送积分啦！每天签到一次送10积分，如连续签到5天（不间断），积分则是5（天）x10（积分），即50积分。</view>
     </view>
     <view class="jf_content">
+      <view class="sec_title">2.积分使用规则 </view>
+      <view class="jf_ins">积分可以享受满立减，下单更优惠！满50积分可抵消5元现金，在下单支付界面系统会自动显示你的总积分，付款之后在订单总金额上系统会自动减去5元。</view>
+    </view>
+    <!--<view class="jf_content">
       <view class="sec_title">积分社区的价值</view>
       <view class="jf_ins">小e们听过各种社区互动获得的积分可以用于提升小嗨的等级，等级越高开启的社区特权越多。</view>
-    </view>
-    <view class="jf_content">
-      <view class="sec_title">积分社区的价值</view>
-      <view class="jf_ins">小e们听过各种社区互动获得的积分可以用于提升小嗨的等级，等级越高开启的社区特权越多。</view>
-    </view>
+    </view>-->
   </view>
 </template>
 <script>
@@ -40,7 +40,7 @@ export default class PointsRule extends wepy.component {
 }
 
 </script>
-<style lang="scss">
+<style lang="less">
 .jf_rule {
   border-top: 1px solid #efefef;
   background: #fff;

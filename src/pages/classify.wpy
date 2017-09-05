@@ -7,22 +7,19 @@
       </navigator>
     </view>
   </view>
-  <view class="classify" style="height:{{windowHeight}}px">
-    <scroll-view class="classify_catetory" scroll-y scroll-with-animation="true" style="height:{{windowHeight}}px">
-      <view class="name {{index==3? 'active':''}}" wx:for="{{list.cate_lv1}}" wx:key="item">
+  <view class="classify" style="height:{{windowHeight-50}}px">
+    <scroll-view class="classify_catetory" scroll-y scroll-with-animation="true" style="height:{{windowHeight-50}}px">
+      <view class="name {{item.active? 'active':''}}" wx:for="{{rootcateList}}" wx:key="item" @tap="changeCate" data-code="{{item.code}}">
         {{item.name}}
       </view>
     </scroll-view>
-    <scroll-view class="classify_detail" scroll-y scroll-with-animation="true" style="height:{{windowHeight}}px">
-      <view class="classify_item" wx:for="{{list.current_node.children}}" wx:key="item">
-        <view class="title">{{item.name}}</view>
+    <scroll-view class="classify_detail" scroll-y scroll-with-animation="true" style="height:{{windowHeight-50}}px">
         <view class="children">
-          <navigator hover-class="none" class="children_item" wx:for={{item.children}} wx:for-item="child" wx:key="index">
-            <image class="child_image" src="{{child.image}}"></image>
-            <view class="child_name">{{child.name}}</view>
+          <navigator hover-class="none" class="children_item" wx:for="{{childcateList}}" wx:for-item="item" wx:key="index" url="/pages/search?cateCode={{item.secondCategory.code}}&title={{item.secondCategory.name}}">
+            <image class="child_image" src="{{item.secondCategory.thumLogo}}"></image>
+            <view class="child_name">{{item.secondCategory.name}}</view>
           </navigator>
         </view>
-      </view>
     </scroll-view>
   </view>
 </template>
@@ -30,10 +27,8 @@
 import wepy from 'wepy';
 import api from '../api/api';
 import {
-  aa
-} from '../api/data';
-import {
-  SYSTEM_INFO
+  SYSTEM_INFO,
+  SEL_CLASS_CODE
 } from '../utils/constant';
 
 
@@ -48,23 +43,102 @@ export default class Classify extends wepy.page {
   data = {
     scrollTop: 100,
     windowHeight: 0,
-    list: {}
-
+    list: {},
+    //一级分类数据
+    rootcateList: {},
+    //二级三级分类数据
+    childcateList: {}
   }
+
+  async getChildCate(rootCateCode) {
+    const json = await api.childGoodsCatetoryList({
+      query: {
+        rootCategoryCode: rootCateCode
+      }
+    });
+    if (json.data.code == 0) {
+      this.childcateList = json.data.list;
+    } else {
+      tip.error(json.data.msg);
+    }
+    this.$apply();
+  }
+
+  async getRootCateTopLevel() {
+    const json = await api.rootCtegoryList({
+      query: {}
+    });
+    if (json.data.code == 0) {
+      this.rootcateList = json.data.list;
+      if (this.rootcateList.length > 0) {
+        let selCode = wx.getStorageSync(SEL_CLASS_CODE);
+        var selRottCateCode = this.rootcateList[0].code;
+        if (selCode.length==0) {
+          this.rootcateList[0].active = true;
+        } else {
+          for (var i = 0; i < this.rootcateList.length; i++) {
+            if (selCode == this.rootcateList[i].code) {
+              selRottCateCode = this.rootcateList[i].code;
+              this.rootcateList[i].active = true;
+            }
+          }
+        }
+
+        this.getChildCate(selRottCateCode);
+      }
+    } else {
+      tip.error(json.data.msg);
+    }
+    this.$apply();
+  }
+
   onLoad() {
     let that = this;
-    this.list = aa.data;
+    //this.list = aa.data;
     let systemInfo = wx.getStorageSync(SYSTEM_INFO);
     this.windowHeight = systemInfo.windowHeight;
     this.$apply();
     console.log(aa)
-
   }
+
+  onShow() {
+    this.getRootCateTopLevel();
+  }
+
   computed = {
 
   }
   methods = {
-
+    changeCate(e) {
+      console.log("changecate....");
+      let code = e.currentTarget.dataset.code;
+      this.getChildCate(code);
+      wepy.setStorageSync(SEL_CLASS_CODE, code);
+      //设置一级分类的选中状态
+      for (var i = 0; i < this.rootcateList.length; i++) {
+        var rootCate = this.rootcateList[i];
+        rootCate.active = false;
+        if (rootCate.code == code) {
+          rootCate.active = true;
+        }
+      }
+    },
+    onShareAppMessage: function (res) {
+      if (res.from === 'button') {
+        // 来自页面内转发按钮
+        console.log(res.target)
+      }
+      return {
+        title: this.detail.name,
+        path: '/pages/classify',
+        success: function(res) {
+          // 转发成功
+        },
+        fail: function(res) {
+          // 转发失败
+        }
+      }
+    }
   }
   events = {
 
@@ -72,7 +146,7 @@ export default class Classify extends wepy.page {
 }
 
 </script>
-<style lang="sass">
+<style lang="less">
 .search_read_only .search_content {
   width: 100%;
 }
@@ -81,7 +155,7 @@ export default class Classify extends wepy.page {
   display: flex;
   position: relative;
   .classify_catetory {
-    width: 250rpx;
+    width: 200rpx;
     position: relative;
     z-index: 1;
     .name {
@@ -90,6 +164,9 @@ export default class Classify extends wepy.page {
       line-height: 100rpx;
       font-size: 28rpx;
       color: #666;
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
     }
     .active {
       border-left: 6rpx solid #ff6a3c;
@@ -100,7 +177,7 @@ export default class Classify extends wepy.page {
   .classify_detail {
     position: relative;
     z-index: 999;
-    margin-left: -15rpx;
+    // margin-left: -15rpx;
     background: #fff;
     padding: 15px 10px 10px 30px;
     .classify_item {}

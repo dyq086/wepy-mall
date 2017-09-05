@@ -1,4 +1,4 @@
-<style lang="scss">
+<style lang="less">
 .swipe-item-wrapper {
   height: 100%;
   position: relative;

@@ -7,7 +7,7 @@
       </view>
     </view>
     <view class="info_block">
-      <navigator class="item" url="/pages/register">
+      <navigator class="item" url="/pages/register" wx:if="{{bShowBind}}">
         <view>
           <view class="item_content">
             <image class="item_img" src="../images/icon_my_01.png"></image>
@@ -21,6 +21,13 @@
         <view class="item_content">
           <image class="item_img" src="../images/icon_my_02.png"></image>
           <view class="text">全部订单</view>
+        </view>
+        <view class="arrow">&gt;</view>
+      </navigator>
+      <navigator class="item" url="/pages/reorder">
+        <view class="item_content">
+          <image class="item_img" src="../images/icon_my_02.png"></image>
+          <view class="text">补货订单</view>
         </view>
         <view class="arrow">&gt;</view>
       </navigator>
@@ -68,7 +75,7 @@
 import wepy from 'wepy';
 import api from '../api/api';
 import {
-  USER_INFO
+  USER_INFO,USER_SPECICAL_INFO
 } from '../utils/constant';
 export default class Index extends wepy.page {
   config = {
@@ -81,17 +88,40 @@ export default class Index extends wepy.page {
   data = {
     avatarUrl: "",
     nickName: "",
-
-
+    bShowBind:false
   }
+  async getUserInfo(phone,code) {
+    let that = this;
+    let userSpecialInfo = wepy.getStorageSync(USER_SPECICAL_INFO) || {};
+    let openId = userSpecialInfo.openid;
+    const json = await api.getUserInfo({
+      query: {
+        openId: openId
+      }
+    });
+
+    if (json.data.code == 0) {
+      if (json.data.user.mobile.length>0) {
+        this.bShowBind=false;
+      } else {
+        this.bShowBind = true;
+      }
+      that.$apply();
+    } else {
+      tip.error(json.data.msg)
+    }
+    that.showLoading = false;
+  }
+
   onLoad() {
     let that = this;
     let userInfo = wepy.getStorageSync(USER_INFO);
     that.avatarUrl = userInfo.avatarUrl;
     that.nickName = userInfo.nickName;
-
-
-
+  }
+  onShow(){
+    let that = this;
+    this.getUserInfo();
   }
   computed = {
 
@@ -105,7 +135,7 @@ export default class Index extends wepy.page {
 }
 
 </script>
-<style lang="sass">
+<style lang="less">
 .header {
   background: #ff6a3c;
   height: 260rpx;

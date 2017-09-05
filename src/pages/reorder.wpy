@@ -24,7 +24,7 @@ import Placeholder from "../components/common/placeholder"
 import api from '../api/api';
 export default class Order extends wepy.page {
   config = {
-    navigationBarTitleText: "我的订单",
+    navigationBarTitleText: "补货订单",
   }
   components = {
     tab: Tab,
@@ -35,7 +35,7 @@ export default class Order extends wepy.page {
   data = {
     winHeight: 0,
     totalCount: 0,
-    tabList: ["全部订单", "待支付", "待收货", "已完成"],
+    tabList: ["全部", "待处理", "待收货", "已完成"],
     orderList: [],
     currentPage: 1,
     is_empty: false,
@@ -73,7 +73,7 @@ export default class Order extends wepy.page {
         receiveFlg : that.receiveFlg,
         page: currentPage || 1,
         size: size || 10,
-        type: 1 //正常单
+        type: 2 //补货单
       }
     });
     if (json.data.code == 0) {
@@ -110,7 +110,8 @@ export default class Order extends wepy.page {
     let openId = userSpecialInfo.openid;
     const json = await api.getMyOrderSize({
       query: {
-        openId: openId
+        openId: openId,
+        type: 2
       }
     });
     if (json.data.code == 0) {
@@ -122,7 +123,7 @@ export default class Order extends wepy.page {
       that.shippedCount = json.data.shippedCount;
 
       //重写list
-      var dotList = ["全部订单", { name: "待支付", dotNum: that.pendingPayCount }, { name: "待收货", dotNum: that.backrdersCount }, "已完成"];
+      var dotList = ["全部", { name: "待处理", dotNum: that.pendingPayCount }, { name: "待收货", dotNum: that.backrdersCount }, "已完成"];
       this.$invoke("tab", "changeList", dotList);
       that.$apply();
     }

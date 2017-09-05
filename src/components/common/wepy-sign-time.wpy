@@ -1,0 +1,147 @@
+<template>
+  <view class="time_line_box">
+    <view class="time_line" style="width:100%">
+      <view>
+        <view class="day-box" wx:for="{{list}}" wx:key="item" wx:index="index">
+          <view class="order_item {{item.signed==1?'selected':''}}"
+                style="left:{{index*15.3}}%">{{item.signTime}}</view>
+          <view class="award-jf" wx:if="{{item.award}}">{{item.award}}</view>
+        </view>
+      </view>
+      <span class="filling_line" style="transform: scaleX({{aways*0.165}})"></span>
+    </view>
+  </view>
+</template>
+
+<script>
+import wepy from 'wepy'
+import tip from '../../utils/tip'
+import {
+  SYSTEM_INFO,
+  USER_SPECICAL_INFO
+} from '../../utils/constant';
+import api from '../../api/api';
+
+  export default class WepySignTime extends wepy.component {
+    data = {
+      list: [],
+      aways: 0
+      // arry : {
+      //   days: [],
+      //   aways: 0
+      // }
+    }
+
+    async getSignDate() {
+      console.log("getSignDate");
+      let that = this;
+      let userSpecialInfo = wepy.getStorageSync(USER_SPECICAL_INFO) || {};
+      let openId = userSpecialInfo.openid;
+      const json = await api.getSignDate({
+        query: {
+          openId: openId
+        }
+      });
+      if (json.data.code == 0) {
+        this.list = json.data.list;
+        console.log("console.log(this.list);");
+        console.log(this.list);
+      } else {
+        tip.error(json.data.msg)
+      }
+      that.showLoading = false;
+      this.$apply()
+    }
+
+    onLoad() {
+      this.getSignDate();
+      // let arry = {
+      //   days: [],
+      //   aways: 0
+      // }
+      // this.list = arry;
+      // console.log(this.arry)
+      // this.list = this.arry.days;
+      // this.aways = this.arry.aways;
+    }
+    methods = {
+      refreshList(val){
+        if (val==undefined) return;
+        console.log("val.....",val);
+        this.list[this.list.length-1].signed = true;
+        this.$apply();
+      },
+    }
+  }
+</script>
+
+<style lang="less">
+  .time_line_box {
+    position: relative;
+    height: 150rpx;
+    overflow: hidden;
+    margin: 10rpx;
+  }
+  .time_line {
+    position: absolute;
+    z-index: 1;
+    left: 0;
+    top: 70rpx;
+    height: 5rpx;
+    background: #dfdfdf;
+    transition: transform 0.4s;
+  }
+  .day-box {
+    float: left;
+    width: 14.28%;
+  }
+  .award-jf {
+    padding-top: 20rpx;
+    font-size: 26rpx;
+    color: #999;
+  }
+  .order_item {
+    position: absolute;
+    bottom: 0;
+    z-index: 2;
+    text-align: center;
+    font-size: 26rpx;
+    padding-bottom: 20rpx;
+    color: #666;
+  }
+  .order_item:after {
+    content: '';
+    position: absolute;
+    left: 50%;
+    right: auto;
+    transform: translateX(-50%);
+    bottom: -8rpx;
+    height: 15rpx;
+    width: 15rpx;
+    border-radius: 50%;
+    border: 2rpx solid #dfdfdf;
+    background-color: #f8f8f8;
+  }
+  .selected {
+    color: #eb6623;
+  }
+  .selected:after {
+    background-color: #eb6623;
+    border-color: #eb6623;
+  }
+  .filling_line {
+    position: absolute;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    height: 100%;
+    width: 100%;
+    background-color: #eb6623;
+    transform-origin: left center;
+    transition-property: transform;
+    transition-duration: 1.5s;
+    transition-timing-function: initial;
+    transition-delay: initial;
+    transform: scaleX(0)
+  }
+</style>

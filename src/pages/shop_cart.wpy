@@ -34,7 +34,7 @@ export default class shopCart extends wepy.page {
 }
 
 </script>
-<style lang="scss">
+<style lang="less">
 .shop_cart {
   background: #f7f7f7;
 }

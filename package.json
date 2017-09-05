@@ -32,7 +32,6 @@
     "eslint-plugin-standard": "^2.0.1",
     "wepy-compiler-babel": "^1.5.1",
     "wepy-compiler-less": "^1.3.10",
-    "wepy-compiler-sass": "^1.3.7",
     "wepy-eslint": "^1.5.2",
     "wepy-plugin-imagemin": "^1.5.2",
     "wepy-plugin-uglifyjs": "^1.3.6"

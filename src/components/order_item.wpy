@@ -1,47 +1,101 @@
 <!--订单列表模块-->
 <template>
-  <view class="order_item">
-    <repeat for="{{orderList}}">
-      <view class="list" wx:key="index">
-        <view class="order_list_top">
-          <view class="left">
-            <view class="title">订单号：
-              <text class="order_doc">{{item.order_id}}</text>
-            </view>
-            <view class="title mt10">提交时间：
-              <text class="order_doc">2017-10-01 12:00</text>
-            </view>
+<view class="order_item">
+<repeat for="{{orderList}}">
+  <view class="list" wx:key="index">
+    <navigator class="item_content" url="/pages/order_detail?orderNo={{item.orderNo}}">
+      <view class="order_list_top">
+        <view class="left">
+          <view class="title">订单号：
+            <text class="order_doc">{{item.orderNo}}</text>
           </view>
-          <view class="order_state">待支付</view>
-        </view>
-        <view class="order_list_center">
-          <shopItemList :goodsList.sync="item.children"></shopItemList>
-        </view>
-        <view class="order_list_footer">
-          <view class="reveiveMoney c333">应付款：
-            <text class="num">18888.0</text>
-          </view>
-          <view class="btn_group">
-            <view class="btn btn_del" @tap="delOrder">删除订单</view>
-            <view class="btn btn_pay" @tap="payMoney">立即付款</view>
+          <view class="title mt10">提交时间：
+            <text class="order_doc">{{item.createTime}}</text>
           </view>
         </view>
+
+        <view class="order_state" wx:if="{{item.auditStatus==5}}">
+          审批中
+        </view>
+        <view class="order_state" wx:elif="{{item.auditStatus==-1}}"> 审批不通过 </view>
+        <view wx:else>
+          <text class="defult" wx:if="{{item.status==0}}">
+            <view class="order_state">待支付</view>
+          </text>
+          <view class="order_state" wx:if="{{item.status==0}}">待付款</view>
+          <view class="order_state" wx:if="{{item.status==2 || item.status==1}}">待收货</view>
+          <view class="order_state" wx:if="{{item.status==4}}">已完成</view>
+          <view class="order_state" wx:if="{{item.status==3}}">待评论</view>
+        </view>
+    </view>
+
+    <view class="order_list_center">
+      <shopItemList :list.sync="item.orderItemList"></shopItemList>
+    </view>
+  </navigator>
+  <view class="order_list_footer">
+    <view class="reveiveMoney c333">应付款：
+      <text class="num">{{item.goodsPrices}}</text>
+    </view>
+
+    <view class="order_state" wx:if="{{item.auditStatus==5}}">
+    </view>
+    <view wx:elif="{{item.auditStatus==-1}}">
+      <view class="btn_group">
+        <view class="btn btn_del" @tap="delOrder" data-id="{{item.orderNo}}">删除订单</view>
       </view>
-    </repeat>
+    </view>
+    <view wx:else>
+      <view class="btn_group">
+        <view class="btn btn_del" @tap="delOrder" data-id="{{item.orderNo}}" wx:if="{{item.status==0 || item.status==4}}">删除订单</view>
+        <view class="btn btn_pay" @tap="payMoney" data-id="{{item.orderNo}}" data-tradeno="{{item.payTradeNo}}" wx:if="{{item.status==0}}">立即付款</view>
+        <view class="btn btn_pay" @tap="completion" data-id="{{item.orderNo}}" wx:if="{{item.status==2 || item.status==1}}">确认收货</view>
+      </view>
+    </view>
   </view>
+
+  </view>
+</repeat>
+</view>
 </template>
 <script>
 import wepy from 'wepy'
 import tip from '../utils/tip'
 import ShopItemList from '../components/shop_item_list'
+import api from '../api/api'
+import {
+  SYSTEM_INFO,
+  USER_SPECICAL_INFO
+} from '../utils/constant';
 export default class orderItem extends wepy.component {
 
   props = {
     orderList: {
-      default: []
+      default: [],
+      flag:"",
+      orderNo:"",
+      list:[]
     }
   }
 
+  async editOrderInfo(orderNo,flag) {
+    console.log("调用方法");
+    let that = this;
+    let userSpecialInfo = wepy.getStorageSync(USER_SPECICAL_INFO) || {};
+    const json = await api.editOrderInfo({
+      query: {
+        orderNo: orderNo,
+        flag:flag
+      }
+    });
+    if (json.data.code == 0) {
+
+      this.$emit('refreshOrderList', that.flag);
+    } else {
+      tip.error(json.data.errerTips)
+    }
+    that.$apply();
+  }
   components = {
     shopItemList: ShopItemList
   }
@@ -51,26 +105,72 @@ export default class orderItem extends wepy.component {
   }
 
   methods = {
-    async delOrder() {
+    async delOrder(e) {
+      this.flag=2;
+      this.orderNo = e.currentTarget.dataset.id;
       await tip.confirm('是否删除订单');
+      console.log(this.flag);
+      this.editOrderInfo(this.orderNo,this.flag);
       console.log("删除成功")
+
+    },
+      async completion(e) {
+      this.flag=3;
+      this.orderNo = e.currentTarget.dataset.id;
+      await tip.confirm('是否确认收货');
+      this.editOrderInfo(this.orderNo,this.flag);
+      console.log("完成")
     },
 
-    async payMoney() {
-      tip.success('支付成功');
-      wx.navigateTo({
-        url: '/pages/pay_success?order_id=112312312321'
-      })
+    async payMoney(e) {
+      this.orderNo = e.currentTarget.dataset.id;
+      let tradeNo = e.currentTarget.dataset.tradeno;
+      let userSpecialInfo = wepy.getStorageSync(USER_SPECICAL_INFO) || {};
+      let openId = userSpecialInfo.openid;
+
+      const pay = await api.toPay({
+        query:{
+          openId: openId,
+          orderNo: tradeNo
+        }
+      });
+      if (pay.data.code==0) {
+        //以下是微信支付
+        wx.requestPayment({
+          appId: pay.data.appId,
+          timeStamp: pay.data.timeStamp,
+          nonceStr: pay.data.nonceStr,
+          package: pay.data.package,
+          signType: 'MD5',
+          paySign: pay.data.paySign,
+          success: function (res) {
+            console.log('pay', res)
+            setTimeout(() => {
+              //支付成功 关闭loadding 跳转到支付成功页面
+              tip.loaded();
+              wepy.navigateTo({
+                url: "/pages/pay_success?orderNo="+tradeNo
+              })
+            }, 2000)
+          },
+          fail: function (res) {
+            tip.alert('支付失败');
+          }
+        })
+      } else {
+        tip.alert('支付失败');
+      }
     }
   }
 
   onLoad() {
-
+    console.log("===========lzz返回数据lzz=========")
+    console.log(this.orderList);
   }
 }
 
 </script>
-<style lang="scss">
+<style lang="less">
 .order_item {
   padding: 10rpx 0rpx;
   background: #f7f7f7;

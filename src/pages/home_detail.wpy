@@ -2,13 +2,13 @@
 <template>
   <view class="item">
     <view class="img_box">
-      <image class="discover_img"></image>
+      <image class="discover_img" src="{{cate.logo}}"></image>
     </view>
     <view class="info">
-      <view class="title">中高端女装货源</view>
-      <view class="doc"><i class="lx">◆</i> 均价：100</view>
-      <view class="doc"><i class="lx">◆</i> 档位：高端</view>
-      <view class="doc"><i class="lx">◆</i> 做工：精致</view>
+      <view class="title">{{cate.name}}</view>
+      <view wx:for="{{cate.attrs}}" wx:key="item">
+        <view class="doc"><i class="lx">◆</i> {{item.attrName.attrName}}：<view wx:for="{{item.attrValList}}" wx:key="item">{{item.attrVal}} </view></view>
+      </view>
     </view>
   </view>
   <view class="fifler">
@@ -16,7 +16,7 @@
   </view>
   <view class="shop_list">
     <!--矩阵商品列表模块-->
-    <shopGridList :list.sync="list"></shopGridList>
+    <shopGridList :purchasetype.sync="purchasetype" :list.sync="list"></shopGridList>
     <!--加载更多时动画-->
     <bottomLoadMore :show.sync="showLoading" message="正在加载"></bottomLoadMore>
     <!--暂无数据显示-->
@@ -25,22 +25,32 @@
 </template>
 <script>
 import wepy from 'wepy';
+import api from '../api/api';
 import FilterBar from "../components/filter_bar"
 import ShopGridList from '../components/shop_grid_list'
 import BottomLoadMore from "../components/common/bottomLoadMore"
 import Placeholder from "../components/common/placeholder"
 import tip from '../utils/tip'
-import {
-  bb
-} from '../api/data';
+
 export default class HomeDetail extends wepy.page {
   config = {
-    navigationBarTitleText: '发现商品',
+    navigationBarTitleText: '',
   }
   data = {
+    catCode: "",
+    cate:{},
     list: [],
-    showLoading: false,
-    is_empty: false
+    purchasetype: 1,
+    is_empty: false,
+    //当前页面
+    currentPage: 1,
+    //总页数
+    page_total: 0,
+    //是否显示 底部loading
+    showLoading: true,
+    //防止重复加载
+    preventRepeatReuqest: false,
+    sort: -1
   }
   components = {
     filterBar: FilterBar,
@@ -49,27 +59,120 @@ export default class HomeDetail extends wepy.page {
     placeholder: Placeholder
   }
 
-  onLoad() {
-    this.list = bb.result.products;
-    this.$apply();
+  async getGoodList(currentPage, size) {
+    let that = this;
+    //const json = await api.getGoodsList({
+    const json = await api.hostGoodsList({
+      query: {
+        page: currentPage || 1,
+        size: size || 10,
+        cateCode: this.catCode,
+        sort: this.sort
+      }
+    });
+    if (json.data.code == 0) {
+      that.cate = json.data.category;
+      wx.setNavigationBarTitle({  title: that.cate.name})
+      that.list = [...that.list, ...json.data.list];
+      that.page_total = json.data.page_total;
+      if (json.data.page_total == 0) {
+        //暂无数据
+        that.is_empty = true;
+      }
+    } else {
+      tip.error(json.data.msg);
+    }
+    that.showLoading = false;
+    that.$apply();
+  }
+
+  onLoad(option) {
+    this.cate={};
+    this.list = [];
+    this.catCode = option.code;
+    this.is_empty = false;
+    //当前页面
+    this.currentPage = 1;
+    //总页数
+    this.page_total = 0;
+    //是否显示 底部loading
+    this.showLoading = true;
+    //防止重复加载
+    this.preventRepeatReuqest = false;
+    this.sort = -1;
+    console.log("id==="+this.catCode);
+    //this.list = bb.result.products;
+    //this.$apply();
+    this.getGoodList();
   }
   computed = {
 
   }
   methods = {
     currentType(obj) {
-      tip.success("状态:" + obj);
+      //tip.success("状态:" + obj);
+      var name = obj.name;
+      var type = obj.type;
+      if (name=="zhonghe") {
+        this.sort = -1;
+      } else if (name=="sale") {
+        this.sort = 3;
+      } else if (name=="price") {
+        if (type=="desc") {
+          this.sort = 2;
+        } else if (type=="asc") {
+          this.sort = 1;
+        }
+      }
+      this.list = [];
+      this.showLoading = true;
+      this.is_empty = false;
+      this.getGoodList();
+    },
+    onShareAppMessage: function (res) {
+      if (res.from === 'button') {
+        // 来自页面内转发按钮
+        console.log(res.target)
+      }
+      return {
+        title: this.cate.name,
+        path: '/pages/home_detail?code='+this.catCode,
+        success: function(res) {
+          // 转发成功
+        },
+        fail: function(res) {
+          // 转发失败
+        }
+      }
     }
   }
 
   events = {
 
   }
-
+  //加载更多
+  onReachBottom() {
+    let that = this;
+    that.showLoading = true;
+    console.log(that.page_total + "===" + that.currentPage);
+    //判断总页数是否大于翻页数
+    if ((that.page_total) > that.currentPage) {
+      //防止重复加载
+      if (that.preventRepeatReuqest) {
+        return true;
+      }
+      that.preventRepeatReuqest = true;
+      that.currentPage++;
+      that.getGoodList(that.currentPage);
+      that.preventRepeatReuqest = false;
+    } else {
+      that.showLoading = false;
+    }
+  };
 }
 
 </script>
-<style lang="scss">
+<style lang="less">
 page {
   background: #fff;
 }
@@ -86,7 +189,7 @@ page {
 }
 
 .info {
-  margin-top: 50rpx;
+  margin-top: 30rpx;
   padding: 0rpx 30rpx;
   .title {
     margin-bottom: 20rpx;
