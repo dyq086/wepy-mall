@@ -13,7 +13,9 @@
 ### 开发使用说明
 
 使用微信开发者工具新建项目，本地开发选择dist目录。
+
 微信开发者工具 --> 项目 --> 关闭ES6转ES5。
+
 本地项目根目录运行npm run dev，开启实时编译。
 
 ### wepy开发文档地址
@@ -23,4 +25,6 @@
 	http://mp.weixin.qq.com/debug/wxadoc/dev/
 
 
-文档有空持续更新~~
+### 部分功能截图
+
+<img src="https://github.com/dyq086/wxYuHanStore//screenshots/WechatIMG263.jpeg" width="365" height="619"/> 
