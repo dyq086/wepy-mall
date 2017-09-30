@@ -30,6 +30,9 @@
 
 <img src="https://github.com/dyq086/wxYuHanStore/blob/master/screenshots/qr.jpg" width="200" height="200"/> 
 
+
+
+
 ### 部分功能截图
 
 
