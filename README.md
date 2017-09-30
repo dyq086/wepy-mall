@@ -24,21 +24,24 @@
 ### 小程序开发文档
 	http://mp.weixin.qq.com/debug/wxadoc/dev/
 
+### 演示地址
+打开微信扫一扫
+<img src="https://github.com/dyq086/wxYuHanStore/blob/master/screenshots/WechatIMG264.jpeg" width="200" height="200"/> 
 
 ### 部分功能截图
 
 <img src="https://github.com/dyq086/wxYuHanStore/blob/master/screenshots/WechatIMG263.jpeg" width="365" height="619" /> 	<img src="https://github.com/dyq086/wxYuHanStore/blob/master/screenshots/WechatIMG264.jpeg" width="365" height="619"/> 
 
- # -----------  
+
 <img src="https://github.com/dyq086/wxYuHanStore/blob/master/screenshots/WechatIMG265.jpeg" width="365" height="619"/> 		<img src="https://github.com/dyq086/wxYuHanStore/blob/master/screenshots/WechatIMG266.jpeg" width="365" height="619"/> 
- # -----------  
+
 <img src="https://github.com/dyq086/wxYuHanStore/blob/master/screenshots/WechatIMG267.jpeg" width="365" height="619"/>		 <img src="https://github.com/dyq086/wxYuHanStore/blob/master/screenshots/WechatIMG268.jpeg" width="365" height="619"/> 
- # -----------  
+
 <img src="https://github.com/dyq086/wxYuHanStore/blob/master/screenshots/WechatIMG269.jpeg" width="365" height="619"/>		 <img src="https://github.com/dyq086/wxYuHanStore/blob/master/screenshots/WechatIMG270.jpeg" width="365" height="619"/> 
- # -----------  
+
 
 <img src="https://github.com/dyq086/wxYuHanStore/blob/master/screenshots/WechatIMG271.jpeg" width="365" height="619"/>		 <img src="https://github.com/dyq086/wxYuHanStore/blob/master/screenshots/WechatIMG272.jpeg" width="365" height="619"/> 
- # -----------  
+
 <img src="https://github.com/dyq086/wxYuHanStore/blob/master/screenshots/WechatIMG273.jpeg" width="365" height="619"/>		 <img src="https://github.com/dyq086/wxYuHanStore/blob/master/screenshots/WechatIMG274.jpeg" width="365" height="619"/> 
- # -----------  
+
 <img src="https://github.com/dyq086/wxYuHanStore/blob/master/screenshots/WechatIMG275.jpeg" width="365" height="619"/> 
