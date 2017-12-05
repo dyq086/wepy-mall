@@ -60,14 +60,15 @@ export default class Rate extends wepy.component {
   width: 50rpx;
   height: 50rpx;
   src: "../images/normal.png";
+  .item {
+    position: absolute;
+    width: 25rpx;
+    top: 0;
+    height: 50rpx;
+  }
 }
 
-.item {
-  position: absolute;
-  width: 25rpx;
-  top: 0;
-  height: 50rpx;
-}
+
 
 .star-image-read {
   position: relative;
