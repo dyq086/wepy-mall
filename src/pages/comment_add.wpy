@@ -1,0 +1,70 @@
+<!--商品评论-->
+<template>
+  <view class="block">
+    <view class="item-block">
+      <view class="title">评分:</view>
+      <view class="content">
+        <rate @change.user="callbackStart"></rate>
+      </view>
+    </view>
+    <view class="item-block">
+      <view class="title">内容:</view>
+      <view class="content">
+        <textarea @input="bindText" class="textarea" placeholder="请输入评论内容" />
+      </view>
+    </view>
+    <view class="button type_green">发表评论</view>
+  </view>
+</template>
+<script>
+import wepy from 'wepy';
+import Rate from "../components/rate"
+export default class goodsComment extends wepy.page {
+  config = {
+    navigationBarTitleText: '商品评论',
+  }
+  data = {
+    
+  }
+  onLoad() {
+
+  }
+  components = {
+    rate: Rate
+  }
+  computed = {}
+  methods = {
+    bindText(e) {
+      console.log(e.detail.value)
+    },
+    callbackStart(count){
+      console.log(count)
+    }
+  }
+  events = {}
+}
+
+</script>
+<style lang="less">
+.block {
+  background: #fff;
+  padding: 20rpx;
+  .item-block {
+    display: flex;
+    margin-top: 20rpx;
+  }
+  .title {
+    padding-right: 10rpx;
+  }
+  .textarea {
+    height: 200rpx;
+    border-radius: 10rpx;
+    border: 1rpx solid #efefef;
+    padding: 10rpx;
+  }
+  .type_green{
+    margin-top: 100rpx;
+  }
+}
+
+</style>

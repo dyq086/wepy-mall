@@ -45,9 +45,7 @@ export default class PointsRules extends wepy.page {
     browselist: [],
     favorlist:[],
     tabList: ["我的足迹", "我的收藏"],
-    currentTab: {
-      default: 0
-    },
+    currentTab: 0,
     winHeight: 0,
     //当前页面
     currentPage: 1,

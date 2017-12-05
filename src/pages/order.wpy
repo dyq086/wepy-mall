@@ -40,9 +40,7 @@ export default class Order extends wepy.page {
     currentPage: 1,
     is_empty: false,
     orderStatus: "",
-    currentTab: {
-      default: 0
-    },
+    currentTab: 0,
     flag: 0,
     //是否显示 底部loading
     showLoading: true,
@@ -227,8 +225,8 @@ export default class Order extends wepy.page {
         that.getMyOrder(that.currentPage);
       } else if (this.currentTab == 2) {
         console.log("待发货订单类型");
-        that.orderStatus = 1;
-        that.receiveFlg=1;
+        that.orderStatus = 2;
+        that.receiveFlg=2;
         that.getMyOrder(that.currentPage);
       } else if (this.currentTab == 3) {
         console.log("已完成订单类型");

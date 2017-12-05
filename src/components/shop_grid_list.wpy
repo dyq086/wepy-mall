@@ -2,12 +2,12 @@
 <template>
   <scroll-view scroll-y="true" class="swiper-item-box">
     <view class="shop_item">
-      <navigator class="list" wx:for="{{list}}" wx:key="item" url="/pages/goods_detail?id={{item.id}}&purchasetype={{purchasetype}}">
+      <navigator class="list" wx:for="{{list}}" wx:key="item" url="/pages/goods_detail?id={{item.id}}&purchasetype={{purchasetype}}&special={{special}}">
         <view class="image_box">
           <image src="{{item.thumLogo}}"></image>
         </view>
         <view class="goods">
-          <view class="product_name">{{item.name}}</view>
+          <view class="product_name" wx:if="{{showTitle}}">{{item.name}}</view>
           <view class="product_info">
             <view class="price">￥{{item.price}}</view>
             <view class="cost_price">￥{{item.marketPrice}}</view>
@@ -26,6 +26,12 @@ export default class ShopGridList extends wepy.component {
     list: [],
     purchasetype: {
       default: 1  //类型:1-商品订单;2-商品补单;
+    },
+    special:{
+      default: 0 //0-正常入库;1-特价专区和换货专区
+    },
+    showTitle:{
+      default:true
     }
   }
 
@@ -53,7 +59,7 @@ export default class ShopGridList extends wepy.component {
 }
 
 .list:nth-child(odd) {
-  margin-right: 15rpx;
+  margin-right: 10rpx;
 }
 
 .list {
@@ -68,10 +74,10 @@ export default class ShopGridList extends wepy.component {
   }
   .product_name {
     color: #1a1a1a;
-    font-size: 30rpx;
+    font-size: 28rpx;
     overflow: hidden;
     display: -webkit-box;
-    -webkit-line-clamp: 2;
+    -webkit-line-clamp: 1;
     -webkit-box-orient: vertical;
     word-break: break-all;
   }

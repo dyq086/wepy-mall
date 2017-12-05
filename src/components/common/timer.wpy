@@ -19,7 +19,7 @@
     <view class="hold hold2">
     <view class="pie pie2" style="transform: rotate({{rotate2}}deg);"></view>
     </view>
-    <view class="bg"></view>
+    <view class="bg_zero"></view>
     <view class="time_box">
     <view class="time_zero">{{endTxt}}</view>
     <view class="over">订单结束</view>
@@ -205,6 +205,14 @@ export default class Timer extends wepy.component {
   position: absolute;
 }
 
+.bg_zero {
+  width: 160rpx;
+  height: 160rpx;
+  background: #BDBDBD;
+  border-radius: 1000px;
+  position: absolute;
+}
+
 .time_box {
   width: 149rpx;
   height: 149rpx;
@@ -224,7 +232,7 @@ export default class Timer extends wepy.component {
   }
   .time_zero {
     margin-top: 40rpx;
-    color: #fe7070;
+    color: #BDBDBD;
     font-size: 32rpx;
   }
   .over {

@@ -45,7 +45,7 @@
   <view class="jiesuan-box" wx:if="{{list.length>0}}">
     <view class="left-price">
       <view @tap.stop="selectAll" class="all_select_box">
-        <icon type="success" size="20" color="{{allSelect?'red':'rgb(153,153,153)'}}" />
+        <icon type="success" size="20" color="{{allChecked?'red':'rgb(153,153,153)'}}" />
         <view class="all_select">全选</view>
       </view>
       <view class="total" hidden="{{noSelect}}">合计：¥ {{totalPrice}}</view>
@@ -71,7 +71,8 @@
       noSelect: false,
       saveHidden: true,
       totalPrice: 0,
-      operating: false
+      operating: false,
+      allChecked: true
     }
     //获取购物车商品列表
     async getCartList() {
@@ -87,6 +88,12 @@
         let data = json.data;
         this.list = data.list;
         this.totalPrice = data.totalPrice;
+        for (var i = 0; i < this.list.length; i++) {
+          if (!this.list[i].ischecked) {
+            this.allChecked = false;
+            break;
+          }
+        }
       } else {
         tip.error(json.data.msg)
       }
@@ -191,6 +198,36 @@
       }
       this.$apply();
     }
+
+    async checkAllGoods() {
+      let userSpecialInfo = wepy.getStorageSync(USER_SPECICAL_INFO) || {};
+      let openId = userSpecialInfo.openid;
+      let check = 0;
+      if (!this.allChecked) {//原来未选中
+        check = 1;
+      }
+      const json = await api.cartCheckAll({
+        query: {
+          openId: openId,
+          check: check
+        }
+      });
+      if (json.data.code == 0) {
+        this.totalPrice = 0;
+        for (var i = 0; i < this.list.length; i++) {
+          this.list[i].ischecked = !this.allChecked;
+          if (!this.allChecked) {
+            this.totalPrice += parseInt(this.list[i].priceSubtotal);
+          }
+        }
+        this.allChecked = !this.allChecked;
+      } else {
+        tip.error(json.data.msg)
+      }
+      this.$apply();
+    }
+
+
     methods = {
       handleDelItem(itemData) {
         this.deleteGoods(itemData);
@@ -203,6 +240,7 @@
       },
       selectAll() {
         console.log("sele....");
+        this.checkAllGoods();
       },
       getCartListMethod() {
         this.getCartList();

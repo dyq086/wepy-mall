@@ -1,0 +1,79 @@
+<template>
+  <block wx:for="{{stars}}" wx:key="item.id">
+    <image wx:if="{{readonly}}" class="star-image-read" style="left: {{item}}rpx" src="{{key > item ?(key-item == 0.5?halfSrc:selectedSrc) : normalSrc}}">
+    </image>
+    <image wx:else class="star-image" style="left: {{item*10}}rpx" src="{{key > item ?(key-item == 0.5?halfSrc:selectedSrc) : normalSrc}}">
+      <view class="item" style="left:0rpx" data-key="{{item+0.5}}" @tap="selectLeft"></view>
+      <view class="item" style="left:25rpx" data-key="{{item+1}}" @tap="selectRight"></view>
+    </image>
+  </block>
+</template>
+<script>
+import wepy from 'wepy';
+export default class Rate extends wepy.component {
+  props = {
+    readonly: {
+      default: false
+    },
+    key: {
+      default: 0
+    },
+  }
+  data = {
+    stars: [0, 1, 2, 3, 4],
+    normalSrc: '../images/normal.png',
+    selectedSrc: '../images/selected.png',
+    halfSrc: '../images/half.png',
+  }
+
+  events = {
+
+  }
+  methods = {
+    //点击右边,半颗星
+    selectLeft: function(e) {
+      var key = e.currentTarget.dataset.key;
+      if (this.data.key == 0.5 && e.currentTarget.dataset.key == 0.5) {
+        //只有一颗星的时候,再次点击,变为0颗
+        this.key = 0;
+      }
+      this.key = key;
+      this.$emit("change", this.key)
+    },
+    //点击左边,整颗星
+    selectRight: function(e) {
+      var key = e.currentTarget.dataset.key;
+      this.key = key;
+      this.$emit("change", this.key)
+    }
+  }
+
+  onLoad() {
+
+  }
+}
+
+</script>
+<style lang="less">
+.star-image {
+  position: relative;
+  width: 50rpx;
+  height: 50rpx;
+  src: "../images/normal.png";
+}
+
+.item {
+  position: absolute;
+  width: 25rpx;
+  top: 0;
+  height: 50rpx;
+}
+
+.star-image-read {
+  position: relative;
+  width: 30rpx;
+  height: 30rpx;
+  src: "../images/normal.png";
+}
+
+</style>

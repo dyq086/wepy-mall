@@ -1,9 +1,9 @@
 <template>
   <view class="container">
-    <swiper class="swiper" indicator-active-color="{{indicatorActiveColor}}" indicator-dots="{{indicatorDots}}" autoplay="{{autoplay}}" interval="{{interval}}" duration="{{duration}}">
+    <swiper class="swiper" indicator-active-color="{{indicatorActiveColor}}" indicator-dots="{{indicatorDots}}" autoplay="{{autoplay}}" interval="{{interval}}" duration="{{duration}}" circular="true">
       <block wx:for="{{adList}}" wx:key="key">
         <swiper-item>
-          <image src="{{item.picUrl}}" class="slide-image" @tap="goToAdvert({{item.advertUrl}})"/>
+          <image src="{{item.picUrl}}" class="slide-image" @tap="goToAdvert({{item.advertUrl}})" />
         </swiper-item>
       </block>
     </swiper>
@@ -39,10 +39,13 @@
     </view>
     <!--发现好商品模块-->
     <discover :list.sync="discoverList"></discover>
+    <view class="recommend-title">商品推荐</view>
     <!--加载更多时动画-->
     <bottomLoadMore :show.sync="showLoading" message="正在加载"></bottomLoadMore>
     <!--暂无数据显示-->
     <placeholder :show.sync="is_empty" message="暂无发现数据"></placeholder>
+    <!--弹屏  types:0 图片  1：领红包   show 是否显示  @close 关闭回调  @callback 点击图片回调 或确定回调-->
+    <bombscreen :types.sync="tps" :show.sync="is_show_alert" @close.user="closeAlert" @callback.user="alertCallback"></bombscreen>
   </view>
 </template>
 <script>
@@ -50,20 +53,21 @@ import wepy from 'wepy';
 import api from '../api/api';
 import tip from '../utils/tip'
 import Discover from '../components/discover'
+import Bombscreen from '../components/bomb_screen'
 import BottomLoadMore from "../components/common/bottomLoadMore"
 import Placeholder from "../components/common/placeholder"
 export default class Home extends wepy.page {
   config = {
     navigationBarTitleText: '素洁服装厂',
-    navigationBarBackgroundColor: '#e42600',
-    navigationBarTextStyle: 'white',
   }
   components = {
     discover: Discover,
     bottomLoadMore: BottomLoadMore,
-    placeholder: Placeholder
+    placeholder: Placeholder,
+    bombscreen: Bombscreen
   }
   data = {
+
     imgUrls: [
       '../images/image_demo.png',
     ],
@@ -84,7 +88,9 @@ export default class Home extends wepy.page {
     //防止重复加载
     preventRepeatReuqest: false,
     //广告列表
-    adList: []
+    adList: [],
+    tps: 0,
+    is_show_alert: true
   }
   async getDiscoverList(currentPage, size) {
     let that = this;
@@ -125,15 +131,15 @@ export default class Home extends wepy.page {
   computed = {}
   methods = {
     goToAdvert(url) {
-      console.log("url==="+url);
-      if (url.length==0) {
+      console.log("url===" + url);
+      if (url.length == 0) {
         return;
       }
       wepy.navigateTo({
         url: url
       })
     },
-    onShareAppMessage: function (res) {
+    onShareAppMessage: function(res) {
       if (res.from === 'button') {
         // 来自页面内转发按钮
         console.log(res.target)
@@ -148,6 +154,12 @@ export default class Home extends wepy.page {
           // 转发失败
         }
       }
+    },
+    alertCallback() {
+      tip.alert('跳转');
+    },
+    closeAlert() {
+      tip.alert('关闭');
     }
   }
   events = {}
@@ -226,6 +238,12 @@ export default class Home extends wepy.page {
   .nav_text {
     font-size: 26rpx
   }
+}
+
+.recommend-title {
+  padding: 40rpx 0;
+  text-align: center;
+  color: #333;
 }
 
 </style>

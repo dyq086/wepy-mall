@@ -32,6 +32,8 @@ const addCart = (params) => wxRequest(params, apiMall + '/api/mall/goodsCart/add
 const cartList = (params) => wxRequest(params, apiMall + '/api/mall/goodsCart/list');
 //购物车的商品选中状态
 const cartCheck = (params) => wxRequest(params, apiMall + '/api/mall/goodsCart/check');
+//购物车的商品选中状态(全选)
+const cartCheckAll = (params) => wxRequest(params, apiMall + '/api/mall/goodsCart/checkAll');
 //购物车的商品删除
 const cartDel = (params) => wxRequest(params, apiMall + '/api/mall/goodsCart/delete');
 //购物车的商品数量更新
@@ -151,7 +153,7 @@ module.exports = {
   user2session,
   userSginInfo,
   doSign,
-  addCart, cartList, cartCheck, cartDel, cartUpdateNum,
+  addCart, cartList, cartCheck, cartCheckAll, cartDel, cartUpdateNum,
   preOrder,refundApply,
   pointInfo,
   browseInfo,addBrowser,delUserBrowser,

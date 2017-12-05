@@ -1,88 +1,4 @@
-<style lang="less">
-.good_list {
-  display: flex;
-  justify-content: space-between;
-  padding: 20rpx 0rpx;
-  border-bottom: 1px solid #efefef
-}
 
-.image_box {
-  image {
-    width: 180rpx;
-    height: 180rpx;
-  }
-}
-
-
-.product_name {
-  color: #414141;
-  font-size: 32rpx;
-  overflow: hidden;
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  word-break: break-all;
-}
-
-.product_rule {
-  font-size: 26rpx;
-  color: #757575;
-  padding-top: 16rpx;
-}
-
-.price {
-  color: #de0000;
-  font-size: 34rpx;
-  font-weight: 600;
-}
-
-.goods {
-  padding: 15rpx 12rpx;
-  .order_footer {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding-top: 20rpx;
-  }
-  .order_state {
-      color: #ff4856;
-      font-size: 32rpx;
-    }
-  .btn_group {
-      display: flex;
-      align-items: right;
-    .btn {
-        font-size: 25rpx;
-        padding: 10rpx 10rpx;
-        text-align: center;
-        margin: 0 auto;
-        width: 100%;
-        -moz-border-radius: 15rpx;
-        /* Firefox */
-        -webkit-border-radius: 15rpx;
-        /* Safari 和 Chrome */
-        border-radius: 15rpx;
-        /* Opera 10.5+, 以及使用了IE-CSS3的IE浏览器 */
-      }
-    .btn_del {
-        color: #333;
-        border: 1px solid #ccc;
-      }
-    }
-}
-
-.product_info {
-  padding-top: 20rpx;
-  display: flex;
-  align-items: flex-end;
-  justify-content: space-between;
-}
-
-.cost_price {
-  padding-left: 20rpx;
-}
-
-</style>
 <template>
 <repeat for="{{list}}" key="index" index="index" item="item">
   <view class="good_list">
@@ -195,3 +111,88 @@ export default class ShopItemList extends wepy.component {
 }
 
 </script>
+<style lang="less">
+.good_list {
+  display: flex;
+  justify-content: space-between;
+  padding: 20rpx 0rpx;
+  border-bottom: 1px solid #efefef
+}
+
+.image_box {
+  image {
+    width: 180rpx;
+    height: 180rpx;
+  }
+}
+
+
+.product_name {
+  color: #414141;
+  font-size: 32rpx;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  word-break: break-all;
+}
+
+.product_rule {
+  font-size: 26rpx;
+  color: #757575;
+  padding-top: 16rpx;
+}
+
+.price {
+  color: #de0000;
+  font-size: 34rpx;
+  font-weight: 600;
+}
+
+.goods {
+  padding: 15rpx 12rpx;
+  .order_footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 20rpx;
+  }
+  .order_state {
+      color: #ff4856;
+      font-size: 32rpx;
+    }
+  .btn_group {
+      display: flex;
+      align-items: right;
+    .btn {
+        font-size: 25rpx;
+        padding: 10rpx 10rpx;
+        text-align: center;
+        margin: 0 auto;
+        width: 100%;
+        -moz-border-radius: 15rpx;
+        /* Firefox */
+        -webkit-border-radius: 15rpx;
+        /* Safari 和 Chrome */
+        border-radius: 15rpx;
+        /* Opera 10.5+, 以及使用了IE-CSS3的IE浏览器 */
+      }
+    .btn_del {
+        color: #333;
+        border: 1px solid #ccc;
+      }
+    }
+}
+
+.product_info {
+  padding-top: 20rpx;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+}
+
+.cost_price {
+  padding-left: 20rpx;
+}
+
+</style>

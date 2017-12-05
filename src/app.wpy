@@ -48,7 +48,9 @@ export default class extends wepy.app {
       'pages/address',
       'pages/order_detail',
       'pages/filter',
-      'pages/logistics'
+      'pages/logistics',
+      'pages/comment',
+      'pages/comment_add'
     ],
     window: {
       backgroundTextStyle: 'dark',

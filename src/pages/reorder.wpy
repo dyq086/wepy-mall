@@ -40,9 +40,7 @@ export default class Order extends wepy.page {
     currentPage: 1,
     is_empty: false,
     orderStatus: "",
-    currentTab: {
-      default: 0
-    },
+    currentTab: 0,
     flag: 0,
     //是否显示 底部loading
     showLoading: true,

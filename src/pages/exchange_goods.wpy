@@ -1,7 +1,7 @@
 <!--换货专区-->
 <template>
   <!--矩阵商品列表模块-->
-  <shopGridList :purchasetype.sync="purchasetype" :list.sync="list"></shopGridList>
+  <shopGridList :purchasetype.sync="purchasetype" :special.sync="special" :list.sync="list"></shopGridList>
   <bottomLoadMore :show.sync="showLoading" message="正在加载"></bottomLoadMore>
   <!--暂无数据显示-->
   <placeholder :show.sync="is_empty" message="暂无发现数据"></placeholder>
@@ -30,6 +30,7 @@ export default class exchangeGoods extends wepy.page {
   data = {
     list: [],
     purchasetype: 1,
+    special:1, ////0-正常入库;1-特价专区和换货专区
     //是否有数据
     is_empty: false,
     //当前页面

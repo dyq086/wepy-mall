@@ -5,11 +5,11 @@
     <!--<view class="jf_jz_title tc">积分价值</view>-->
     <view class="jf_content">
       <view class="sec_title">1.签到积分规则 </view>
-      <view class="jf_ins">亲，每天签到送积分啦！每天签到一次送10积分，如连续签到5天（不间断），积分则是5（天）x10（积分），即50积分。</view>
+      <view class="jf_ins">亲，每天签到送积分啦！每天签到一次送10积分，多签多得，积分可以抵消现金的，记得每天签到一次哦。</view>
     </view>
     <view class="jf_content">
       <view class="sec_title">2.积分使用规则 </view>
-      <view class="jf_ins">积分可以享受满立减，下单更优惠！满50积分可抵消5元现金，在下单支付界面系统会自动显示你的总积分，付款之后在订单总金额上系统会自动减去5元。</view>
+      <view class="jf_ins">亲，签到的积分可以享受满立减，下单更优惠！即满100积分可抵消5元现金；在您下单微信支付界面，系统会自动显示你的总积分多少可用多少，微信付款之后在商品金额上系统会自动减去5元。</view>
     </view>
     <!--<view class="jf_content">
       <view class="sec_title">积分社区的价值</view>

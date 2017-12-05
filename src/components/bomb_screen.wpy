@@ -1,0 +1,138 @@
+<template>
+  <view wx:if="{{show}}">
+    <view wx:if="{{types===0}}">
+      <view class="pop-alert-box">
+        <image src="../../images/icon_alert.png" class="icon_alert" @tap.stop="callback"></image>
+        <i class="iconfont icon-close" @tap.stop="close"></i>
+      </view>
+    </view>
+    <view wx:else>
+      <view class="pop-alert-box dialog">
+        <view class="alert-content-box">
+          <view class="alert-content">
+            <image src="../../images/icon_alert.png" class="icon_alert_dialog"></image>
+            <view class="title">恭喜获得红包</view>
+            <view class="title-doc">恭喜获得一张卡券，已发放至该账号</view>
+          </view>
+          <view class="btn_box">
+            <view class="button type_red"  @tap.stop="callback">点击领取</view>
+          </view>
+        </view>
+          <i class="iconfont icon-close" @tap.stop="close"></i>
+      </view>
+    </view>
+    <view class="alert_mask" @tap.stop="close"></view>
+  </view>
+</template>
+<script>
+import wepy from 'wepy';
+export default class bombScreen extends wepy.component {
+  data = {
+
+  }
+  props = {
+    show: {
+      default: false
+    },
+    types: {
+      default: 0
+    }
+  }
+  events = {
+
+  }
+  methods = {
+    close() {
+      this.show = false;
+      this.$emit("close")
+    },
+    callback() {
+      this.$emit("callback")
+    }
+  }
+
+  onLoad() {
+
+  }
+}
+
+</script>
+<style lang="less">
+.pop-alert-box {
+  position: fixed;
+  width: 550rpx;
+  height: 550rpx;
+  margin-left: -275rpx;
+  top: 20%;
+  left: 50%;
+  z-index: 2001;
+  text-align: center;
+  &.dialog {
+    .alert-content-box {
+      width: 100%;
+      height: 100%;
+      position: relative;
+      background: #fff;
+      border-radius: 10rpx;
+      text-align: center;
+    }
+    .alert-content {
+      padding: 20rpx;
+      .title {
+        font-weight: bold;
+        color:#333;
+      }
+      .title-doc{
+        padding-top: 10rpx;
+        color:#999;
+      }
+    }
+    .btn_box {
+      width: 100%;
+      position: absolute;
+      bottom: 30rpx;
+      .button{
+        width: 90%;
+      }
+
+    }
+  }
+}
+
+.icon_alert {
+  width: 100%;
+}
+
+.icon_alert_dialog {
+  width: 200rpx;
+  height: 200rpx;
+  margin: 0 auto;
+}
+
+.icon-close {
+  display: inline-block;
+  font-size: 60rpx;
+  color: #dedede;
+  margin-top: 50rpx;
+}
+
+.alert_mask {
+  background-color: rgba(0, 0, 0, .6);
+  position: fixed;
+  z-index: 2000;
+  bottom: 0;
+  right: 0;
+  left: 0;
+  top: 0;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+}
+
+</style>

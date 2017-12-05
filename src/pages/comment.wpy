@@ -1,0 +1,70 @@
+<!--商品评论列表-->
+<template>
+  <view class="block">
+    <view class="block_title">全部评价(20)</view>
+    <view class="block_content">
+      <commentList :list.sync="commentList"></commentList>
+    </view>
+  </view>
+</template>
+<script>
+import wepy from 'wepy';
+import CommentList from "../components/comment_list"
+export default class goodsComment extends wepy.page {
+  config = {
+    navigationBarTitleText: '商品评论',
+  }
+  data = {
+    commentList: [{
+        url: "../images/icon_nav_01_new.png",
+        name: "浪子天涯",
+        time: "2017-10-01 10:10",
+        content: "东西收到,很满意!!真的是超级好的卖家,解答疑问不厌其烦,细致认真,关键是东西好,而且货物发得超快,包装仔细,值得信赖!",
+        start: 4.5,
+        children: [{
+          content: "跟你交易次次都这么成功和开心的．．希望我们以后有更多的交易吧．．．哈哈"
+        }],
+
+      },
+      {
+        url: "../images/icon_nav_02_new.png",
+        name: "勇闯天下",
+        time: "2017-10-01 10:10",
+        content: "太感谢了，衣服很漂亮，朋友很喜欢，最主要的是买家太好了~~~大大的赞一个。。。 衣服，很合身",
+        start: 4,
+        children: [],
+
+      }
+
+
+    ],
+  }
+  onLoad() {
+
+  }
+  components = {
+    commentList: CommentList
+  }
+  computed = {}
+  methods = {}
+  events = {}
+}
+
+</script>
+<style lang="less">
+.block {
+  padding: 27rpx 0rpx;
+  background: #fff;
+  .block_title {
+    color: #000;
+    height: 30rpx;
+    line-height: 30rpx;
+    border-left: 6px solid #f73c3c;
+    padding-left: 20rpx;
+  }
+  .block_content {
+    padding: 38rpx 22rpx;
+  }
+}
+
+</style>
