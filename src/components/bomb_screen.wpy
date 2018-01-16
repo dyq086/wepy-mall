@@ -2,7 +2,7 @@
   <view wx:if="{{show}}">
     <view wx:if="{{types===0}}">
       <view class="pop-alert-box">
-        <image src="../../images/icon_alert.png" class="icon_alert" @tap.stop="callback"></image>
+        <image src="../images/icon_alert.png" class="icon_alert" @tap.stop="callback"></image>
         <i class="iconfont icon-close" @tap.stop="close"></i>
       </view>
     </view>
@@ -10,7 +10,7 @@
       <view class="pop-alert-box dialog">
         <view class="alert-content-box">
           <view class="alert-content">
-            <image src="../../images/icon_alert.png" class="icon_alert_dialog"></image>
+            <image src="../images/icon_alert.png" class="icon_alert_dialog"></image>
             <view class="title">恭喜获得红包</view>
             <view class="title-doc">恭喜获得一张卡券，已发放至该账号</view>
           </view>

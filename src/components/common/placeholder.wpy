@@ -1,6 +1,6 @@
 <template>
     <view class="empty-placeholder row-center" wx:if="{{show}}">
-        <image class="icon-xl" src="/images/empty.png" />
+        <image class="icon-xl" src="../../images/empty.png" />
         <view class="txt">{{message}}</view>
     </view>
 </template>
