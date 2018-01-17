@@ -2,9 +2,9 @@
  * author: Di (微信小程序开发工程师)
  * organization: WeAppDev(微信小程序开发论坛)(http://weappdev.com)
  *               垂直微信小程序开发交流社区
- * 
+ *
  * github地址: https://github.com/icindy/wxParse
- * 
+ *
  * for: 微信小程序富文本解析
  * detail : http://weappdev.com/t/wxparse-alpha0-1-html-markdown/184
  */
@@ -48,6 +48,7 @@ function wxParse(bindName = 'wxParseData', type='html', data='<div class="color:
   var bindData = {};
   bindData[bindName] = transData;
   that.setData(bindData)
+  that.bindData = bindData // 增加这一行代码
   that.wxParseImgLoad = wxParseImgLoad;
   that.wxParseImgTap = wxParseImgTap;
 }
@@ -65,7 +66,7 @@ function wxParseImgTap(e) {
 }
 
 /**
- * 图片视觉宽高计算函数区 
+ * 图片视觉宽高计算函数区
  **/
 function wxParseImgLoad(e) {
   var that = this;
@@ -73,7 +74,7 @@ function wxParseImgLoad(e) {
   var idx = e.target.dataset.idx;
   if (typeof (tagFrom) != 'undefined' && tagFrom.length > 0) {
     calMoreImageInfo(e, idx, that, tagFrom)
-  } 
+  }
 }
 // 假循环获取计算图片视觉最佳宽高
 function calMoreImageInfo(e, idx, that, bindName) {
@@ -83,9 +84,9 @@ function calMoreImageInfo(e, idx, that, bindName) {
   }
   var temImages = temData.images;
   //因为无法获取view宽度 需要自定义padding进行计算，稍后处理
-  var recal = wxAutoImageCal(e.detail.width, e.detail.height,that,bindName); 
+  var recal = wxAutoImageCal(e.detail.width, e.detail.height,that,bindName);
   // temImages[idx].width = recal.imageWidth;
-  // temImages[idx].height = recal.imageheight; 
+  // temImages[idx].height = recal.imageheight;
   // temData.images = temImages;
   // var bindData = {};
   // bindData[bindName] = temData;
@@ -143,7 +144,7 @@ function wxParseTemArray(temArrayName,bindNameReg,total,that){
 
 /**
  * 配置emojis
- * 
+ *
  */
 
 function emojisInit(reg='',baseSrc="/wxParse/emojis/",emojis){

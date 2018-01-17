@@ -251,6 +251,21 @@ export default class goodsDetail extends wepy.page {
     })
     this.animation = animation;
   }
+  wxParseImgLoad(e) {
+  }
+
+  wxParseImgTap(e) {
+    var that = this
+    var nowImgUrl = e.target.dataset.src
+    var tagFrom = e.target.dataset.from
+    if (typeof (tagFrom) != 'undefined' && tagFrom.length > 0) {
+      wx.previewImage({
+        current: nowImgUrl, // 当前显示图片的http链接
+        // urls: that.data[tagFrom].imageUrls // 需要预览的图片http链接列表
+        urls: that.bindData[tagFrom].imageUrls  // 注释掉上面的 换着一行 (http://blog.csdn.net/zhuming3834/article/details/74380079)
+      })
+    }
+  }
   /*onReachBottom() {
     let that = this;
     if (that.good_bigimg.length == 0) {
@@ -282,7 +297,11 @@ export default class goodsDetail extends wepy.page {
         }
       }
     } else {
-      tip.error(json.data.msg)
+      if (json.data.msg) {
+        tip.error(json.data.msg)
+      } else {
+        tip.error('查看商品失败')
+      }
     }
     that.$apply();
     //this.$invoke('timer', 'initTimer', time);
@@ -326,7 +345,11 @@ export default class goodsDetail extends wepy.page {
       }, 100)
       tip.success("成功加入购物车");
     } else {
-      tip.error(json.data.msg)
+      if (json.data.msg) {
+        tip.error(json.data.msg)
+      } else {
+        tip.error('无法加入购物车')
+      }
     }
   }
   //立即购买
@@ -357,7 +380,11 @@ export default class goodsDetail extends wepy.page {
         url: "/pages/comfire_order?goodsId=" + that.goodsId + "&purchasetype=" + that.purchasetype
       })
     } else {
-      tip.error(json.data.msg)
+      if (json.data.msg) {
+        tip.error(json.data.msg)
+      } else {
+        tip.error('无法立刻购买')
+      }
     }
   }
   async showConfirmData() {
@@ -391,7 +418,12 @@ export default class goodsDetail extends wepy.page {
         this.isFavorite = false;
       }
     } else {
-      tip.error(json.data.msg)
+      console.log('查看商品收藏失败')
+      if (json.data.msg) {
+        tip.error(json.data.msg)
+      } else {
+        tip.error('查看商品收藏失败')
+      }
     }
     that.$apply();
   }
@@ -411,7 +443,8 @@ export default class goodsDetail extends wepy.page {
       this.isFavorite = true;
       tip.toast("收藏成功");
     } else {
-      tip.error(json.data.msg)
+      console.log(json.data)
+      tip.error('收藏失败')
     }
     that.$apply();
   }
@@ -431,7 +464,8 @@ export default class goodsDetail extends wepy.page {
       tip.toast("取消收藏成功");
       this.isFavorite = false;
     } else {
-      tip.error(json.data.msg)
+      console.log(json.data)
+      tip.error('取消收藏失败')
     }
     that.$apply();
   }
