@@ -90,16 +90,19 @@
     </view>
     <view class="detail-bottom">
       <view class="bottom-box">
-        <view class="item">
+        <view class="item"  @tap="homePage">
           <i class="iconfont icon-home"></i>
           <view class="doc">首页</view>
         </view>
+        <!-- <contact-button class="contact"> -->
         <contact-button class="contact">
         </contact-button>
         <view class="item">
           <i class="iconfont icon-message"></i>
           <view class="doc">客服</view>
         </view>
+        <contact-button class="contact">
+        </contact-button>
         <view class="item {{isFavorite?'selec_active':''}}" @tap="takeFavorite">
           <i class="iconfont icon-collection"></i>
           <view class="doc">收藏</view>
@@ -470,6 +473,17 @@ export default class goodsDetail extends wepy.page {
     that.$apply();
   }
   methods = {
+    // issus : https://mp.weixin.qq.com/debug/wxadoc/dev/api/ui-navigate.html#wxrelaunchobject
+    homePage() {
+      wepy.switchTab({
+        url: '/frame/home'
+      })
+      // wx.switchTab({
+      //   url: '/frame/home'
+      // })
+      // console.log(wepy)
+      // console.log(wx)
+    },
     moreComment() {
       wepy.navigateTo({
         url: "/pages/comment"
@@ -747,7 +761,7 @@ export default class goodsDetail extends wepy.page {
       position: absolute;
       text-align: center;
       line-height: 80rpx;
-      left: 0;
+      left: 100rpx; // 在客服上面
       opacity: 0;
     }
   }
