@@ -1,8 +1,8 @@
 <template>
   <view class="container">
     <search @searchValue.user="doSearch"></search>
+    <filterBar wx:if="{{list.length>0||skuval !==''}}" @currentType.user="currentType"></filterBar>
     <view wx:if="{{list.length>0}}">
-      <filterBar @currentType.user="currentType"></filterBar>
       <!--矩阵商品列表模块-->
       <shopGridList :purchasetype.sync="purchasetype" :list.sync="list"></shopGridList>
       <!--加载更多时动画-->

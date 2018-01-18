@@ -31,6 +31,7 @@ import {
   SEL_CLASS_CODE
 } from '../utils/constant';
 
+import tip from '../utils/tip'
 
 export default class Classify extends wepy.page {
   config = {
