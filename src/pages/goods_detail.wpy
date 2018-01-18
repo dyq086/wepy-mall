@@ -476,10 +476,10 @@ export default class goodsDetail extends wepy.page {
     // issus : https://mp.weixin.qq.com/debug/wxadoc/dev/api/ui-navigate.html#wxrelaunchobject
     homePage() {
       wepy.switchTab({
-        url: '/frame/home'
+        url: '/pages/home'
       })
       // wx.switchTab({
-      //   url: '/frame/home'
+      //   url: '/pages/home'
       // })
       // console.log(wepy)
       // console.log(wx)
