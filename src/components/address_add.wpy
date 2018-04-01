@@ -31,13 +31,13 @@
       <view class="list_item">
         <view class="title">收货人姓名:</view>
         <view class="input">
-          <input type="text" name="receiverName" value="">
+          <input type="text" name="receiverName" value="" />
         </view>
       </view>
       <view class="list_item">
         <view class="title">联系电话:</view>
         <view class="input">
-          <input type="text" name="mobile">
+          <input type="text" name="mobile" />
         </view>
       </view>
       <view class="list_item">
@@ -50,7 +50,7 @@
       <view class="list_item">
         <view class="title">详细地址:</view>
         <view class="input">
-          <input type="text" name="addressDetail">
+          <input type="text" name="addressDetail"/>
         </view>
       </view>
       <view class="list_item">

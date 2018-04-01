@@ -64,7 +64,7 @@
       <view class="spacing"></view>
         <view class="block">
         <view class="left total_jf">积分 \t共{{total_jf_num}}\t可用{{can_use_score}}</view>
-        <view class="right"><input type="number" class="dk-jf" value={{jf_num}} bindinput="jfInput" placeholder="输入抵扣积分"></view>
+        <view class="right"><input type="number" class="dk-jf" value="{{jf_num}}" bindinput="jfInput" placeholder="输入抵扣积分"/></view>
       </view>
       <view class="spacing"></view>
       <view class="block">
