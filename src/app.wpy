@@ -142,41 +142,13 @@ export default class extends wepy.app {
               wepy.setStorageSync(USER_SPECICAL_INFO, obj);
             }
           } else {
-            let obj = {};
-            obj.openid = "oeuj50KHMqsh5kYZYWQJuwmY5yG0";
-            obj.expires_in = "7200";
-            //存储openid 
-            wepy.setStorageSync(USER_SPECICAL_INFO, obj);
+            // let obj = {};
+            // obj.openid = "oeuj50KHMqsh5kYZYWQJuwmY5yG0";
+            // obj.expires_in = "7200";
+            // //存储openid 
+            // wepy.setStorageSync(USER_SPECICAL_INFO, obj);
           }
         });
-
-        let url = 'https://api.weixin.qq.com/sns/jscode2session?appid=' + d.appid + '&secret=' + d.secret + '&js_code=' + res.code + '&grant_type=authorization_code';
-
-        /* let b = await wepy.request({
-             url: url,
-             data: {},
-             method: 'POST',
-             header: {
-                 'content-Type': 'application/x-www-form-urlencoded'
-             }
-         });
-         if (b.data.openid) {
-             let obj = {};
-             obj.openid = b.data.openid;
-             obj.expires_in = Date.now() + b.data.expires_in;
-
-             //存储openid 
-             wepy.setStorageSync(USER_SPECICAL_INFO, obj);
-
-             //存储userInfo 
-             let c = await wepy.getUserInfo();
-             wepy.setStorageSync(USER_INFO, c.userInfo);
-
-             //存储系统信息 
-             let systemInfo = await wepy.getSystemInfoSync();
-             wepy.setStorageSync(SYSTEM_INFO, systemInfo);
-             console.log(b, '登陆成功')
-         }*/
 
       } else {
         console.log('获取用户登录态失败！' + res.errMsg)

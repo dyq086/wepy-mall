@@ -95,11 +95,10 @@ export default class Classify extends wepy.page {
 
   onLoad() {
     let that = this;
-    //this.list = aa.data;
     let systemInfo = wx.getStorageSync(SYSTEM_INFO);
     this.windowHeight = systemInfo.windowHeight;
     this.$apply();
-    console.log(aa)
+
   }
 
   onShow() {
@@ -111,7 +110,6 @@ export default class Classify extends wepy.page {
   }
   methods = {
     changeCate(e) {
-      console.log("changecate....");
       let code = e.currentTarget.dataset.code;
       this.getChildCate(code);
       wepy.setStorageSync(SEL_CLASS_CODE, code);

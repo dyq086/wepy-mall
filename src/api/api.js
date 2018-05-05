@@ -4,7 +4,7 @@ import {
 
 let env = "-test" //-dev 或者 -test
 const apiMall = 'https://sujiefs.com/'
-//const apiMall = 'https://api.tangxinmao.com'
+// const apiMall = 'http://localhost:8080/'
 
 /**
  * 获取发现好商品接口
@@ -146,36 +146,53 @@ const getAdList = (params) => wxRequest(params, apiMall + '/api/adverts/list');
 
 module.exports = {
   hostGoodsList,
-  getDiscoverList, getHomeDisvocerList,
+  getDiscoverList,
+  getHomeDisvocerList,
   getGoodsList,
   goodsDetail,
   wxJsCode2Session,
   user2session,
   userSginInfo,
   doSign,
-  addCart, cartList, cartCheck, cartCheckAll, cartDel, cartUpdateNum,
-  preOrder,refundApply,
+  addCart,
+  cartList,
+  cartCheck,
+  cartCheckAll,
+  cartDel,
+  cartUpdateNum,
+  preOrder,
+  refundApply,
   pointInfo,
-  browseInfo,addBrowser,delUserBrowser,
+  browseInfo,
+  addBrowser,
+  delUserBrowser,
   favoriteInfo,
   messageInfo,
-  registerUser,sendRandCode,
+  registerUser,
+  sendRandCode,
   getUserInfo,
   getUserAddress,
   saveAddress,
   receiverInfoById,
   getUserAddress,
-  addSearchKeyword, searchKeywordList, clearSearchKeyword,
-  getMyOrderList, saveByCart,toPay,
-  rootCtegoryList, childGoodsCatetoryList,
+  addSearchKeyword,
+  searchKeywordList,
+  clearSearchKeyword,
+  getMyOrderList,
+  saveByCart,
+  toPay,
+  rootCtegoryList,
+  childGoodsCatetoryList,
   getOrderInfo,
-  editOrderInfo, goodsUserOrderList,
+  editOrderInfo,
+  goodsUserOrderList,
   orderExpressInfo,
   delUserAddress,
   goodsFavorite,
   goodsUnFavorite,
   goodsIsFavorite,
-  getMyOrderSize,getPayOrderDetail,
+  getMyOrderSize,
+  getPayOrderDetail,
   getAdList,
   getSignDate
 }

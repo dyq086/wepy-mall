@@ -39,7 +39,6 @@
     </view>
     <!--发现好商品模块-->
     <discover :list.sync="discoverList"></discover>
-    <view class="recommend-title">商品推荐</view>
     <!--加载更多时动画-->
     <bottomLoadMore :show.sync="showLoading" message="正在加载"></bottomLoadMore>
     <!--暂无数据显示-->
@@ -58,7 +57,7 @@ import BottomLoadMore from "../components/common/bottomLoadMore"
 import Placeholder from "../components/common/placeholder"
 export default class Home extends wepy.page {
   config = {
-    navigationBarTitleText: '素洁服装厂',
+    navigationBarTitleText: '演示商城',
   }
   components = {
     discover: Discover,
@@ -67,10 +66,6 @@ export default class Home extends wepy.page {
     bombscreen: Bombscreen
   }
   data = {
-
-    imgUrls: [
-      '../images/image_demo.png',
-    ],
     indicatorDots: true,
     autoplay: true,
     interval: 3000,
@@ -162,7 +157,7 @@ export default class Home extends wepy.page {
       tip.alert('跳转');
     },
     closeAlert() {
-      tip.alert('关闭');
+     // tip.alert('关闭');
     }
   }
   events = {}
