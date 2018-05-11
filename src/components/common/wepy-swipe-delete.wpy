@@ -98,15 +98,15 @@ export default class Counter extends wepy.component {
     tm(e) {
       if (e.touches.length === 1) {
         // 手指起始点位置与移动期间的差值
-        var distenceX = this.moveX - e.touches[0].clientX
+        var distanceX = this.moveX - e.touches[0].clientX
         this.moveX = e.touches[0].clientX
 
-        if ((this.swipeData.style - distenceX) < -140) {
+        if ((this.swipeData.style - distanceX) < -140) {
           this.swipeData.style = -140
-        } else if ((this.swipeData.style - distenceX) > 0) {
+        } else if ((this.swipeData.style - distanceX) > 0) {
           this.swipeData.style = 0
         } else {
-          this.swipeData.style = this.swipeData.style - distenceX
+          this.swipeData.style = this.swipeData.style - distanceX
         }
         this.setData({
           swipeData: this.props.swipeData
