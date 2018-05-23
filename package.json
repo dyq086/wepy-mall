@@ -1,39 +1,41 @@
 {
-  "name": "test",
-  "version": "1.2.8",
-  "description": "",
+  "name": "wxYuHanStore",
+  "version": "1.0.2",
+  "description": "wxYuHanStore project",
   "main": "dist/app.js",
   "scripts": {
     "dev": "wepy build --watch",
     "build": "cross-env NODE_ENV=production wepy build --no-cache",
+    "dev:web": "wepy build --output web",
+    "clean": "find ./dist -maxdepth 1 -not -name 'project.config.json' -not -name 'dist' | xargs rm -rf",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "",
-  "license": "ISC",
+  "wepy": {
+    "module-a": false
+  },
+  "author": "yongqing <490844594@qq.com>",
+  "license": "MIT",
   "dependencies": {
-    "promise-polyfill": "^6.0.2",
-    "wepy": "^1.5.7",
+    "wepy": "^1.6.0",
     "wepy-async-function": "^1.4.4",
     "wepy-com-toast": "^1.0.2"
   },
   "devDependencies": {
     "babel-eslint": "^7.2.1",
-    "babel-plugin-syntax-export-extensions": "^6.13.0",
+    "babel-plugin-transform-class-properties": "^6.24.1",
     "babel-plugin-transform-decorators-legacy": "^1.3.4",
     "babel-plugin-transform-export-extensions": "^6.22.0",
-    "babel-preset-es2015": "^6.24.1",
-    "babel-preset-stage-1": "^6.24.1",
-    "cross-env": "^4.0.0",
+    "babel-plugin-transform-object-rest-spread": "^6.26.0",
+    "babel-preset-env": "^1.6.1",
+    "cross-env": "^5.1.3",
     "eslint": "^3.18.0",
     "eslint-config-standard": "^7.1.0",
     "eslint-friendly-formatter": "^2.0.7",
     "eslint-plugin-html": "^2.0.1",
     "eslint-plugin-promise": "^3.5.0",
     "eslint-plugin-standard": "^2.0.1",
+    "wepy-eslint": "^1.5.3",
     "wepy-compiler-babel": "^1.5.1",
-    "wepy-compiler-less": "^1.3.10",
-    "wepy-eslint": "^1.5.2",
-    "wepy-plugin-imagemin": "^1.5.2",
-    "wepy-plugin-uglifyjs": "^1.3.6"
+    "wepy-compiler-less": "^1.3.10"
   }
 }
