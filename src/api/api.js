@@ -1,6 +1,6 @@
 import {
   wxRequest
-} from '../utils/wxRequest';
+} from '@/utils/wxRequest';
 
 let env = "-test" //-dev 或者 -test
 const apiMall = 'https://sujiefs.com/'
@@ -144,7 +144,7 @@ const childGoodsCatetoryList = (params) => wxRequest(params, apiMall + '/api/mal
 //查询广告列表
 const getAdList = (params) => wxRequest(params, apiMall + '/api/adverts/list');
 
-module.exports = {
+export default {
   hostGoodsList,
   getDiscoverList,
   getHomeDisvocerList,
