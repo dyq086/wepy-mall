@@ -51,11 +51,11 @@
 </template>
 <script>
 import wepy from 'wepy';
-import api from '../api/api';
+import api from '@/api/api';
 import {
   SYSTEM_INFO,
   USER_SPECICAL_INFO
-} from '../utils/constant';
+} from '@/utils/constant';
 export default class Messages extends wepy.page {
   config = {
     navigationBarTitleText: '设置',

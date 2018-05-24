@@ -14,12 +14,12 @@
 </template>
 <script>
 import wepy from 'wepy';
-import api from '../api/api';
+import api from '@/api/api';
 import {
   SYSTEM_INFO,
   USER_SPECICAL_INFO
-} from '../utils/constant';
-import PointsDetail from '../components/points_detail'
+} from '@/utils/constant';
+import PointsDetail from '@/components/points_detail'
 import BottomLoadMore from "../components/common/bottomLoadMore"
 import Placeholder from "../components/common/placeholder"
 export default class PointsMore extends wepy.page {

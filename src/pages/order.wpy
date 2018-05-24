@@ -13,15 +13,15 @@
 </template>
 <script>
 import wepy from 'wepy';
-import Tab from '../components/tab'
+import Tab from '@/components/tab'
 import {
   SYSTEM_INFO,
   USER_SPECICAL_INFO
-} from '../utils/constant';
-import OrderItem from '../components/order_item'
+} from '@/utils/constant';
+import OrderItem from '@/components/order_item'
 import BottomLoadMore from "../components/common/bottomLoadMore"
 import Placeholder from "../components/common/placeholder"
-import api from '../api/api';
+import api from '@/api/api';
 export default class Order extends wepy.page {
   config = {
     navigationBarTitleText: "我的订单",

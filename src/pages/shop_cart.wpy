@@ -5,7 +5,7 @@
 </template>
 <script>
 import wepy from 'wepy';
-import ShopCart from '../components/shop_cart'
+import ShopCart from '@/components/shop_cart'
 export default class shopCart extends wepy.page {
   config = {
     navigationBarTitleText: '购物车',

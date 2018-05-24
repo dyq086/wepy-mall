@@ -25,12 +25,12 @@
 </template>
 <script>
 import wepy from 'wepy';
-import api from '../api/api';
+import api from '@/api/api';
 import FilterBar from "../components/filter_bar"
-import ShopGridList from '../components/shop_grid_list'
+import ShopGridList from '@/components/shop_grid_list'
 import BottomLoadMore from "../components/common/bottomLoadMore"
 import Placeholder from "../components/common/placeholder"
-import tip from '../utils/tip'
+import tip from '@/utils/tip'
 
 export default class HomeDetail extends wepy.page {
   config = {

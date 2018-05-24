@@ -56,11 +56,11 @@
 
 <script>
   import wepy from 'wepy';
-  import api from '../api/api';
-  import tip from '../utils/tip';
+  import api from '@/api/api';
+  import tip from '@/utils/tip';
   import {
     USER_SPECICAL_INFO
-  } from '../utils/constant';
+  } from '@/utils/constant';
   import swipeDelete from './common/wepy-swipe-delete'
   export default class shopCart extends wepy.component {
     components = {

@@ -20,11 +20,11 @@
 </template>
 <script>
 import wepy from 'wepy';
-import api from '../api/api';
-import tip from '../utils/tip'
+import api from '@/api/api';
+import tip from '@/utils/tip'
 import {
   USER_SPECICAL_INFO
-} from '../utils/constant';
+} from '@/utils/constant';
 
 
 export default class Register extends wepy.page {

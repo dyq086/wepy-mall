@@ -22,7 +22,7 @@
 </template>
 <script>
 import wepy from 'wepy'
-import regions from '../../utils/regions.js';
+import regions from '@/../utils/regions.js';
 
 export default class AreaPicker extends wepy.component {
   data = {

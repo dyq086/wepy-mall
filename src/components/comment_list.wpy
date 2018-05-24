@@ -25,8 +25,8 @@ import wepy from 'wepy';
 import {
   SYSTEM_INFO,
   USER_SPECICAL_INFO
-} from '../utils/constant';
-import tip from '../utils/tip'
+} from '@/utils/constant';
+import tip from '@/utils/tip'
 import Rate from './rate'
 export default class CommentList extends wepy.component {
   props = {

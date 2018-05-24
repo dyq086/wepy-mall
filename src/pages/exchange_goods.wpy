@@ -8,15 +8,15 @@
 </template>
 <script>
 import wepy from 'wepy';
-import ShopGridList from '../components/shop_grid_list'
+import ShopGridList from '@/components/shop_grid_list'
 import {
   SYSTEM_INFO,
   USER_SPECICAL_INFO
-} from '../utils/constant';
-import tip from '../utils/tip';
-import api from '../api/api';
-import BottomLoadMore from "../components/common/bottomLoadMore"
-import Placeholder from "../components/common/placeholder"
+} from '@/utils/constant';
+import tip from '@/utils/tip';
+import api from '@/api/api';
+import BottomLoadMore from "@/components/common/bottomLoadMore"
+import Placeholder from "@/components/common/placeholder"
 
 export default class exchangeGoods extends wepy.page {
   config = {

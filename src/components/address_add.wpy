@@ -67,11 +67,11 @@
 </template>
 <script>
 import wepy from 'wepy';
-import tip from '../utils/tip';
+import tip from '@/utils/tip';
 import api from "../api/api";
 import {
   USER_SPECICAL_INFO
-} from '../utils/constant';
+} from '@/utils/constant';
 import AreaPicker from "./common/wepy-area-picker"
 export default class AddressAdd extends wepy.component {
   data = {

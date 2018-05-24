@@ -16,10 +16,10 @@ import AddressList from "../components/address_list";
 import AddressAdd from "../components/address_add";
 import AddressEdit from "../components/address_edit";
 import api from "../api/api";
-import tip from '../utils/tip';
+import tip from '@/utils/tip';
 import {
   USER_SPECICAL_INFO
-} from '../utils/constant';
+} from '@/utils/constant';
 export default class Address extends wepy.page {
   config = {
     navigationBarTitleText: '地址管理',

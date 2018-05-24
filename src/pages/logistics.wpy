@@ -41,14 +41,14 @@
 
 </template>
 <script>
-import tip from '../utils/tip';
+import tip from '@/utils/tip';
 import wepy from 'wepy';
 import Timer from "../components/common/timer"
-import api from '../api/api'
+import api from '@/api/api'
 import {
   SYSTEM_INFO,
   USER_SPECICAL_INFO
-} from '../utils/constant';
+} from '@/utils/constant';
 export default class exchangeGoods extends wepy.page {
   config = {
     navigationBarTitleText: '订单物流',

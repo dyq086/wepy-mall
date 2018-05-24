@@ -22,16 +22,16 @@
 </style>
 <script>
 import wepy from 'wepy';
-import Tab from '../components/tab';
-import api from '../api/api';
-import tip from '../utils/tip'
+import Tab from '@/components/tab';
+import api from '@/api/api';
+import tip from '@/utils/tip'
 import BottomLoadMore from "../components/common/bottomLoadMore"
 import Placeholder from "../components/common/placeholder"
 import {
   SYSTEM_INFO,
   USER_SPECICAL_INFO
-} from '../utils/constant';
-import ShopGridList from '../components/shop_grid_list'
+} from '@/utils/constant';
+import ShopGridList from '@/components/shop_grid_list'
 export default class replenishmentGoods extends wepy.page {
   config = {
     navigationBarTitleText: '我要补货',

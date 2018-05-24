@@ -25,9 +25,9 @@ import wepy from 'wepy';
 import {
   SYSTEM_INFO,
   USER_SPECICAL_INFO
-} from '../utils/constant';
-import tip from '../utils/tip'
-import api from '../api/api';
+} from '@/utils/constant';
+import tip from '@/utils/tip'
+import api from '@/api/api';
 import SwipeDelete from './common/wepy-swipe-delete'
 export default class CollecntionList extends wepy.component {
   props = {

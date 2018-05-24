@@ -27,12 +27,12 @@
 <script>
 import wepy from 'wepy'
 import SwipeDelete from './common/wepy-swipe-delete'
-import tip from '../utils/tip'
+import tip from '@/utils/tip'
 import api from "../api/api";
 import {
   USER_SPECICAL_INFO,
   ADDRESS_ID
-} from '../utils/constant';
+} from '@/utils/constant';
 export default class AddressList extends wepy.component {
   props = {
     addressList: {

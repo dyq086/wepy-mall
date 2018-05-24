@@ -16,7 +16,7 @@
 </template>
 <script>
 import wepy from 'wepy';
-import api from '../api/api';
+import api from '@/api/api';
 
 export default class Discover extends wepy.component {
 
