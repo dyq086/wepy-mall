@@ -68,7 +68,7 @@
 <script>
 import wepy from 'wepy';
 import tip from '@/utils/tip';
-import api from "../api/api";
+import api from "@/api/api";
 import {
   USER_SPECICAL_INFO
 } from '@/utils/constant';
@@ -89,18 +89,13 @@ export default class AddressAdd extends wepy.component {
   }
 
   async addAddress(address) {
-
     let that = this;
-    console.log("=======province=======");
-    console.log(that.province);
     let userSpecialInfo = wepy.getStorageSync(USER_SPECICAL_INFO) || {};
     let isDefult = 0;
     if (this.isDefult) {
       isDefult = 1;
     }
     let openId = userSpecialInfo.openid;
-    console.log("address:");
-    console.log(address);
     const json = await api.saveAddress({
       query: {
         openId: openId,
@@ -152,15 +147,12 @@ export default class AddressAdd extends wepy.component {
       this.$invoke('areaPicker', 'openAddressPicker');
     },
     areaPickerArray(province, city, area) {
-      console.log("ddddddddd11111111");
       this.province = province;
       this.city = city;
       this.area = area;
-
       this.provinceCode = province.code;
       this.cityCode = city.code;
       this.areaCode = area.code;
-      console.log(this.provinceCode);
       this.$apply();
     }
   }

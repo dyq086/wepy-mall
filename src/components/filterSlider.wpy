@@ -55,7 +55,6 @@
       },
       selSKU(e) {
         var sku = e.currentTarget.dataset.sku;
-        console.log("sku---"+sku);
         this.$emit('filterSku', sku);
         this.swictchOverlay();
       }

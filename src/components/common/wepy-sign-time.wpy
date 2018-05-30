@@ -15,12 +15,12 @@
 
 <script>
 import wepy from 'wepy'
-import tip from '@/../utils/tip'
+import tip from '@/utils/tip'
 import {
   SYSTEM_INFO,
   USER_SPECICAL_INFO
-} from '@/../utils/constant';
-import api from '@/../api/api';
+} from '@/utils/constant';
+import api from '@/api/api';
 
   export default class WepySignTime extends wepy.component {
     data = {

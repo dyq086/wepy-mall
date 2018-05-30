@@ -68,7 +68,7 @@
 <script>
 import wepy from 'wepy'
 import tip from '@/utils/tip'
-import api from "../api/api"
+import api from "@/api/api"
 import {
   USER_SPECICAL_INFO
 } from '@/utils/constant';
