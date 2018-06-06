@@ -41,10 +41,13 @@ export default class Authorize extends wepy.page {
             nickName: e.detail.userInfo.nickName
           }
         })
-        if (rlt.result) {
+      if (rlt.data.result) {
           let data = rlt.data;
-          if (data.openid) {
-            wepy.setStorageSync(USER_SPECICAL_INFO, obj);
+          if (data.data.openid) {
+            wepy.setStorageSync(USER_SPECICAL_INFO, data.data);
+            wepy.switchTab({
+              url: '/pages/home'
+            })
           }
         } else {
           let res = await wepy.showModal({
