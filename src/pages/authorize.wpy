@@ -94,7 +94,7 @@ export default class Authorize extends wepy.page {
 
   }
 }
-
+}
 </script>
 <style lang="less">
 page {
