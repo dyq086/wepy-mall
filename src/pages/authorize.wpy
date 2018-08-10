@@ -23,29 +23,6 @@ export default class Authorize extends wepy.page {
   async onLoad() {
     let res = await wepy.getSetting()
     if ((res.authSetting)['scope.userInfo']) {
-      let userInfo = wepy.getStorageSync(USER_INFO)
-      if (!userInfo.nickName) {
-        let data  = await wepy.getUserInfo()
-        if (data) {
-          wepy.setStorageSync(USER_INFO, data.userInfo)
-        }
-        let res = await wepy.login()
-        if (res.code) {
-          let systemInfo = wepy.getSystemInfoSync();
-          wepy.setStorageSync(SYSTEM_INFO, systemInfo);
-          let rlt = await api.wxJsCode2Session({
-            query: {
-              jsCode: res.code,
-              nickName: data.userInfo.nickName
-            }
-          })
-          if (rlt.data.result) {
-            let data = rlt.data;
-            if (data.data.openid) {
-              wepy.setStorageSync(USER_SPECICAL_INFO, data.data);
-            }
-        }
-      }
       wepy.switchTab({
         url: '/pages/home'
       })
