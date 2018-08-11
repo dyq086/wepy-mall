@@ -20,7 +20,7 @@ export default class Authorize extends wepy.page {
   config = {
     navigationBarTitleText: '授权登录',
   }
-  async onLoad() {
+  async onLoad() { 
     let res = await wepy.getSetting()
     if ((res.authSetting)['scope.userInfo']) {
       let userInfo = wepy.getStorageSync(USER_INFO)
@@ -44,6 +44,7 @@ export default class Authorize extends wepy.page {
             if (data.data.openid) {
               wepy.setStorageSync(USER_SPECICAL_INFO, data.data);
             }
+          }
         }
       }
       wepy.switchTab({
@@ -64,7 +65,7 @@ export default class Authorize extends wepy.page {
             nickName: e.detail.userInfo.nickName
           }
         })
-      if (rlt.data.result) {
+        if (rlt.data.result) {
           let data = rlt.data;
           if (data.data.openid) {
             wepy.setStorageSync(USER_SPECICAL_INFO, data.data);
@@ -94,7 +95,6 @@ export default class Authorize extends wepy.page {
 
   }
 }
-}
 </script>
 <style lang="less">
 page {
@@ -120,5 +120,4 @@ page {
     margin: 100rpx 50rpx;
   }
 }
-
 </style>
