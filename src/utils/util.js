@@ -1,24 +1,24 @@
 function getCurrentTime() {
-  var keep = ''
-  var date = new Date()
-  var y = date.getFullYear()
-  var m = date.getMonth() + 1
+  let keep = ''
+  let date = new Date()
+  let y = date.getFullYear()
+  let m = date.getMonth() + 1
   m = m < 10 ? '0' + m : m
-  var d = date.getDate() < 10 ? '0' + date.getDate() : date.getDate()
-  var h = date.getHours() < 10 ? '0' + date.getHours() : date.getHours()
-  var f = date.getMinutes() < 10 ? '0' + date.getMinutes() : date.getMinutes()
-  var s = date.getSeconds() < 10 ? '0' + date.getSeconds() : date.getSeconds()
+  let d = date.getDate() < 10 ? '0' + date.getDate() : date.getDate()
+  let h = date.getHours() < 10 ? '0' + date.getHours() : date.getHours()
+  let f = date.getMinutes() < 10 ? '0' + date.getMinutes() : date.getMinutes()
+  let s = date.getSeconds() < 10 ? '0' + date.getSeconds() : date.getSeconds()
   keep = y + '' + m + '' + d + '' + h + '' + f + '' + s
   return keep // 20160614134947
 }
 
 function objLength(input) {
-  var type = toString(input)
-  var length = 0
+  let type = toString(input)
+  let length = 0
   if (type !== '[object Object]') {
     // throw '输入必须为对象{}！'
   } else {
-    for (var key in input) {
+    for (let key in input) {
       if (key !== 'number') {
         length++
       }
@@ -60,7 +60,7 @@ function div(a, b) {
 }
 // 浮点型加法函数
 function accAdd(arg1, arg2) {
-  var r1, r2, m
+  let r1, r2, m
   try {
     r1 = arg1.toString().split('.')[1].length
   } catch (e) {
@@ -90,8 +90,8 @@ function mul(a, b) {
 
 //  遍历对象属性和值
 function displayProp(obj) {
-  var names = ''
-  for (var name in obj) {
+  let names = ''
+  for (let name in obj) {
     names += name + obj[name]
   }
   return names
@@ -107,8 +107,8 @@ function replaceColon(txt) {
 // 转换星星分数
 function convertStarArray(score) {
   // 1 全星,0 空星,2半星
-  var arr = []
-  for (var i = 1; i <= 5; i++) {
+  let arr = []
+  for (let i = 1; i <= 5; i++) {
     if (score >= i) {
       arr.push(1)
     } else if (score > i - 1 && score < i + 1) {
