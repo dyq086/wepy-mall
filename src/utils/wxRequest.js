@@ -25,8 +25,8 @@ const wxRequest = async (params = {}, url) => {
   const isAppend = params.isAppend || false
   if (isAppend) {
     const a = appendInfo()
-    for (let k in a) {
-      eval('data.' + k + '= a.' + k)
+    for (const k in a) {
+      data.k = a.k
     }
   }
   const res = await wepy.request({
