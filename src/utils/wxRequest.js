@@ -17,6 +17,15 @@ const appendInfo = () => {
 }
 const wxRequest = async (params = {}, url) => {
   console.log('wxRequest')
+  const c = wx.getStorageSync('onNetworkStatusChange')
+  if (!c.isConnected) {
+    wx.showToast({
+      title: '无网络',
+      icon: 'loading',
+      duration: 2000
+    })
+    return
+  }
   tip.loading()
   let data = params.query || {}
   const header = params.header || {
