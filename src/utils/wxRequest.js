@@ -9,10 +9,10 @@ const appendInfo = () => {
   const SIGN = md5.hex_md5((TIMESTAMP + API_SECRET_KEY).toLowerCase())
   const MORE = 'more......'
   return {
-    'API_SECRET_KEY': API_SECRET_KEY,
-    'TIMESTAMP': TIMESTAMP,
-    'SIGN': SIGN,
-    'MORE': MORE
+    API_SECRET_KEY: API_SECRET_KEY,
+    TIMESTAMP: TIMESTAMP,
+    SIGN: SIGN,
+    MORE: MORE
   }
 }
 const wxRequest = async (params = {}, url) => {
