@@ -150,9 +150,9 @@
 ### 如需合作请加
 qq:490844594  微信:dyq088
 
-### 友情赞助
-如果本项目对你有较大的帮助，可以对我打赏，否则不需要，随便放个二维码，看看有没有对我特别好的小伙伴 ~ 哈哈
-
-
-<img src="https://github.com/dyq086/wxYuHanStore/blob/master/screenshots/WechatIMG276.jpg" width="400" height="400"/> 
+<!-- ### 友情赞助 -->
+<!-- 如果本项目对你有较大的帮助，可以对我打赏，否则不需要，随便放个二维码，看看有没有对我特别好的小伙伴 ~ 哈哈 -->
+### 扫一扫领红包
+打开支付宝扫一扫给予您的一份惊喜，还望多多支持~
+<img src="https://github.com/dyq086/wxYuHanStore/blob/master/screenshots/WechatIMG277.jpg" width="400" height="358"/> 
 
