@@ -23,3 +23,5 @@ node_modules
 *.iws
 
 *.wepycache
+*.swp
+*.swo

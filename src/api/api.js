@@ -4,6 +4,7 @@ import {
 
 let env = "-test" //-dev 或者 -test
 const apiMall = 'https://sujiefs.com/'
+const host = "https://lingqule.papamk.com"
 // const apiMall = 'http://localhost:8080/'
 
 /**
@@ -14,7 +15,7 @@ const apiMall = 'https://sujiefs.com/'
 const getDiscoverList = (params) => wxRequest(params, apiMall + '/goods/list?cateidOne=1&cateidTwo=0&price=0&sales=2');
 
 //微信的jscode换取sessionKey
-const wxJsCode2Session = (params) => wxRequest(params, apiMall + "/api/wechat/jscode2session");
+const wxJsCode2Session = (params) => wxRequest(params, host + "/wp-json/watch-life-net/v1/weixin/getopenid", 'POST');
 const user2session = (params) => wxRequest(params, apiMall + "/api/wechat/user2session?jsoncallback=?");
 
 //商品接口---begin

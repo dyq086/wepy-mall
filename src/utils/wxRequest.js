@@ -7,14 +7,14 @@ const API_SECRET_KEY = 'www.mall.cycle.com'
 const TIMESTAMP = util.getCurrentTime()
 const SIGN = md5.hex_md5((TIMESTAMP + API_SECRET_KEY).toLowerCase())
 
-const wxRequest = async(params = {}, url) => {
+const wxRequest = async(params = {}, url, method = 'GET') => {
     tip.loading();
     let data = params.query || {};
     data.sign = SIGN;
     data.time = TIMESTAMP;
     let res = await wepy.request({
         url: url,
-        method: params.method || 'GET',
+        method: params.method || method,
         data: data,
         header: { 'Content-Type': 'application/json' },
     });

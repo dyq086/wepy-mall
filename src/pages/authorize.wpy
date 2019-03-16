@@ -26,6 +26,7 @@ export default class Authorize extends wepy.page {
       let userInfo = wepy.getStorageSync(USER_INFO)
       if (!userInfo.nickName) {
         let data  = await wepy.getUserInfo()
+        console.log('data', data)
         if (data) {
           wepy.setStorageSync(USER_INFO, data.userInfo)
         }
@@ -35,14 +36,18 @@ export default class Authorize extends wepy.page {
           wepy.setStorageSync(SYSTEM_INFO, systemInfo);
           let rlt = await api.wxJsCode2Session({
             query: {
-              jsCode: res.code,
-              nickName: data.userInfo.nickName
+              js_code: res.code,
+              nickname: data.userInfo.nickName,
+              avatarUrl: data.userInfo.avatarUrl,
+              encryptedData: data.encryptedData,
+              iv: data.iv
             }
           })
-          if (rlt.data.result) {
-            let data = rlt.data;
-            if (data.data.openid) {
-              wepy.setStorageSync(USER_SPECICAL_INFO, data.data);
+          console.log("rlt", rlt)
+          let data2 = rlt.data;
+          if (data2.status == "200") {
+            if (data2.openid) {
+              wepy.setStorageSync(USER_SPECICAL_INFO, data2);
             }
           }
         }
@@ -59,16 +64,20 @@ export default class Authorize extends wepy.page {
         wepy.setStorageSync(USER_INFO, e.detail.userInfo);
         let systemInfo = wepy.getSystemInfoSync();
         wepy.setStorageSync(SYSTEM_INFO, systemInfo);
+        console.log('e', e)
         let rlt = await api.wxJsCode2Session({
           query: {
-            jsCode: res.code,
-            nickName: e.detail.userInfo.nickName
+              js_code: res.code,
+              nickname: e.detail.userInfo.nickName,
+              avatarUrl: e.detail.userInfo.avatarUrl,
+              encryptedData: e.detail.encryptedData,
+              iv: e.detail.iv
           }
         })
-        if (rlt.data.result) {
-          let data = rlt.data;
-          if (data.data.openid) {
-            wepy.setStorageSync(USER_SPECICAL_INFO, data.data);
+        let data2 = rlt.data;
+        if (data2.status == "200") {
+          if (data2.openid) {
+            wepy.setStorageSync(USER_SPECICAL_INFO, data2);
             wepy.switchTab({
               url: '/pages/home'
             })
