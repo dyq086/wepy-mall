@@ -106,12 +106,12 @@
     computed = {}
     async doSearchGoods(keyword, currentPage, size) {
       let that = this;
-      const json = await api.getGoodsList({
+      const json = await api.queryProducts({
         query: {
           page: currentPage || 1,
           size: size || 10,
           searchKeyWords: this.keyword,
-          cateCode: this.cateCode || "",
+          category: this.cateCode || "",
           sort: this.sort,
           skuval: this.skuval
         }

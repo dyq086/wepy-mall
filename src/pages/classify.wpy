@@ -9,15 +9,15 @@
   </view>
   <view class="classify" style="height:{{windowHeight-50}}px">
     <scroll-view class="classify_catetory" scroll-y scroll-with-animation="true" style="height:{{windowHeight-50}}px">
-      <view class="name {{item.active? 'active':''}}" wx:for="{{rootcateList}}" wx:key="item" @tap="changeCate" data-code="{{item.code}}">
+      <view class="name {{item.active? 'active':''}}" wx:for="{{rootcateList}}" wx:key="item" @tap="changeCate" data-code="{{item.id}}">
         {{item.name}}
       </view>
     </scroll-view>
     <scroll-view class="classify_detail" scroll-y scroll-with-animation="true" style="height:{{windowHeight-50}}px">
         <view class="children">
-          <navigator hover-class="none" class="children_item" wx:for="{{childcateList}}" wx:for-item="item" wx:key="index" url="/pages/search?cateCode={{item.secondCategory.code}}&title={{item.secondCategory.name}}">
-            <image class="child_image" src="{{item.secondCategory.thumLogo}}"></image>
-            <view class="child_name">{{item.secondCategory.name}}</view>
+          <navigator hover-class="none" class="children_item" wx:for="{{childcateList}}" wx:for-item="item" wx:key="index" url="/pages/search?cateCode={{item.id}}&title={{item.name}}">
+            <image class="child_image" src="{{item.images[0].src}}"></image>
+            <view class="child_name">{{item.name}}</view>
           </navigator>
         </view>
     </scroll-view>
@@ -51,16 +51,16 @@ export default class Classify extends wepy.page {
     childcateList: {}
   }
 
-  async getChildCate(rootCateCode) {
-    const json = await api.childGoodsCatetoryList({
+  async getChildCate(categoryID) {
+    const json = await api.queryProducts({
       query: {
-        rootCategoryCode: rootCateCode
+        category: categoryID
       }
     });
-    if (json.data.code == 0) {
-      this.childcateList = json.data.list;
+    if (json.data.length > 0) {
+      this.childcateList = json.data;
     } else {
-      tip.error(json.data.msg);
+      tip.error("获取产品列表失败");
     }
     this.$apply();
   }
@@ -69,17 +69,17 @@ export default class Classify extends wepy.page {
     const json = await api.rootCtegoryList({
       query: {}
     });
-    if (json.data.code == 0) {
-      this.rootcateList = json.data.list;
+    if (json.data instanceof Array) {
+      this.rootcateList = json.data;
       if (this.rootcateList.length > 0) {
         let selCode = wx.getStorageSync(SEL_CLASS_CODE);
-        var selRottCateCode = this.rootcateList[0].code;
+        var selRottCateCode = this.rootcateList[0].id;
         if (selCode.length==0) {
           this.rootcateList[0].active = true;
         } else {
           for (var i = 0; i < this.rootcateList.length; i++) {
-            if (selCode == this.rootcateList[i].code) {
-              selRottCateCode = this.rootcateList[i].code;
+            if (selCode == this.rootcateList[i].id) {
+              selRottCateCode = this.rootcateList[i].id;
               this.rootcateList[i].active = true;
             }
           }
@@ -88,7 +88,7 @@ export default class Classify extends wepy.page {
         this.getChildCate(selRottCateCode);
       }
     } else {
-      tip.error(json.data.msg);
+      tip.error("无数据");
     }
     this.$apply();
   }

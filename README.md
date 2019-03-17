@@ -1,3 +1,6 @@
+# 说明
+ 此程序为分叉版本，主要目标是改造成适合woocommerce。
+
 ### 安装（更新） wepy 命令行工具。
 	npm install wepy-cli -g
 
@@ -144,13 +147,4 @@
 
 
 ### 说明
-
 此小程序借助于wepy进行高度的组件封装，仅供学习参考。喜欢就动手点个star吧~^o^~
-
-### 如需合作请加
-qq:490844594  微信:dyq088
-
- ### 友情赞助
- 如果本项目对你有较大的帮助，可以对我打赏，否则不需要，随便放个二维码，看看有没有对我特别好的小伙伴 ~ 哈哈 
-<img src="https://github.com/dyq086/wxYuHanStore/blob/master/screenshots/WechatIMG276.jpg" width="400" height="400"/> 
-

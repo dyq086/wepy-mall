@@ -1,5 +1,6 @@
 import {
-  wxRequest
+  wxRequest,
+  request
 } from '@/utils/wxRequest';
 
 let env = "-test" //-dev 或者 -test
@@ -15,15 +16,16 @@ const host = "https://lingqule.papamk.com"
 const getDiscoverList = (params) => wxRequest(params, apiMall + '/goods/list?cateidOne=1&cateidTwo=0&price=0&sales=2');
 
 //微信的jscode换取sessionKey
-const wxJsCode2Session = (params) => wxRequest(params, host + "/wp-json/watch-life-net/v1/weixin/getopenid", 'POST');
+const wxJsCode2Session = (params) => request(host + "/wp-json/watch-life-net/v1/weixin/getopenid", {...params, method: 'POST'});
 const user2session = (params) => wxRequest(params, apiMall + "/api/wechat/user2session?jsoncallback=?");
 
 //商品接口---begin
 //首页发现商品接口
 const hostGoodsList = (params) => wxRequest(params, apiMall + '/api/home/hostGoodsList');
 const getHomeDisvocerList = (params) => wxRequest(params, apiMall + '/api/mall/discoverList');
+
 //查询商品列表
-const getGoodsList = (params) => wxRequest(params, apiMall + '/api/mall/searchGoodsList');
+const queryProducts = (params) => request(`${host}/wp-json/wc/v3/products`, {...params, status: 'published'});
 
 //查询商品详情信息
 const goodsDetail = (params) => wxRequest(params, apiMall + '/api/mall/goods');
@@ -137,7 +139,7 @@ const refundApply = (params) => wxRequest(params, apiMall + '/api/mall/refund/sa
 
 //商品分类--begin
 //一级分类
-const rootCtegoryList = (params) => wxRequest(params, apiMall + '/api/mall/rootCtegoryList');
+const rootCtegoryList = (params) => request(`${host}/wp-json/wc/v3/products/categories?parent=0&per_page=100`, params);
 //二级三级分类
 const childGoodsCatetoryList = (params) => wxRequest(params, apiMall + '/api/mall/childGoodsCatetoryList');
 //商品分类--end
@@ -149,7 +151,7 @@ export default {
   hostGoodsList,
   getDiscoverList,
   getHomeDisvocerList,
-  getGoodsList,
+  queryProducts,
   goodsDetail,
   wxJsCode2Session,
   user2session,
