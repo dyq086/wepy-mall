@@ -19,13 +19,14 @@ const getDiscoverList = (params) => wxRequest(params, apiMall + '/goods/list?cat
 const wxJsCode2Session = (params) => request(host + "/wp-json/watch-life-net/v1/weixin/getopenid", {...params, method: 'POST'});
 const user2session = (params) => wxRequest(params, apiMall + "/api/wechat/user2session?jsoncallback=?");
 
+const getToken = (params) => request(`${host}/wp-json/jwt-auth/v1/token`, {...params, method:'POST'});
 //商品接口---begin
 //首页发现商品接口
 const hostGoodsList = (params) => wxRequest(params, apiMall + '/api/home/hostGoodsList');
 const getHomeDisvocerList = (params) => wxRequest(params, apiMall + '/api/mall/discoverList');
 
 //查询商品列表
-const queryProducts = (params) => request(`${host}/wp-json/wc/v3/products`, {...params, status: 'published'});
+const queryProducts = (params) => request(`${host}/wp-json/wc/v3/products`, {...params, query: {status: 'publish'}});
 
 //查询商品详情信息
 // const goodsDetail = (id, params) => request(`${host}/wp-json/wc/v3/products/${id}`, params);
@@ -155,6 +156,7 @@ export default {
   getHomeDisvocerList,
   queryProducts,
   getProducts,
+  getToken,
   wxJsCode2Session,
   user2session,
   userSginInfo,

@@ -14,7 +14,8 @@ import api from '@/api/api';
 import {
   SYSTEM_INFO,
   USER_SPECICAL_INFO,
-  USER_INFO
+  USER_INFO,
+  TOKEN,
 } from '@/utils/constant';
 export default class Authorize extends wepy.page {
   config = {
@@ -43,12 +44,22 @@ export default class Authorize extends wepy.page {
               iv: data.iv
             }
           })
-          console.log("rlt", rlt)
+          // console.log("rlt", rlt)
           let data2 = rlt.data;
           if (data2.status == "200") {
             if (data2.openid) {
               wepy.setStorageSync(USER_SPECICAL_INFO, data2);
+              let token = await api.getToken({
+                query: {
+                  username: data2.openid,
+                  password: data2.openid
+                }
+              })
+              if (token.statusCode == 200) {
+                wepy.setStorageSync(TOKEN, token.data.token);
+              }
             }
+
           }
         }
       }
@@ -78,6 +89,15 @@ export default class Authorize extends wepy.page {
         if (data2.status == "200") {
           if (data2.openid) {
             wepy.setStorageSync(USER_SPECICAL_INFO, data2);
+            let token = await api.getToken({
+              query: {
+                username: data2.openid,
+                password: data2.openid,
+              }
+            })
+            if (token.statusCode == 200) {
+              wepy.setStorageSync(TOKEN, token.data.token);
+            }
             wepy.switchTab({
               url: '/pages/home'
             })
