@@ -3,17 +3,17 @@
     <import src="../plugins/wxParse/wxParse.wxml" />
     <!--index.wxml-->
     <swiper indicator-dots="true" autoplay="true" interval="5000" duration="500" indicator-active-color="#ffc452" indicator-color="#efefef" class="swiper">
-      <block wx:for="{{detail.photoList}}" key="item" item="item" wx:key="key">
+      <block wx:for="{{detail.images}}" key="item" item="item" wx:key="key">
         <swiper-item>
-          <image src="{{item.photo}}" data-src="{{item.photo}}" class="slide-image" @tap="previewImage" />
+          <image src="{{item.src}}" data-src="{{item.src}}" class="slide-image" @tap="previewImage" />
         </swiper-item>
       </block>
     </swiper>
     <view class="details-msg">
       <view class="details-title">{{detail.name}}</view>
       <view class="details_pinfo">
-        <text class="price">￥{{detail.price}}</text>
-        <view class="order_time {{purchasetype==2||special==1?'hidden':''}}">
+      <text class="price">￥{{detail.price}} </text> <text class="origin-price">{{detail.regular_price}}</text>
+        <view class="order_time {{detail.date_on_sale_to ? '' : 'hidden'}}">
           <timer :startTime.sync="startTime" :endTime.sync="endTime"></timer>
         </view>
 <!--         <view class="share-box">
@@ -21,59 +21,59 @@
           <text>分享</text>
         </view> -->
       </view>
-      <view class="baoyou">满{{detail.freeShipNum}}件包邮</view>
+      <!-- <view class="baoyou">满{{detail.freeShipNum}}件包邮</view> -->
     </view>
-    <view class="order_num">
-      <view class="doc" wx:if="{{special == 1}}">库存:
-        <text class="num">{{detail.stockNum}}件</text>
-      </view>
-      <view class="doc" wx:else>规定单数:
-        <text class="num">{{detail.minBuyNum}}件成团</text>
-      </view>
-      <view class="doc">订单中:
-        <text class="num">已拼{{detail.saleCount}}件</text>
-      </view>
-    </view>
-    <view class="block">
-      <view class="block_title">拼货流程</view>
-      <view class="block_content">
-        <view class="process">
-          新款展示
-          <i class="iconfont icon-next"></i> 拼单结束
-          <i class="iconfont icon-next"></i> 生产商品
-          <i class="iconfont icon-next"></i> 商品检验
-          <i class="iconfont icon-next"></i> 商品发货
-        </view>
-        <view class="doc">
-          如若出现特殊情况外，发货时间则会延迟5-10天左右。
-        </view>
-      </view>
-      <view class="block_title">商品评价(20)</view>
-      <view class="block_content">
-        <commentList :list.sync="commentList"></commentList>
-        <view class="button-more-cmment" wx:if="{{commentList.length!==0}}" @tap="moreComment">查看更多评论</view>
-      </view>
-    </view>
-    <view class="spacing"></view>
-    <view class="block">
-      <view class="block_title">拼单说明</view>
-      <view class="block_content">
-        <view class="doc">
-          此商品在拼单期间可接收订单，如若超过拼单时间则不能下单；拼单结束后未付款订单系统将会自动取消，所以，亲下单以后请尽快付款。我们会以实际订单为准为您发货，如超过订单时间而又没有拼购到规定数量的，我们将会第一时间为您退款，请您放心购买!
-        </view>
-      </view>
-    </view>
-    <view class="spacing"></view>
-    <view class="block">
-      <view class="block_title">商品信息</view>
-      <view class="block_content">
-        <view class="table">
-          <view class="th" wx:for="{{detail.attrList}}" key="item" item="item" wx:key="key">
-            <view class="tr1" wx:for="{{item}}" key="item" item="item" wx:key="key">{{item.attrName}}:{{item.attrVal}}</view>
-          </view>
-        </view>
-      </view>
-    </view>
+    <!-- <view class="order_num"> -->
+    <!--   <view class="doc" wx:if="{{special == 1}}">库存: -->
+    <!--     <text class="num">{{detail.stock_quantity}}件</text> -->
+    <!--   </view> -->
+    <!--   <view class="doc" wx:else>规定单数: -->
+    <!--     <text class="num">{{detail.minBuyNum}}件成团</text> -->
+    <!--   </view> -->
+    <!--   <view class="doc">订单中: -->
+    <!--     <text class="num">已拼{{detail.saleCount}}件</text> -->
+    <!--   </view> -->
+    <!-- </view> -->
+    <!-- <view class="block"> -->
+    <!--   <view class="block_title">拼货流程</view> -->
+    <!--   <view class="block_content"> -->
+    <!--     <view class="process"> -->
+    <!--       新款展示 -->
+    <!--       <i class="iconfont icon-next"></i> 拼单结束 -->
+    <!--       <i class="iconfont icon-next"></i> 生产商品 -->
+    <!--       <i class="iconfont icon-next"></i> 商品检验 -->
+    <!--       <i class="iconfont icon-next"></i> 商品发货 -->
+    <!--     </view> -->
+    <!--     <view class="doc"> -->
+    <!--       如若出现特殊情况外，发货时间则会延迟5-10天左右。 -->
+    <!--     </view> -->
+    <!--   </view> -->
+    <!--   <view class="block_title">商品评价(20)</view> -->
+    <!--   <view class="block_content"> -->
+    <!--     <commentList :list.sync="commentList"></commentList> -->
+    <!--     <view class="button-more-cmment" wx:if="{{commentList.length!==0}}" @tap="moreComment">查看更多评论</view> -->
+    <!--   </view> -->
+    <!-- </view> -->
+    <!-- <view class="spacing"></view> -->
+    <!-- <view class="block"> -->
+    <!--   <view class="block_title">拼单说明</view> -->
+    <!--   <view class="block_content"> -->
+    <!--     <view class="doc"> -->
+    <!--       此商品在拼单期间可接收订单，如若超过拼单时间则不能下单；拼单结束后未付款订单系统将会自动取消，所以，亲下单以后请尽快付款。我们会以实际订单为准为您发货，如超过订单时间而又没有拼购到规定数量的，我们将会第一时间为您退款，请您放心购买! -->
+    <!--     </view> -->
+    <!--   </view> -->
+    <!-- </view> -->
+    <!-- <view class="spacing"></view> -->
+    <!-- <view class="block"> -->
+    <!--   <view class="block_title">商品信息</view> -->
+    <!--   <view class="block_content"> -->
+    <!--     <view class="table"> -->
+    <!--       <view class="th" wx:for="{{detail.attributes}}" key="item" item="item" wx:key="key"> -->
+    <!--         <view class="tr1" >{{item.name}}:{{item.options[0]}}</view> -->
+    <!--       </view> -->
+    <!--     </view> -->
+    <!--   </view> -->
+    <!-- </view> -->
     <view class="spacing"></view>
     <view class="block">
       <view class="block_title">商品详情</view>
@@ -278,18 +278,14 @@ export default class goodsDetail extends wepy.page {
   async getGoodsDetail() {
     let that = this;
     //const json = await api.getGoodsDetail({
-    const json = await api.goodsDetail({
-      query: {
-        id: that.goodsId
-      }
-    });
+    const json = await api.getProducts(that.goodsId);
     let time = {};
-    if (json.data.code == 0) {
-      let data = json.data.data;
+    if (json.statusCode == 200) {
+      let data = json.data;
       that.detail = data;
-      WxParse.wxParse('detailInfo', 'html', that.detail.detailInfo, this);
-      time.endTime = that.detail.validEndTime;
-      time.startTime = that.detail.startTime;
+      WxParse.wxParse('detailInfo', 'html', that.detail.description, this);
+      time.endTime = that.detail.date_on_sale_to;
+      time.startTime = that.detail.date_on_sale_from;
       if (json.data.validDate == "0") {
         that.isValidDate = false;
         if (this.purchasetype == 1 && this.special != 1) {
@@ -297,14 +293,16 @@ export default class goodsDetail extends wepy.page {
         }
       }
     } else {
-      if (json.data.msg) {
-        tip.error(json.data.msg)
+      if (json.data.message) {
+        tip.error(json.data.message)
       } else {
         tip.error('查看商品失败')
       }
     }
     that.$apply();
-    this.$invoke('timer', 'initTimer', time);
+    if (time.startTime && time.endTime) {
+      this.$invoke('timer', 'initTimer', time);
+    }
   }
   async addUserBrowser() {
     let that = this;
@@ -617,6 +615,13 @@ export default class goodsDetail extends wepy.page {
   image {
     width: 100%;
   }
+}
+
+.origin-price {
+  display:inline-block;
+  text-decoration:line-through;
+  font-size:24rpx;
+  padding-left:16rpx;
 }
 
 .details-msg {

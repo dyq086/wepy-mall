@@ -2674,6 +2674,10 @@ mkdirp@^0.5.0, mkdirp@^0.5.1:
   dependencies:
     minimist "0.0.8"
 
+moment@^2.24.0:
+  version "2.24.0"
+  resolved "http://registry.npm.taobao.org/moment/download/moment-2.24.0.tgz?cache=0&other_urls=http%3A%2F%2Fregistry.npm.taobao.org%2Fmoment%2Fdownload%2Fmoment-2.24.0.tgz#0d055d53f5052aa653c9f6eb68bb5d12bf5c2b5b"
+
 mozjpeg@^4.0.0:
   version "4.1.1"
   resolved "http://registry.npm.taobao.org/mozjpeg/download/mozjpeg-4.1.1.tgz#859030b24f689a53db9b40f0160d89195b88fd50"

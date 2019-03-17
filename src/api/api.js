@@ -28,7 +28,9 @@ const getHomeDisvocerList = (params) => wxRequest(params, apiMall + '/api/mall/d
 const queryProducts = (params) => request(`${host}/wp-json/wc/v3/products`, {...params, status: 'published'});
 
 //查询商品详情信息
-const goodsDetail = (params) => wxRequest(params, apiMall + '/api/mall/goods');
+// const goodsDetail = (id, params) => request(`${host}/wp-json/wc/v3/products/${id}`, params);
+const getProducts = (id, params) => request(`${host}/wp-json/wc/v3/products/${id}`, params);
+
 //商品加入购物车
 const addCart = (params) => wxRequest(params, apiMall + '/api/mall/goodsCart/add');
 //用户的购物车商品列表
@@ -152,7 +154,7 @@ export default {
   getDiscoverList,
   getHomeDisvocerList,
   queryProducts,
-  goodsDetail,
+  getProducts,
   wxJsCode2Session,
   user2session,
   userSginInfo,

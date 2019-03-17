@@ -15,11 +15,11 @@
     </scroll-view>
     <scroll-view class="classify_detail" scroll-y scroll-with-animation="true" style="height:{{windowHeight-50}}px">
         <view class="children">
-          <view wx:for="{{childList}}" wx:for-item="item" wx:key="index">
-          <van-card price="{{item.price + ' 件'}}" origin-price="{{item.regular_price != item.price ? item.regular_price :  null}}" title="{{item.name}}" thumb="{{item.images[0].src}}" thumb-link="/pages/goods_detail?id={{item.id}}" custom-class="item" tag="{{item.regular_price != item.price ? '促销' : ''}}" >
+          <navigator wx:for="{{childList}}" wx:for-item="item" wx:key="index" url="/pages/goods_detail?id={{item.id}}">
+            <van-card price="{{item.price + ' 件'}}" origin-price="{{item.regular_price != item.price ? item.regular_price :  null}}" title="{{item.name}}" thumb="{{item.images[0].src}}" thumb-link="/pages/goods_detail?id={{item.id}}" custom-class="item" tag="{{item.regular_price != item.price ? '促销' : ''}}" >
               <view slot="footer" style="border-top:1rpx solid #ededed;margin-top:8rpx"></view>
             </van-card>
-          </view>
+          </navigator>
           <!--加载更多时动画-->
           <bottomLoadMore :show.sync="showLoading" message="正在加载"></bottomLoadMore>
           <!--暂无数据显示-->

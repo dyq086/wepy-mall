@@ -9,7 +9,7 @@
     <view class="bg"></view>
     <view class="time_box">
       <view class="time">{{strD>=0?strD+"天":""}}{{strH}}:{{strM}}:{{strS}}</view>
-      <view class="over">订单结束</view>
+      <view class="over">促销结束</view>
     </view>
   </view>
   <view wx:if="{{!isShow}}">
@@ -22,12 +22,13 @@
     <view class="bg_zero"></view>
     <view class="time_box">
     <view class="time_zero">{{endTxt}}</view>
-    <view class="over">订单结束</view>
+    <view class="over">促销结束</view>
   </view>
   </view>
 </template>
 <script>
 import wepy from 'wepy'
+import moment from 'moment'
 export default class Timer extends wepy.component {
   props = {
     startTime: {
@@ -64,8 +65,8 @@ export default class Timer extends wepy.component {
     initTimer(val) {
       console.log(val);
       let date = new Date();
-      this.startTime = val.startTime;
-      this.endTime = val.endTime;
+      this.startTime = moment(val.startTime).format('YYYY-MM-DD h:mm:ss');
+      this.endTime = moment(val.endTime).format('YYYY-MM-DD h:mm:ss');
       //开始时间(.replace(/(-)/g, '/')解决ios 不兼容问题)
       let startDay = new Date(this.startTime.replace(/(-)/g, '/'));
       //结束时间
