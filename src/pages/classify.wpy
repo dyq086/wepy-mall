@@ -15,10 +15,15 @@
     </scroll-view>
     <scroll-view class="classify_detail" scroll-y scroll-with-animation="true" style="height:{{windowHeight-50}}px">
         <view class="children">
-          <navigator hover-class="none" class="children_item" wx:for="{{childcateList}}" wx:for-item="item" wx:key="index" url="/pages/search?cateCode={{item.id}}&title={{item.name}}">
-            <image class="child_image" src="{{item.images[0].src}}"></image>
-            <view class="child_name">{{item.name}}</view>
-          </navigator>
+          <view wx:for="{{childcateList}}" wx:for-item="item" wx:key="index">
+          <van-card price="{{item.price + ' 件'}}" origin-price="{{item.regular_price != item.price ? item.regular_price :  null}}" title="{{item.name}}" thumb="{{item.images[0].src}}" thumb-link="/pages/goods_detail?id={{item.id}}" custom-class="item" tag="{{item.regular_price != item.price ? '促销' : ''}}" >
+              <view slot="footer" style="border-top:1rpx solid #ededed;margin-top:8rpx"></view>
+            </van-card>
+          </view>
+          <!-- <navigator hover-class="none" class="children_item" wx:for="{{childcateList}}" wx:for-item="item" wx:key="index" url="/pages/search?cateCode={{item.id}}&title={{item.name}}"> -->
+          <!--   <image class="child_image" src="{{item.images[0].src}}"></image> -->
+          <!--   <view class="child_name">{{item.name}}</view> -->
+          <!-- </navigator> -->
         </view>
     </scroll-view>
   </view>
@@ -137,6 +142,9 @@ export default class Classify extends wepy.page {
           // 转发失败
         }
       }
+    },
+    getTag (item) {
+        return '促销';
     }
   }
   events = {
@@ -178,21 +186,14 @@ export default class Classify extends wepy.page {
     z-index: 999;
     // margin-left: -15rpx;
     background: #fff;
-    padding: 15px 10px 10px 30px;
-    .classify_item {}
-    .title {
-      font-size: 30rpx;
-      color: #333;
-      margin-left: 25rpx;
-    }
-    .children {
-      display: flex;
-      flex-wrap: wrap;
-      margin: 20rpx 0rpx;
-    }
-    .child_image {
-      width: 60px;
-      height: 60px;
+    // padding: 15px 10px 10px 30px;
+    .item {
+      background-color: white !important;
+
+      .van-card__thumb {
+        width: 120rpx !important;
+        height: 120rpx !important;
+      }
     }
     .child_name {
       font-size: 26rpx;

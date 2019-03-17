@@ -76,6 +76,10 @@ export default class extends wepy.app {
         "iconPath": "images/icon_info.png",
         "selectedIconPath": "images/icon_info_active.png"
       }]
+    },
+    usingComponents: {
+        'van-button':'components/van/button/index',
+        'van-card': 'components/van/card/index',
     }
   }
 
