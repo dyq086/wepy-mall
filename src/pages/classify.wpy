@@ -15,12 +15,16 @@
     </scroll-view>
     <scroll-view class="classify_detail" scroll-y scroll-with-animation="true" style="height:{{windowHeight-50}}px">
         <view class="children">
-          <view wx:for="{{childcateList}}" wx:for-item="item" wx:key="index">
+          <view wx:for="{{childList}}" wx:for-item="item" wx:key="index">
           <van-card price="{{item.price + ' 件'}}" origin-price="{{item.regular_price != item.price ? item.regular_price :  null}}" title="{{item.name}}" thumb="{{item.images[0].src}}" thumb-link="/pages/goods_detail?id={{item.id}}" custom-class="item" tag="{{item.regular_price != item.price ? '促销' : ''}}" >
               <view slot="footer" style="border-top:1rpx solid #ededed;margin-top:8rpx"></view>
             </van-card>
           </view>
-          <!-- <navigator hover-class="none" class="children_item" wx:for="{{childcateList}}" wx:for-item="item" wx:key="index" url="/pages/search?cateCode={{item.id}}&title={{item.name}}"> -->
+          <!--加载更多时动画-->
+          <bottomLoadMore :show.sync="showLoading" message="正在加载"></bottomLoadMore>
+          <!--暂无数据显示-->
+          <view wx:if="{{isEmpty}}" style="text-align:center;"> 没有数据了 </view>
+          <!-- <navigator hover-class="none" class="children_item" wx:for="{{childList}}" wx:for-item="item" wx:key="index" url="/pages/search?cateCode={{item.id}}&title={{item.name}}"> -->
           <!--   <image class="child_image" src="{{item.images[0].src}}"></image> -->
           <!--   <view class="child_name">{{item.name}}</view> -->
           <!-- </navigator> -->
@@ -37,13 +41,16 @@ import {
 } from '@/utils/constant';
 
 import tip from '@/utils/tip'
+import BottomLoadMore from "../components/common/bottomLoadMore"
+import Placeholder from "../components/common/placeholder"
 
 export default class Classify extends wepy.page {
   config = {
     navigationBarTitleText: '分类',
   }
   components = {
-
+      bottomLoadMore: BottomLoadMore,
+      placeholder: Placeholder
   }
 
   data = {
@@ -53,7 +60,15 @@ export default class Classify extends wepy.page {
     //一级分类数据
     rootcateList: {},
     //二级三级分类数据
-    childcateList: {}
+    childList: {},
+    showLoading: false,
+    isEmpty: false,
+    //当前页面
+    currentPage: 1,
+    //总页数
+    pageTotal: 0,
+    categoryID: -1,
+    preventRepeatReuqest: false
   }
 
   async getChildCate(categoryID) {
@@ -62,11 +77,16 @@ export default class Classify extends wepy.page {
         category: categoryID
       }
     });
+    console.log('json', json);
     if (json.data.length > 0) {
-      this.childcateList = json.data;
+      this.childList = json.data;
+      this.pageTotal = json.header['X-WP-Total'];
     } else {
-      tip.error("获取产品列表失败");
+      this.childList = [];
+      this.isEmpty= true;
     }
+    this.categoryID = categoryID;
+    this.currentPage = 1;
     this.$apply();
   }
 
@@ -147,9 +167,44 @@ export default class Classify extends wepy.page {
         return '促销';
     }
   }
-  events = {
-
-  }
+    async doSearchGoods(currentPage, size = 10) {
+      let that = this;
+      const json = await api.queryProducts({
+        query: {
+          page: currentPage || 1,
+          size: size || 10,
+          category: that.categoryID || "",
+        }
+      });
+      if (json.data.length != 0) {
+        that.childList = [...that.childList, ...json.data];
+        that.pageTotal = json.header['X-WP-Total'];
+      } else {
+        //暂无数据
+        that.isEmpty= true;
+        // tip.error(json.data.msg);
+      }
+      that.showLoading = false;
+      that.$apply();
+    }
+    //加载更多
+    onReachBottom() {
+      let that = this;
+      that.showLoading = true;
+      console.log(that.pageTotal + "===" + that.currentPage);
+      // //判断总页数是否大于翻页数
+      if ((that.pageTotal) > that.currentPage) {
+        //防止重复加载
+        if (that.preventRepeatReuqest) {
+          return true;
+        }
+        that.currentPage++;
+        that.doSearchGoods(that.currentPage);
+        that.preventRepeatReuqest = false;
+      } else {
+        that.showLoading = false;
+      }
+    }
 }
 
 </script>
