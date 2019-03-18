@@ -57,7 +57,7 @@ import BottomLoadMore from "../components/common/bottomLoadMore"
 import Placeholder from "../components/common/placeholder"
 export default class Home extends wepy.page {
   config = {
-    navigationBarTitleText: '演示商城',
+    navigationBarTitleText: '菜篮先生',
   }
   components = {
     discover: Discover,

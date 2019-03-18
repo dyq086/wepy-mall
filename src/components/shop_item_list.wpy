@@ -54,12 +54,8 @@ export default class ShopItemList extends wepy.component {
   }
 
   async applyRefund(itemId) {
-    let userSpecialInfo = wepy.getStorageSync(USER_SPECICAL_INFO) || {};
-    let openId = userSpecialInfo.openid;
-
     const json = await api.refundApply({
       query:{
-        openId: openId,
         orderItemId: itemId
       }
     });

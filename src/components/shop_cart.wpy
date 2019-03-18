@@ -11,19 +11,19 @@
             </view>
             <view class="text-box">
               <view class="goods-title">
-                <navigator url="/pages/goods_detail?id={{item.goodsId}}">
-                  {{item.goodsName}}
+                <navigator url="/pages/goods_detail?id={{item.product_id}}">
+                  {{item.product_name}}
                 </navigator>
               </view>
               <!--  -->
               <view class="lable">
                 <view class="goods-lable">{{item.goodsSkuValName}}</view>
-                <view class="bo-label" wx:if="{{item.type==2}}">补货</view>
+                <!-- <view class="bo-label" wx:if="{{item.type==2}}">补货</view> -->
               </view>
-              <view class="goods-price">¥ {{item.price}}</view>
+              <view class="goods-price">¥ {{item.line_total}}</view>
               <view class="buy-num">
                 <view class="jian-btn {{item.num==1? 'disabled' : ''}}" catchtap="jianBtnTap" data-index="{{index}}" data-id="{{item.id}}">-</view>
-                <input type="number" value="{{item.num}}" disabled/>
+                <input type="number" value="{{item.quantity}}" disabled/>
                 <view class="jia-btn {{item.num==1000? 'disabled' : ''}}" catchtap="jiaBtnTap" data-index="{{index}}" data-id="{{item.id}}">+</view>
               </view>
             </view>
@@ -77,16 +77,13 @@
     //获取购物车商品列表
     async getCartList() {
       let that = this;
-      let userSpecialInfo = wepy.getStorageSync(USER_SPECICAL_INFO) || {};
-      let openId = userSpecialInfo.openid;
-      const json = await api.cartList({
-        query: {
-          openId: openId
-        }
-      });
-      if (json.data.code == 0) {
+      const json = await api.getCart()
+
+      if (json.statusCode == 200) {
+        json.data = Object.keys(json.data).map((k) => json.data[k])
+        console.log('data', json.data);
         let data = json.data;
-        this.list = data.list;
+        this.list = data;
         this.totalPrice = data.totalPrice;
         for (var i = 0; i < this.list.length; i++) {
           if (!this.list[i].ischecked) {

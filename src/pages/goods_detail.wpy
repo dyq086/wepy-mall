@@ -114,7 +114,7 @@
       <view class="model_content">
         <view class="head_box">
           <view class="img_wrap">
-            <image class="goods_img" src="{{detail.logo}}" />
+            <image class="goods_img" src="{{detail.images[0].src}}" />
           </view>
           <view class="product_wrap">
             <view class="product_name">{{detail.name}}</view>
@@ -320,18 +320,13 @@ export default class goodsDetail extends wepy.page {
   //加入购物车
   async doTakeCart() {
     let that = this;
-    let userSpecialInfo = wepy.getStorageSync(USER_SPECICAL_INFO) || {};
-    let openId = userSpecialInfo.openid;
     const json = await api.addCart({
       query: {
-        openId: openId,
-        goodsId: that.goodsId,
-        goodsSkuId: this.detail.goodsSkuValIds,
-        purchaseType: this.purchasetype,
-        num: this.orderNum
+        product_id: that.goodsId,
+        quantity: this.orderNum
       }
     });
-    if (json.data.code == 0) {
+    if (json.statusCode == 200) {
       this.winHeight = "100%";
       this.animation.height(0).step();
       this.setData({
@@ -343,8 +338,8 @@ export default class goodsDetail extends wepy.page {
       }, 100)
       tip.success("成功加入购物车");
     } else {
-      if (json.data.msg) {
-        tip.error(json.data.msg)
+      if (json.data.message) {
+        tip.error(json.data.message)
       } else {
         tip.error('无法加入购物车')
       }

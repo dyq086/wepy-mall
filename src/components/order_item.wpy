@@ -111,10 +111,13 @@ export default class orderItem extends wepy.component {
 
     },
       async completion(e) {
-      this.flag=3;
       this.orderNo = e.currentTarget.dataset.id;
       await tip.confirm('是否确认收货');
-      this.editOrderInfo(this.orderNo,this.flag);
+      this.editOrderInfo(this.orderNo, {
+        query: {
+          status: 'completed'
+        }
+      })
       console.log("完成")
     },
 

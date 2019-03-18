@@ -34,9 +34,10 @@ const queryProducts = ({query}) => request(`${host}/wp-json/wc/v3/products`, {qu
 const getProducts = (id, params) => request(`${host}/wp-json/wc/v3/products/${id}`, params);
 
 //商品加入购物车
-const addCart = (params) => wxRequest(params, apiMall + '/api/mall/goodsCart/add');
+const addCart = (params) => request(`${host}/wp-json/wc/v2/cart/add`, {...params, method: 'POST'});
+
 //用户的购物车商品列表
-const cartList = (params) => wxRequest(params, apiMall + '/api/mall/goodsCart/list');
+const getCart = (params) => request(`${host}/wp-json/wc/v2/cart`, params);
 //购物车的商品选中状态
 const cartCheck = (params) => wxRequest(params, apiMall + '/api/mall/goodsCart/check');
 //购物车的商品选中状态(全选)
@@ -189,7 +190,7 @@ export default {
   userSginInfo,
   doSign,
   addCart,
-  cartList,
+  getCart,
   cartCheck,
   cartCheckAll,
   cartDel,
