@@ -16,7 +16,8 @@ import wepy from 'wepy';
 import Tab from '@/components/tab'
 import {
   SYSTEM_INFO,
-  USER_SPECICAL_INFO
+  USER_SPECICAL_INFO,
+  ME,
 } from '@/utils/constant';
 import OrderItem from '@/components/order_item'
 import BottomLoadMore from "../components/common/bottomLoadMore"
@@ -35,11 +36,11 @@ export default class Order extends wepy.page {
   data = {
     winHeight: 0,
     totalCount: 0,
-    tabList: ["全部订单", "待支付", "待收货", "已完成"],
+    tabList: ["全部订单", "待支付", "待收货", "已完成", "已取消"],
     orderList: [],
     currentPage: 1,
     is_empty: false,
-    orderStatus: "",
+    orderStatus: "any",
     currentTab: 0,
     flag: 0,
     //是否显示 底部loading
@@ -62,40 +63,40 @@ export default class Order extends wepy.page {
     let that = this;
     console.log("orderStatus值");
     console.log("orderStatus值" + that.orderStatus);
-    let userSpecialInfo = wepy.getStorageSync(USER_SPECICAL_INFO) || {};
-    let openId = userSpecialInfo.openid;
-    const json = await api.getMyOrderList({
+    // let userSpecialInfo = wepy.getStorageSync(USER_SPECICAL_INFO) || {};
+    // let openId = userSpecialInfo.openid;
+    let me = wepy.getStorageSync(ME) || {};
+    const json = await api.queryOrders({
       query: {
-        openId: openId,
-        orderStatus: that.orderStatus,
-        receiveFlg : that.receiveFlg,
+        customer: me.id,
+        status: that.orderStatus,
         page: currentPage || 1,
         size: size || 10,
-        type: 1 //正常单
       }
     });
-    if (json.data.code == 0) {
+    if (json.statusCode == 200) {
       console.log("json.data.list");
       console.log(json.data.list);
       if (refresh) {
-        that.orderList = json.data.list;
+        that.orderList = json.data;
       } else {
-        that.orderList = [...that.orderList, ...json.data.list];
+        that.orderList = [...that.orderList, ...json.data];
       }
-      that.page_total = json.data.page_total;
-      that.totalCount = json.data.totalCount;
+      that.pageTotal = json.header['X-WP-TotalPages'];
+      that.totalCount = json.header['X-WP-Total'];
+
       console.log("条目数：" + that.totalCount);
-      if (json.data.page_total == 0) {
+      if (json.data.pageTotal == 0) {
         //暂无数据
         that.is_empty = true;
       } else {
         that.is_empty = false;
       }
-      that.getMyOrderSize();
+      // that.getMyOrderSize();
       console.log("list返回数据");
       console.log(that.orderList);
     } else {
-      tip.error(json.data.msg)
+      tip.error(json.data.message)
     }
     that.showLoading = false;
     that.$apply();
@@ -144,7 +145,7 @@ export default class Order extends wepy.page {
   methods = {
     getCurrentTab(cur, evt) {
       this.currentPage = 1;
-      this.page_total = 0;
+      this.pageTotal = 0;
       this.orderList = [];
 
       let that = this;
@@ -152,23 +153,26 @@ export default class Order extends wepy.page {
       console.log("cur");
       console.log(cur);
       if (cur == 0) {
-        console.log("所有订单类型");
-        that.orderStatus = "";
+        // console.log("所有订单类型");
+        that.orderStatus = "any";
         that.getMyOrder();
       } else if (cur == 1) {
-        console.log("未付款订单类型");
-        that.orderStatus = 0;
+        // console.log("未付款订单类型");
+        that.orderStatus = "pending";
         that.getMyOrder();
       } else if (cur == 2) {
-        console.log("待收货订单类型");
-        that.orderStatus = 2;
+        // console.log("待收货订单类型");
+        that.orderStatus = "processing";
         that.receiveFlg=2;
         that.getMyOrder();
       } else if (cur == 3) {
-
-        console.log("已完成订单类型");
-        that.orderStatus = 4;
+        // console.log("已完成订单类型");
+        that.orderStatus = "completed";
         that.receiveFlg=4;
+        that.getMyOrder();
+      } else if (cur == 4) {
+        that.orderStatus = "cancelled";
+        that.receiveFlg=5;
         that.getMyOrder();
       }
       that.$apply();
@@ -177,7 +181,6 @@ export default class Order extends wepy.page {
      * 滑动切换tab
      */
     bindChange(e) {
-
       let that = this;
       that.currentTab = e.detail.current;
       console.log("change tab...." + e.detailcurrent);
@@ -206,9 +209,9 @@ export default class Order extends wepy.page {
     console.log("加载更多");
     let that = this;
     that.showLoading = true;
-    console.log(that.page_total + "232===" + that.currentPage);
+    console.log(that.pageTotal + "232===" + that.currentPage);
     //判断总页数是否大于翻页数
-    if ((that.page_total) > that.currentPage) {
+    if ((that.pageTotal) > that.currentPage) {
       //防止重复加载
       if (that.preventRepeatReuqest) {
         return true;

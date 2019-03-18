@@ -3,24 +3,24 @@
 <repeat for="{{list}}" key="index" index="index" item="item">
   <view class="good_list">
     <view class="image_box">
-      <image src="{{item.goodsThumLogo}}"></image>
+      <image src="{{item.image}}"></image>
     </view>
     <view class="goods">
-      <view class="product_name">{{item.goodsName}}</view>
-      <view class="product_rule">规格:{{item.goodsSkuVals}}</view>
+      <view class="product_name">{{item.name}}</view>
+      <view class="product_rule">规格:{{item.sku}}</view>
       <view class="product_info">
         <view class="price">￥{{item.price}}</view>
-        <view class="goods_num">x{{item.num}}</view>
+        <view class="goods_num">x{{item.quantity}}</view>
       </view>
 
       <view class="order_footer">
         <view class="btn_group">
-          <view class="btn btn_del" @tap.stop="refund" data-id="{{item.id}}" wx:if="{{item.status==4 && item.refundStatus==0}}">申请退货</view>
+          <view class="btn btn_del" @tap.stop="refund" data-id="{{item.id}}" wx:if="{{item.status=='completed' && item.refundStatus==0}}">申请退货</view>
         </view>
         <view class="order_state" wx:if="{{item.refundStatus==1}}">
           <view>退货中</view>
         </view>
-        <view class="order_state" wx:if="{{item.refundStatus==2}}">
+        <view class="order_state" wx:if="{{item.refundStatus=='refunded'}}">
           <view>退款成功</view>
         </view>
       </view>

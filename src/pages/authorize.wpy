@@ -16,6 +16,7 @@ import {
   USER_SPECICAL_INFO,
   USER_INFO,
   TOKEN,
+  ME,
 } from '@/utils/constant';
 export default class Authorize extends wepy.page {
   config = {
@@ -57,6 +58,8 @@ export default class Authorize extends wepy.page {
               })
               if (token.statusCode == 200) {
                 wepy.setStorageSync(TOKEN, token.data.token);
+                let me = await api.getMe();
+                wepy.setStorageSync(ME, me.data);
               }
             }
 
@@ -97,6 +100,8 @@ export default class Authorize extends wepy.page {
             })
             if (token.statusCode == 200) {
               wepy.setStorageSync(TOKEN, token.data.token);
+              let me = await api.getMe();
+              wepy.setStorageSync(ME, me.data);
             }
             wepy.switchTab({
               url: '/pages/home'

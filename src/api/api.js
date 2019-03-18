@@ -20,13 +20,14 @@ const wxJsCode2Session = (params) => request(host + "/wp-json/watch-life-net/v1/
 const user2session = (params) => wxRequest(params, apiMall + "/api/wechat/user2session?jsoncallback=?");
 
 const getToken = (params) => request(`${host}/wp-json/jwt-auth/v1/token`, {...params, method:'POST'});
+const getMe= (params) => request(`${host}/wp-json/wp/v2/users/me`, {...params});
 //商品接口---begin
 //首页发现商品接口
 const hostGoodsList = (params) => wxRequest(params, apiMall + '/api/home/hostGoodsList');
 const getHomeDisvocerList = (params) => wxRequest(params, apiMall + '/api/mall/discoverList');
 
 //查询商品列表
-const queryProducts = (params) => request(`${host}/wp-json/wc/v3/products`, {...params, query: {status: 'publish'}});
+const queryProducts = ({query}) => request(`${host}/wp-json/wc/v3/products`, {query: {...query, status: 'publish'}});
 
 //查询商品详情信息
 // const goodsDetail = (id, params) => request(`${host}/wp-json/wc/v3/products/${id}`, params);
@@ -115,7 +116,32 @@ const searchKeywordList = (params) => wxRequest(params, apiMall + '/api/searchke
 const clearSearchKeyword = (params) => wxRequest(params, apiMall + '/api/searchkeyword/clear');
 
 //查询我的订单
-const getMyOrderList = (params) => wxRequest(params, apiMall + '/api/mall/goodsOrder/getMyOrderList');
+// const getMyOrderList = (params) => wxRequest(params, apiMall + '/api/mall/goodsOrder/getMyOrderList');
+const queryOrders = async (params) => {
+  let response = await request(`${host}/wp-json/wc/v3/orders`, params);
+  if (response.statusCode == 200) {
+    let idsArr = response.data.map((item) => item.line_items.map(item2 => item2.product_id).join(','))
+    let ids = idsArr.join(',')
+    let products = await queryProducts({query: {include: ids}});
+    let products2 = {}
+    products.data.map(item => {
+      products2[item.id] = item
+    })
+
+    console.log('products', ids, products, products2)
+    response.data = response.data.map((item) => {
+      item.line_items = item.line_items.map(item2 => {
+        let p = products2[item2.product_id];
+        item2.image = p ? p.images[0].src : null;
+        return item2
+      })
+      return item
+    })
+  }
+  return response;
+}
+
+const updateOrders = (id, params) => request(`${host}/wp-json/wc/v3/orders/${id}`, {...params, method: 'PUT'})
 
 //查询我的订单数量
 const getMyOrderSize = (params) => wxRequest(params, apiMall + '/api/mall/goodsOrder/getMyOrderSize');
@@ -157,6 +183,7 @@ export default {
   queryProducts,
   getProducts,
   getToken,
+  getMe,
   wxJsCode2Session,
   user2session,
   userSginInfo,
@@ -185,7 +212,8 @@ export default {
   addSearchKeyword,
   searchKeywordList,
   clearSearchKeyword,
-  getMyOrderList,
+  queryOrders,
+  updateOrders,
   saveByCart,
   toPay,
   rootCtegoryList,

@@ -3,14 +3,14 @@
 <view class="order_item">
 <repeat for="{{orderList}}">
   <view class="list" wx:key="index">
-    <navigator class="item_content" url="/pages/order_detail?orderNo={{item.orderNo}}">
+    <navigator class="item_content" url="/pages/order_detail?orderNo={{item.id}}">
       <view class="order_list_top">
         <view class="left">
           <view class="title">订单号：
-            <text class="order_doc">{{item.orderNo}}</text>
+            <text class="order_doc">#{{item.number}}</text>
           </view>
           <view class="title mt10">提交时间：
-            <text class="order_doc">{{item.createTime}}</text>
+            <text class="order_doc">{{item.date_created}}</text>
           </view>
         </view>
 
@@ -19,37 +19,39 @@
         </view>
         <view class="order_state" wx:elif="{{item.auditStatus==-1}}"> 审批不通过 </view>
         <view wx:else>
-          <text class="defult" wx:if="{{item.status==0}}">
+          <text class="defult" wx:if="{{item.status== 'pending'}}">
             <view class="order_state">待支付</view>
           </text>
-          <view class="order_state" wx:if="{{item.status==0}}">待付款</view>
-          <view class="order_state" wx:if="{{item.status==2 || item.status==1}}">待收货</view>
-          <view class="order_state" wx:if="{{item.status==4}}">已完成</view>
-          <view class="order_state" wx:if="{{item.status==3}}">待评论</view>
+          <view class="order_state" wx:if="{{item.status=='pending'}}">待付款</view>
+          <view class="order_state" wx:if="{{item.status=='processing'}}">待收货</view>
+          <view class="order_state" wx:if="{{item.status=='completed'}}">已完成</view>
+          <view class="order_state" wx:if="{{item.status=='cancelled'}}">已取消</view>
+          <view class="order_state" wx:if="{{item.status=='refunded'}}">已退款</view>
+          <view class="order_state" wx:if="{{item.status=='on-hold'}}">预订</view>
         </view>
     </view>
 
     <view class="order_list_center">
-      <shopItemList :list.sync="item.orderItemList"></shopItemList>
+      <shopItemList :list.sync="item.line_items"></shopItemList>
     </view>
   </navigator>
   <view class="order_list_footer">
-    <view class="reveiveMoney c333">应付款：
-      <text class="num">{{item.goodsPrices}}</text>
+    <view class="reveiveMoney c333">付款总金额：
+      <text class="num">¥ {{item.total}}</text>
     </view>
 
     <view class="order_state" wx:if="{{item.auditStatus==5}}">
     </view>
     <view wx:elif="{{item.auditStatus==-1}}">
       <view class="btn_group">
-        <view class="btn btn_del" @tap="delOrder" data-id="{{item.orderNo}}">删除订单</view>
+        <view class="btn btn_del" @tap="cancelOrder" data-id="{{item.id}}">取消订单</view>
       </view>
     </view>
     <view wx:else>
       <view class="btn_group">
-        <view class="btn btn_del" @tap="delOrder" data-id="{{item.orderNo}}" wx:if="{{item.status==0 || item.status==4}}">删除订单</view>
-        <view class="btn btn_pay" @tap="payMoney" data-id="{{item.orderNo}}" data-tradeno="{{item.payTradeNo}}" wx:if="{{item.status==0}}">立即付款</view>
-        <view class="btn btn_pay" @tap="completion" data-id="{{item.orderNo}}" wx:if="{{item.status==2 || item.status==1}}">确认收货</view>
+        <view class="btn btn_del" @tap="cancelOrder" data-id="{{item.id}}" wx:if="{{item.status=='pending'}}">取消订单</view>
+        <view class="btn btn_pay" @tap="payMoney" data-id="{{item.id}}" data-tradeno="{{item.payTradeNo}}" wx:if="{{item.status== 'pending'}}">立即付款</view>
+        <view class="btn btn_pay" @tap="completion" data-id="{{item.id}}" wx:if="{{item.status== 'processing'}}">确认收货</view>
       </view>
     </view>
   </view>
@@ -78,21 +80,13 @@ export default class orderItem extends wepy.component {
     }
   }
 
-  async editOrderInfo(orderNo,flag) {
-    console.log("调用方法");
+  async editOrderInfo(orderNo,params) {
     let that = this;
-    let userSpecialInfo = wepy.getStorageSync(USER_SPECICAL_INFO) || {};
-    const json = await api.editOrderInfo({
-      query: {
-        orderNo: orderNo,
-        flag:flag
-      }
-    });
-    if (json.data.code == 0) {
-
-      this.$emit('refreshOrderList', that.flag);
+    const json = await api.updateOrders(orderNo, params)
+    if (json.statusCode == 200) {
+      this.$emit('refreshOrderList', 1);
     } else {
-      tip.error(json.data.errerTips)
+      tip.error(json.data.message)
     }
     that.$apply();
   }
@@ -105,13 +99,15 @@ export default class orderItem extends wepy.component {
   }
 
   methods = {
-    async delOrder(e) {
-      this.flag=2;
+    async cancelOrder(e) {
       this.orderNo = e.currentTarget.dataset.id;
-      await tip.confirm('是否删除订单');
-      console.log(this.flag);
-      this.editOrderInfo(this.orderNo,this.flag);
-      console.log("删除成功")
+      await tip.confirm('是否取消订单');
+      this.editOrderInfo(this.orderNo, {
+        query: {
+          status: 'cancelled'
+        }
+      });
+      console.log("取消成功")
 
     },
       async completion(e) {
@@ -202,6 +198,7 @@ export default class orderItem extends wepy.component {
     padding-top: 20rpx;
     .num {
       color: #ff4856;
+      font-size: 36rpx;
     }
   }
   .order_list_top {
