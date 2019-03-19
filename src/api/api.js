@@ -34,18 +34,18 @@ const queryProducts = ({query}) => request(`${host}/wp-json/wc/v3/products`, {qu
 const getProducts = (id, params) => request(`${host}/wp-json/wc/v3/products/${id}`, params);
 
 //商品加入购物车
-const addCart = (params) => request(`${host}/wp-json/wc/v2/cart/add`, {...params, method: 'POST'});
+const addCart = (params) => request(`${host}/wp-json/w2w/v1/cart/add`, {...params, method: 'POST'});
 
 //用户的购物车商品列表
-const getCart = (params) => request(`${host}/wp-json/wc/v2/cart`, params);
+const getCart = (params) => request(`${host}/wp-json/w2w/v1/cart`, params);
+
 //购物车的商品选中状态
-const cartCheck = (params) => wxRequest(params, apiMall + '/api/mall/goodsCart/check');
-//购物车的商品选中状态(全选)
-const cartCheckAll = (params) => wxRequest(params, apiMall + '/api/mall/goodsCart/checkAll');
+const cartCheck = (params) => request(`${host}/wp-json/w2w/v1/cart/check`, {...params, method: 'POST'}); // wxRequest(params, apiMall + '/api/mall/goodsCart/check');
 //购物车的商品删除
-const cartDel = (params) => wxRequest(params, apiMall + '/api/mall/goodsCart/delete');
+const cartDel = (params) => request(`${host}/wp-json/w2w/v1/cart/delete`, {...params, method: 'POST'});
+
 //购物车的商品数量更新
-const cartUpdateNum = (params) => wxRequest(params, apiMall + '/api/mall/goodsCart/updateNum');
+const cartUpdateNum = (params) => request(`${host}/wp-json/w2w/v1/cart/update_quantity`, {...params, method: 'POST'});
 //直接购买商品
 const preOrder = (params) => wxRequest(params, apiMall + '/api/mall/goodsOrder/commitData');
 
@@ -192,7 +192,6 @@ export default {
   addCart,
   getCart,
   cartCheck,
-  cartCheckAll,
   cartDel,
   cartUpdateNum,
   preOrder,

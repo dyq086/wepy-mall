@@ -5,9 +5,9 @@
         <swipeDelete :swipeData="item" @delItem.user="handleDelItem">
           <!-- <view class="a-goods-conts {{item.ischecked? 'active':''}}"  > -->
           <view class="goods-info">
-            <icon class="icon_check" type="success" color="{{item.ischecked?'red':'rgb(153,153,153)'}}" @tap.stop="selectTap" data-index="{{index}}" data-id="{{item.id}}" size="20" />
+            <icon class="icon_check" type="success" color="{{item.checked?'red':'rgb(153,153,153)'}}" @tap.stop="selectTap" data-index="{{index}}" data-id="{{item.key}}" size="20" />
             <view class="img-box">
-              <image src="{{item.thumLogo}}" class="img" />
+              <image src="{{item.product.images[0].shop_thumbnail}}" class="img" />
             </view>
             <view class="text-box">
               <view class="goods-title">
@@ -17,14 +17,14 @@
               </view>
               <!--  -->
               <view class="lable">
-                <view class="goods-lable">{{item.goodsSkuValName}}</view>
-                <!-- <view class="bo-label" wx:if="{{item.type==2}}">补货</view> -->
+                <view class="goods-lable">{{item.product.sku}}</view>
+                <view class="bo-label" wx:if="{{item.type==2}}">库存:{{item.product.stock_quantity}}</view>
               </view>
-              <view class="goods-price">¥ {{item.line_total}}</view>
+              <view class="goods-price">¥ {{item.product.price}}</view>
               <view class="buy-num">
-                <view class="jian-btn {{item.num==1? 'disabled' : ''}}" catchtap="jianBtnTap" data-index="{{index}}" data-id="{{item.id}}">-</view>
+                <view class="jian-btn {{item.quantity ==1? 'disabled' : ''}}" catchtap="jianBtnTap" data-index="{{index}}" data-id="{{item.key}}">-</view>
                 <input type="number" value="{{item.quantity}}" disabled/>
-                <view class="jia-btn {{item.num==1000? 'disabled' : ''}}" catchtap="jiaBtnTap" data-index="{{index}}" data-id="{{item.id}}">+</view>
+                <view class="jia-btn {{item.quantity >= item.product.stock_quantity ? 'disabled' : ''}}" catchtap="jiaBtnTap" data-index="{{index}}" data-id="{{item.key}}">+</view>
               </view>
             </view>
           </view>
@@ -74,27 +74,30 @@
       operating: false,
       allChecked: true
     }
-    //获取购物车商品列表
-    async getCartList() {
+    fillCart(json) {
       let that = this;
-      const json = await api.getCart()
-
       if (json.statusCode == 200) {
-        json.data = Object.keys(json.data).map((k) => json.data[k])
-        console.log('data', json.data);
         let data = json.data;
-        this.list = data;
-        this.totalPrice = data.totalPrice;
+        this.list = Object.keys(data.cart).map((k) => data.cart[k])
+        this.totalPrice = data.cart_total;
         for (var i = 0; i < this.list.length; i++) {
-          if (!this.list[i].ischecked) {
+          if (!this.list[i].checked) {
             this.allChecked = false;
-            break;
+            this.totalPrice -= this.list[i].line_total;
           }
         }
+        this.totalPrice = this.totalPrice.toFixed(2);
+        return 0;
       } else {
-        tip.error(json.data.msg)
+        tip.error(json.data.message)
+        return -1;
       }
-      that.$apply();
+    }
+    //获取购物车商品列表
+    async getCartList() {
+      const json = await api.getCart()
+      this.fillCart(json);
+      this.$apply();
     }
     onLoad() {
       let that = this;
@@ -105,121 +108,61 @@
     }
     computed = {}
     async checkGoods(id, index, ischecked) {
-      let userSpecialInfo = wepy.getStorageSync(USER_SPECICAL_INFO) || {};
-      let openId = userSpecialInfo.openid;
       const json = await api.cartCheck({
         query: {
-          openId: openId,
-          id: id
+          cart_key: id,
+          checked: !ischecked
         }
       });
-      if (json.data.code == 0) {
-        // 购物车数据
-        this.list[index].ischecked = !ischecked;
-        if (this.list[index].ischecked) {
-          this.totalPrice += parseInt(this.list[index].priceSubtotal);
-        } else {
-          this.totalPrice -= parseInt(this.list[index].priceSubtotal);
-        }
-      } else {
-        tip.error(json.data.msg)
-      }
+      this.fillCart(json);
       this.$apply();
     }
     async reduceGoodNum(id, num, index) {
-      let userSpecialInfo = wepy.getStorageSync(USER_SPECICAL_INFO) || {};
-      let openId = userSpecialInfo.openid;
       const json = await api.cartUpdateNum({
         query: {
-          openId: openId,
-          id: id,
-          num: num
+          cart_key: id,
+          quantity: num
         }
       });
-      if (json.data.code == 0) {
-        // 购物车数据
-        this.list[index].num = num;
-        this.totalPrice = this.totalPrice - this.list[index].price;
-        this.operating = false;
-      } else {
-        tip.error(json.data.msg)
-      }
+      this.fillCart(json);
+      this.operating = false;
       this.$apply();
     }
     async addGoodNum(id, num, index) {
-      let userSpecialInfo = wepy.getStorageSync(USER_SPECICAL_INFO) || {};
-      let openId = userSpecialInfo.openid;
       const json = await api.cartUpdateNum({
         query: {
-          openId: openId,
-          id: id,
-          num: num
+          cart_key: id,
+          quantity: num
         }
       });
-      if (json.data.code == 0) {
-        // 购物车数据
-        this.list[index].num = num;
-        this.totalPrice = parseInt(this.totalPrice) + parseInt(this.list[index].price);
-        this.operating = false;
-      } else {
-        tip.error(json.data.msg)
-      }
+      this.fillCart(json);
+      this.operating = false;
       this.$apply();
     }
     async deleteGoods(itemData) {
-      var id = itemData.id;
-      let userSpecialInfo = wepy.getStorageSync(USER_SPECICAL_INFO) || {};
-      let openId = userSpecialInfo.openid;
+      var id = itemData.key;
       const json = await api.cartDel({
         query: {
-          openId: openId,
-          cartIdList: [id],
+          cart_key: id,
         }
       });
-      if (json.data.code == 0) {
-        // 购物车数据
-        let retList = [];
-        for (var i = 0; i < this.list.length; i++) {
-          if (this.list[i].id == id) {
-            if (this.list[i].ischecked) {
-              this.totalPrice -= parseInt(this.list[i].priceSubtotal);
-            }
-            continue;
-          } else {
-            retList.push(this.list[i]);
-          }
-        }
-        this.list = retList;
-      } else {
-        tip.error(json.data.msg)
-      }
+      this.fillCart(json);
       this.$apply();
     }
 
     async checkAllGoods() {
-      let userSpecialInfo = wepy.getStorageSync(USER_SPECICAL_INFO) || {};
-      let openId = userSpecialInfo.openid;
       let check = 0;
       if (!this.allChecked) {//原来未选中
         check = 1;
       }
-      const json = await api.cartCheckAll({
+      const json = await api.cartCheck({
         query: {
-          openId: openId,
-          check: check
+          checked: check,
+          all: true,
         }
       });
-      if (json.data.code == 0) {
-        this.totalPrice = 0;
-        for (var i = 0; i < this.list.length; i++) {
-          this.list[i].ischecked = !this.allChecked;
-          if (!this.allChecked) {
-            this.totalPrice += parseInt(this.list[i].priceSubtotal);
-          }
-        }
-        this.allChecked = !this.allChecked;
-      } else {
-        tip.error(json.data.msg)
+      if (this.fillCart(json) == 0) {
+          this.allChecked = check;
       }
       this.$apply();
     }
@@ -232,7 +175,7 @@
       selectTap(e) {
         var id = e.currentTarget.dataset.id;
         var index = parseInt(e.currentTarget.dataset.index);
-        var ischecked = this.list[index].ischecked;
+        var ischecked = this.list[index].checked;
         this.checkGoods(id, index, ischecked);
       },
       selectAll() {
@@ -249,11 +192,12 @@
         this.operating = true;
         var id = e.currentTarget.dataset.id;
         var index = parseInt(e.currentTarget.dataset.index);
-        var num = this.list[index].num;
+        var num = this.list[index].quantity;
         // 如果只有1件了，就不允许再减了
         if (num > 1) {
           num--;
         } else {
+          this.operating = false;
           return;
         }
         this.reduceGoodNum(id, num, index);
@@ -265,7 +209,7 @@
         this.operating = true;
         var id = e.currentTarget.dataset.id;
         var index = parseInt(e.currentTarget.dataset.index);
-        var num = this.list[index].num;
+        var num = this.list[index].quantity;
         // 自增
         num++;
         this.addGoodNum(id, num, index);
