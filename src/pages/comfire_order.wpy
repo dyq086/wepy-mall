@@ -124,15 +124,11 @@ export default class ComfireOrder extends wepy.page {
   //获取订单详情
   async getOrderDetailInfo() {
     let that = this;
-    let userSpecialInfo = wepy.getStorageSync(USER_SPECICAL_INFO) || {};
-    let openId = userSpecialInfo.openid;
     const json = await api.preOrder({
       query: {
-        openId: openId,
-        goodsId: that.goodsId
       }
     });
-    if (json.data.code == 0) {
+    if (json.statusCode == 200) {
       let data = json.data;
       this.list = data.goodsList;
       this.totalPrice = data.totalPrice;
@@ -146,7 +142,7 @@ export default class ComfireOrder extends wepy.page {
       this.jf_num = data.canUseScore;
       this.reduce_fee = data.reduceFee;
     } else {
-      tip.error(json.data.msg)
+      tip.error(json.data.message)
     }
     that.$apply();
   }

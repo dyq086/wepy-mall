@@ -12,13 +12,13 @@
             <view class="text-box">
               <view class="goods-title">
                 <navigator url="/pages/goods_detail?id={{item.product_id}}">
-                  {{item.product_name}}
+                  {{item.product.name}}
                 </navigator>
               </view>
               <!--  -->
               <view class="lable">
                 <view class="goods-lable">{{item.product.sku}}</view>
-                <view class="bo-label" wx:if="{{item.type==2}}">库存:{{item.product.stock_quantity}}</view>
+                <view class="bo-label" >库存:{{item.product.stock_quantity}}</view>
               </view>
               <view class="goods-price">¥ {{item.product.price}}</view>
               <view class="buy-num">
@@ -50,7 +50,7 @@
       </view>
       <view class="total" hidden="{{noSelect}}">合计：¥ {{totalPrice}}</view>
     </view>
-    <view class="to-pay-btn {{noSelect?'no-select':''}}" hidden="{{!saveHidden}}" bindtap="toPayOrder">去结算</view>
+    <view class="to-pay-btn {{noSelect?'no-select':''}}" hidden="{{!saveHidden}}" bindtap="pay">去结算</view>
   </view>
 </template>
 
@@ -80,10 +80,13 @@
         let data = json.data;
         this.list = Object.keys(data.cart).map((k) => data.cart[k])
         this.totalPrice = data.cart_total;
+        this.noSelect = true;
         for (var i = 0; i < this.list.length; i++) {
           if (!this.list[i].checked) {
             this.allChecked = false;
             this.totalPrice -= this.list[i].line_total;
+          } else {
+            this.noSelect = false;
           }
         }
         this.totalPrice = this.totalPrice.toFixed(2);
@@ -214,7 +217,9 @@
         num++;
         this.addGoodNum(id, num, index);
       },
-      toPayOrder() {
+      pay() {
+        if (this.noSelect)
+            return;
         let purType = 1,
           prePurType = 1;
         let bOneType = true;
@@ -231,10 +236,6 @@
             prePurType = purType;
             index++;
           }
-        }
-        if (!bOneType) {
-          tip.alert("先把补货的商品结算!");
-          return;
         }
         wepy.navigateTo({
           url: "/pages/comfire_order?purchasetype=" + purType
