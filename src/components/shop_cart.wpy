@@ -68,7 +68,7 @@
     }
     data = {
       list: [],
-      noSelect: false,
+      noSelect: true,
       saveHidden: true,
       totalPrice: 0,
       operating: false,
@@ -78,6 +78,9 @@
       let that = this;
       if (json.statusCode == 200) {
         let data = json.data;
+        if (!data.cart) {
+            return 0;
+        }
         this.list = Object.keys(data.cart).map((k) => data.cart[k])
         this.totalPrice = data.cart_total;
         this.noSelect = true;
@@ -220,6 +223,7 @@
       pay() {
         if (this.noSelect)
             return;
+        /*
         let purType = 1,
           prePurType = 1;
         let bOneType = true;
@@ -236,9 +240,9 @@
             prePurType = purType;
             index++;
           }
-        }
+        }*/
         wepy.navigateTo({
-          url: "/pages/comfire_order?purchasetype=" + purType
+          url: "/pages/comfire_order"
         })
       },
       goIndex() {

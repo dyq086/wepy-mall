@@ -130,11 +130,11 @@
           </view>
           <view class="num_box">
             <view class="title">数量</view>
-            <view class="stock">库存:{{detail.stockNum}}件</view>
+            <view class="stock">库存:{{detail.stock_quantity}}件</view>
             <view class="buy-num">
               <view class="jian-btn {{item.number==1? 'disabled' : ''}}" catchtap="jianBtnTap" data-index="{{index}}">-</view>
               <input type="number" bindinput="bindOrderNumInput" value="{{orderNum}}" />
-              <view class="jia-btn {{item.number==10? 'disabled' : ''}}" catchtap="jiaBtnTap" data-index="{{index}}">+</view>
+              <view class="jia-btn {{item.number >= detail.stock_quantity? 'disabled' : ''}}" catchtap="jiaBtnTap" data-index="{{index}}">+</view>
             </view>
           </view>
         </scroll-view>
@@ -323,7 +323,8 @@ export default class goodsDetail extends wepy.page {
     const json = await api.addCart({
       query: {
         product_id: that.goodsId,
-        quantity: this.orderNum
+        quantity: this.orderNum,
+        checked: true
       }
     });
     if (json.statusCode == 200) {

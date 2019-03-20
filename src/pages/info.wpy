@@ -24,13 +24,13 @@
         </view>
         <view class="arrow">&gt;</view>
       </navigator>
-      <navigator class="item" url="/pages/reorder">
+      <view class="item" @tap="setAddress">
         <view class="item_content">
           <image class="item_img" src="../images/icon_my_02.png"></image>
-          <view class="text">补货订单</view>
+          <view class="text">我的地址</view>
         </view>
         <view class="arrow">&gt;</view>
-      </navigator>
+      </view>
       <navigator class="item" url="/pages/points">
         <view class="item_content">
           <image class="item_img" src="../images/icon_my_03.png"></image>
@@ -127,7 +127,14 @@ export default class Index extends wepy.page {
 
   }
   methods = {
-
+    async setAddress() {
+      await wepy.authorize({scope: "scope.address"}); 
+      let address = await wepy.chooseAddress();
+      console.log('address', address);
+      // wepy.navigateTo({
+      //  url: "/pages/address?type=order"
+      // })
+    },
   }
   events = {
 

@@ -9,12 +9,12 @@
       <view class="address_info" wx:else>
         <view class="title">
           <view class="user_info">
-            <text class="name">{{address.receiverName}}</text>
-            <text class="phone">{{address.mobile}}</text>
+            <text class="name">{{address.userName}}</text>
+            <text class="phone">{{address.telNumber}}</text>
           </view>
           <view class="active_address">
             <text class="defult" wx:if="{{address.isdefault==1}}"> [默认]</text>
-            {{address.addressDetail}}
+            {{address.countryName}} {{address.provinceName}} {{address.cityName}} {{address.detailInfo}} {{address.postalCode}}
           </view>
         </view>
         <view class="arrow">&gt;</view>
@@ -30,12 +30,12 @@
   <swipeDelete :swipeData="item" @delItem.user="handleDelItem">
       <view class="goods-info">
         <view class="img-box">
-          <image src="{{item.thumLogo}}" class="img" />
+          <image src="{{item.product.images[0].src}}" class="img" />
         </view>
         <view class="text-box">
-          <view class="goods-title">{{item.goodsName}}</view>
-          <view class="goods-label">{{item.goodsSkuValName}}</view>
-          <view class="goods-price">¥ {{item.price}}</view>
+          <view class="goods-title">{{item.product.name}}</view>
+          <view class="goods-label">{{item.product.sku}}</view>
+          <view class="goods-price">¥ {{item.line_total}}</view>
           <view class="buy-num">
             <view class="jian-btn {{item.num==1? 'disabled' : ''}}" catchtap="jianBtnTap" data-index="{{index}}" data-id="{{item.id}}">-</view>
             <input type="number" value="{{item.num}}" disabled/>
@@ -124,14 +124,17 @@ export default class ComfireOrder extends wepy.page {
   //获取订单详情
   async getOrderDetailInfo() {
     let that = this;
-    const json = await api.preOrder({
+    const json = await api.getCart({
       query: {
       }
     });
     if (json.statusCode == 200) {
       let data = json.data;
-      this.list = data.goodsList;
-      this.totalPrice = data.totalPrice;
+      if (!data.cart) {
+          return 0;
+      }
+      this.list = Object.keys(data.cart).map((k) => data.cart[k])
+      this.totalPrice = data.cart_total;
       this.actualPrice = data.actualPrice;
       this.is_exit_address = data.hasDefaultAddress;
       this.address = data.defaultAddress;
@@ -174,7 +177,7 @@ export default class ComfireOrder extends wepy.page {
     this.reduce_fee = 0;
     this.operating = false;
     that.goodsId = option.goodsId==undefined?"":option.goodsId;
-    this.purchaseType = option.purchasetype==undefined?"1":option.purchasetype;
+    // this.purchaseType = option.purchasetype==undefined?"1":option.purchasetype;
     /*that.list = bb.result.products;
     console.log(bb.result.products)*/
     that.getOrderDetailInfo();
@@ -359,10 +362,14 @@ export default class ComfireOrder extends wepy.page {
       }
       this.goToPay(fId);
     },
-    setAddress() {
-      wepy.navigateTo({
-        url: "/pages/address?type=order"
-      })
+    async setAddress() {
+      try {
+        await wepy.authorize({scope: "scope.address"}); 
+        let address = await wepy.chooseAddress();
+        this.address = address;
+        console.log('address', address);
+      } catch (e) {
+      }
     },
     jianBtnTap(e) {
       if (this.operating) {

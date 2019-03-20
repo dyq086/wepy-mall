@@ -124,16 +124,13 @@ export default class orderItem extends wepy.component {
     async payMoney(e) {
       this.orderNo = e.currentTarget.dataset.id;
       let tradeNo = e.currentTarget.dataset.tradeno;
-      let userSpecialInfo = wepy.getStorageSync(USER_SPECICAL_INFO) || {};
-      let openId = userSpecialInfo.openid;
 
       const pay = await api.toPay({
         query:{
-          openId: openId,
           orderNo: tradeNo
         }
       });
-      if (pay.data.code==0) {
+      if (pay.statusCode == 0) {
         //以下是微信支付
         wx.requestPayment({
           appId: pay.data.appId,
