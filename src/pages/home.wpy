@@ -3,7 +3,7 @@
     <swiper class="swiper" indicator-active-color="{{indicatorActiveColor}}" indicator-dots="{{indicatorDots}}" autoplay="{{autoplay}}" interval="{{interval}}" duration="{{duration}}" circular="true">
       <block wx:for="{{adList}}" wx:key="key">
         <swiper-item>
-          <image src="{{item.picUrl}}" class="slide-image" @tap="goToAdvert({{item.advertUrl}})" />
+          <image src="{{item.image}}" class="slide-image" @tap="goToAdvert({{item.url}})" />
         </swiper-item>
       </block>
     </swiper>
@@ -20,10 +20,10 @@
       </view>
     </view>
     <view class="nav_list">
-      <navigator open-type="navigate" url="/pages/sign_in">
-        <image src="../images/icon_nav_01_new.png" class="nav_icon"></image>
-        <view class="nav_text">签到有礼</view>
-      </navigator>
+      <!-- <navigator open-type="navigate" url="/pages/sign_in"> -->
+      <!--   <image src="../images/icon_nav_01_new.png" class="nav_icon"></image> -->
+      <!--   <view class="nav_text">签到有礼</view> -->
+      <!-- </navigator> -->
       <navigator open-type="navigate" url="/pages/exchange_goods">
         <image src="../images/icon_nav_02_new.png" class="nav_icon"></image>
         <view class="nav_text">换货专区</view>
@@ -32,10 +32,10 @@
         <image src="../images/icon_nav_03_new.png" class="nav_icon"></image>
         <view class="nav_text">特价专区</view>
       </navigator>
-      <navigator open-type="navigate" url="/pages/replenishment_goods">
-        <image src="../images/icon_nav_04_new.png" class="nav_icon"></image>
-        <view class="nav_text">我要补货</view>
-      </navigator>
+      <!-- <navigator open-type="navigate" url="/pages/replenishment_goods"> -->
+      <!--   <image src="../images/icon_nav_04_new.png" class="nav_icon"></image> -->
+      <!--   <view class="nav_text">我要补货</view> -->
+      <!-- </navigator> -->
     </view>
     <!--发现好商品模块-->
     <discover :list.sync="discoverList"></discover>
@@ -112,11 +112,9 @@ export default class Home extends wepy.page {
     that.showLoading = false;
   }
   async getAdList() {
-    const json = await api.getAdList({
-      query: {}
-    });
-    if (json.data.code == 0) {
-      this.adList = json.data.list;
+    const json = await api.getBanners();
+    if (json.statusCode == 200) {
+      this.adList = json.data;
       this.$apply();
     } else {}
   }

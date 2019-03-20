@@ -53,7 +53,7 @@ const preOrder = (params) => wxRequest(params, apiMall + '/api/mall/goodsOrder/c
 const saveByCart = (params) => wxRequest(params, apiMall + '/api/mall/goodsOrder/saveByCart');
 
 //支付统一下单
-const toPay = (params) => wxRequest(params, apiMall + '/wepay/toPay');
+const toPay = (params) => request(`${host}/wp-json/w2w/v1/payment`, params);
 
 //商品收藏
 const goodsFavorite = (params) => wxRequest(params, apiMall + '/api/mall/goodsFavorite/add');
@@ -175,7 +175,7 @@ const childGoodsCatetoryList = (params) => wxRequest(params, apiMall + '/api/mal
 //商品分类--end
 
 //查询广告列表
-const getAdList = (params) => wxRequest(params, apiMall + '/api/adverts/list');
+const getBanners = (params) => request(`${host}/wp-json/w2w/v1/store/banner`, params);
 
 export default {
   hostGoodsList,
@@ -228,6 +228,6 @@ export default {
   goodsIsFavorite,
   getMyOrderSize,
   getPayOrderDetail,
-  getAdList,
+  getBanners,
   getSignDate
 }
