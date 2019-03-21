@@ -19,27 +19,27 @@
         </navigator>
       </view>
     </view>
-    <view class="nav_list">
+    <!-- <view class="nav_list"> -->
       <!-- <navigator open-type="navigate" url="/pages/sign_in"> -->
       <!--   <image src="../images/icon_nav_01_new.png" class="nav_icon"></image> -->
       <!--   <view class="nav_text">签到有礼</view> -->
       <!-- </navigator> -->
-      <navigator open-type="navigate" url="/pages/exchange_goods">
-        <image src="../images/icon_nav_02_new.png" class="nav_icon"></image>
-        <view class="nav_text">换货专区</view>
-      </navigator>
-      <navigator open-type="navigate" url="/pages/wholesale">
-        <image src="../images/icon_nav_03_new.png" class="nav_icon"></image>
-        <view class="nav_text">特价专区</view>
-      </navigator>
+      <!-- <navigator open-type="navigate" url="/pages/exchange_goods"> -->
+      <!--   <image src="../images/icon_nav_02_new.png" class="nav_icon"></image> -->
+      <!--   <view class="nav_text">换货专区</view> -->
+      <!-- </navigator> -->
+      <!-- <navigator open-type="navigate" url="/pages/wholesale"> -->
+      <!--   <image src="../images/icon_nav_03_new.png" class="nav_icon"></image> -->
+      <!--   <view class="nav_text">特价专区</view> -->
+      <!-- </navigator> -->
       <!-- <navigator open-type="navigate" url="/pages/replenishment_goods"> -->
       <!--   <image src="../images/icon_nav_04_new.png" class="nav_icon"></image> -->
       <!--   <view class="nav_text">我要补货</view> -->
       <!-- </navigator> -->
-    </view>
+    <!-- </view> -->
     <!--发现好商品模块-->
     <!-- <discover :list.sync="discoverList"></discover> -->
-
+    <view style="font-size:40rpx;">今日精选</view>
     <productCardList :list.sync="discoverList"></productCardList>
     <!--加载更多时动画-->
     <bottomLoadMore :show.sync="showLoading" message="正在加载"></bottomLoadMore>
