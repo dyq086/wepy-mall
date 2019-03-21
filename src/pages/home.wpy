@@ -38,7 +38,9 @@
       <!-- </navigator> -->
     </view>
     <!--发现好商品模块-->
-    <discover :list.sync="discoverList"></discover>
+    <!-- <discover :list.sync="discoverList"></discover> -->
+
+    <productCardList :list.sync="discoverList"></productCardList>
     <!--加载更多时动画-->
     <bottomLoadMore :show.sync="showLoading" message="正在加载"></bottomLoadMore>
     <!--暂无数据显示-->
@@ -55,6 +57,8 @@ import Discover from '@/components/discover'
 import Bombscreen from '@/components/bomb_screen'
 import BottomLoadMore from "../components/common/bottomLoadMore"
 import Placeholder from "../components/common/placeholder"
+import ProductCardList from "@/components/product_card_list"
+
 export default class Home extends wepy.page {
   config = {
     navigationBarTitleText: '菜篮先生',
@@ -63,7 +67,8 @@ export default class Home extends wepy.page {
     discover: Discover,
     bottomLoadMore: BottomLoadMore,
     placeholder: Placeholder,
-    bombscreen: Bombscreen
+    bombscreen: Bombscreen,
+    productCardList: ProductCardList,     
   }
   data = {
     indicatorDots: true,
@@ -85,29 +90,26 @@ export default class Home extends wepy.page {
     //广告列表
     adList: [],
     tps: 0,
-    is_show_alert: true
+    is_show_alert: false, //true
   }
   async getDiscoverList(currentPage, size) {
     let that = this;
-    const json = await api.getHomeDisvocerList({
+    const json = await api.queryProducts({
       query: {
         page: currentPage || 1,
         size: size || 10
       }
     });
-    if (json.data.code == 0) {
-      that.discoverList = [...that.discoverList, ...json.data.list];
-
-      if (json.data.page_total) { // 后台的数据不再返回page_total
-      that.page_total = json.data.page_total
-      };
-      if (json.data.page_total == 0) {
+    if (json.statusCode == 200) {
+      that.discoverList = [...that.discoverList, ...json.data];
+      that.page_total = json.header['X-WP-Total'];
+      if (that.page_total == 0) {
         //暂无数据
         that.is_empty = true;
       }
       that.$apply();
     } else {
-      tip.error(json.data.msg);
+      tip.error(json.data.message);
     }
     that.showLoading = false;
   }
@@ -161,6 +163,7 @@ export default class Home extends wepy.page {
   events = {}
   //加载更多
   onReachBottom() {
+      /*
     let that = this;
     that.showLoading = true;
     console.log(that.page_total + "===" + that.currentPage);
@@ -176,7 +179,7 @@ export default class Home extends wepy.page {
       that.preventRepeatReuqest = false;
     } else {
       that.showLoading = false;
-    }
+    }*/
   };
 }
 

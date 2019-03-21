@@ -21,6 +21,7 @@
     "wepy": "^1.7.2",
     "wepy-async-function": "^1.4.4",
     "wepy-com-toast": "^1.0.2",
+    "wepy-compiler-typescript": "^1.5.9",
     "wepy-plugin-imagemin": "^1.5.3",
     "wepy-plugin-uglifyjs": "^1.3.7"
   },

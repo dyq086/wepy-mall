@@ -15,11 +15,7 @@
     </scroll-view>
     <scroll-view class="classify_detail" scroll-y scroll-with-animation="true" style="height:{{windowHeight-50}}px">
         <view class="children">
-          <navigator wx:for="{{childList}}" wx:for-item="item" wx:key="index" url="/pages/goods_detail?id={{item.id}}">
-            <van-card price="{{item.price + ' 件'}}" origin-price="{{item.regular_price != item.price ? item.regular_price :  null}}" title="{{item.name}}" thumb="{{item.images[0].src}}" thumb-link="/pages/goods_detail?id={{item.id}}" custom-class="item" tag="{{item.regular_price != item.price ? '促销' : ''}}" >
-              <view slot="footer" style="border-top:1rpx solid #ededed;margin-top:8rpx"></view>
-            </van-card>
-          </navigator>
+          <productCardList :list.sync="childList"></productCardList>
           <!--加载更多时动画-->
           <bottomLoadMore :show.sync="showLoading" message="正在加载"></bottomLoadMore>
           <!--暂无数据显示-->
@@ -43,6 +39,7 @@ import {
 import tip from '@/utils/tip'
 import BottomLoadMore from "../components/common/bottomLoadMore"
 import Placeholder from "../components/common/placeholder"
+import ProductCardList from "@/components/product_card_list"
 
 export default class Classify extends wepy.page {
   config = {
@@ -50,7 +47,8 @@ export default class Classify extends wepy.page {
   }
   components = {
       bottomLoadMore: BottomLoadMore,
-      placeholder: Placeholder
+      placeholder: Placeholder,
+      productCardList: ProductCardList,     
   }
 
   data = {
@@ -60,7 +58,7 @@ export default class Classify extends wepy.page {
     //一级分类数据
     rootcateList: {},
     //二级三级分类数据
-    childList: {},
+    childList: [],
     showLoading: false,
     isEmpty: false,
     //当前页面
@@ -242,14 +240,6 @@ export default class Classify extends wepy.page {
     // margin-left: -15rpx;
     background: #fff;
     // padding: 15px 10px 10px 30px;
-    .item {
-      background-color: white !important;
-
-      .van-card__thumb {
-        width: 120rpx !important;
-        height: 120rpx !important;
-      }
-    }
     .child_name {
       font-size: 26rpx;
       color: #666;
