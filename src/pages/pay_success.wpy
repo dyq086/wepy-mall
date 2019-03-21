@@ -48,15 +48,11 @@ export default class paySuccess extends wepy.page {
   }
   async getPayOrderDetail() {
     let that = this;
-    const json = await api.getPayOrderDetail({
-      query: {
-        tradeNo: this.orderNo
-      }
-    });
-    if (json.data.code == 0) {
-      this.totalFee = json.data.order.totalFee;
+    const json = await api.getOrders(this.orderNo);
+    if (json.statusCode == 200) {
+      this.totalFee = json.data.total;
     } else {
-      tip.error(json.data.msg)
+      tip.error(json.data.message)
     }
 
     that.$apply();

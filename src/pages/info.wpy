@@ -38,13 +38,13 @@
         </view>
         <view class="arrow">&gt;</view>
       </navigator>
-      <navigator class="item" url="/pages/collection?type=0">
-        <view class="item_content">
-          <image class="item_img" src="../images/icon_my_04.png"></image>
-          <view class="text">我的足迹</view>
-        </view>
-        <view class="arrow">&gt;</view>
-      </navigator>
+      <!-- <navigator class="item" url="/pages/collection?type=0"> -->
+      <!--   <view class="item_content"> -->
+      <!--     <image class="item_img" src="../images/icon_my_04.png"></image> -->
+      <!--     <view class="text">我的足迹</view> -->
+      <!--   </view> -->
+      <!--   <view class="arrow">&gt;</view> -->
+      <!-- </navigator> -->
       <navigator class="item" url="/pages/collection?type=1">
         <view class="item_content">
           <image class="item_img" src="../images/icon_my_05.png"></image>

@@ -22,21 +22,19 @@ export default class Authorize extends wepy.page {
   config = {
     navigationBarTitleText: '授权登录',
   }
-  async onLoad() { 
-    let res = await wepy.getSetting()
-    if ((res.authSetting)['scope.userInfo']) {
+  async login() {
       /* let userInfo = wepy.getStorageSync(USER_INFO) */
 
       let token = wepy.getStorageSync(TOKEN);
       if (!token) {
+          /*
         let data  = await wepy.getUserInfo()
-        console.log('data', data)
         if (data) {
           wepy.setStorageSync(USER_INFO, data.userInfo)
-        }
+        }*/
         let res = await wepy.login()
-        let data  = await wepy.getUserInfo()
-        console.log('data', data)
+        let data = await wepy.getUserInfo()
+        // console.log('data', data)
         if (data) {
           wepy.setStorageSync(USER_INFO, data.userInfo)
         }
@@ -73,57 +71,16 @@ export default class Authorize extends wepy.page {
       wepy.switchTab({
         url: '/pages/home'
       })
+  }
+  async onLoad() { 
+    let res = await wepy.getSetting()
+    if ((res.authSetting)['scope.userInfo']) {
+        this.login()
     }
   }
   async onGotUserInfo(e) {
     if (e.detail.errMsg == 'getUserInfo:ok') {
-      let res = await wepy.login();
-      if (res.code) {
-        wepy.setStorageSync(USER_INFO, e.detail.userInfo);
-        let systemInfo = wepy.getSystemInfoSync();
-        wepy.setStorageSync(SYSTEM_INFO, systemInfo);
-        console.log('e', e)
-        let rlt = await api.wxJsCode2Session({
-          query: {
-              js_code: res.code,
-              nickname: e.detail.userInfo.nickName,
-              avatarUrl: e.detail.userInfo.avatarUrl,
-              encryptedData: e.detail.encryptedData,
-              iv: e.detail.iv
-          }
-        })
-        let data2 = rlt.data;
-        if (data2.status == "200") {
-          if (data2.openid) {
-            wepy.setStorageSync(USER_SPECICAL_INFO, data2);
-            let token = await api.getToken({
-              query: {
-                username: data2.openid,
-                password: data2.openid,
-              }
-            })
-            if (token.statusCode == 200) {
-              wepy.setStorageSync(TOKEN, token.data.token);
-              let me = await api.getMe();
-              wepy.setStorageSync(ME, me.data);
-            }
-            wepy.switchTab({
-              url: '/pages/home'
-            })
-          }
-        } else {
-          let res = await wepy.showModal({
-            title: 'appid有误',
-            content: '授权失败'
-          })
-          if (res.confirm) {
-            wepy.switchTab({
-              url: '/pages/home'
-            })
-          }
-        }
-
-      }
+        this.login()
     }
   }
   methods = {

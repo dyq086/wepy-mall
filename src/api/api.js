@@ -151,7 +151,7 @@ const getMyOrderSize = (params) => wxRequest(params, apiMall + '/api/mall/goodsO
 const getOrderInfo = (params) => wxRequest(params, apiMall + '/api/mall/goodsOrder/getOrderDetail');
 
 //根据订单号查询详情
-const getPayOrderDetail = (params) => wxRequest(params, apiMall + '/api/mall/goodsOrder/getPayOrderDetail');
+const getOrders = (id, params) => request(`${host}/wp-json/wc/v3/orders/${id}`, params);
 
 //根据订单号查询详情
 const editOrderInfo = (params) => wxRequest(params, apiMall + '/api/mall/goodsOrder/opt');
@@ -227,7 +227,7 @@ export default {
   goodsUnFavorite,
   goodsIsFavorite,
   getMyOrderSize,
-  getPayOrderDetail,
+  getOrders,
   getBanners,
   getSignDate
 }
