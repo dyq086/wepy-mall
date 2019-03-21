@@ -35,6 +35,11 @@ export default class Authorize extends wepy.page {
           wepy.setStorageSync(USER_INFO, data.userInfo)
         }
         let res = await wepy.login()
+        let data  = await wepy.getUserInfo()
+        console.log('data', data)
+        if (data) {
+          wepy.setStorageSync(USER_INFO, data.userInfo)
+        }
         if (res.code) {
           let systemInfo = wepy.getSystemInfoSync();
           wepy.setStorageSync(SYSTEM_INFO, systemInfo);
@@ -49,8 +54,7 @@ export default class Authorize extends wepy.page {
           })
           // console.log("rlt", rlt)
           let data2 = rlt.data;
-          if (data2.status == "200") {
-            if (data2.openid) {
+          if (rlt.statusCode == 200) {
               wepy.setStorageSync(USER_SPECICAL_INFO, data2);
               let token = await api.getToken({
                 query: {
@@ -60,11 +64,9 @@ export default class Authorize extends wepy.page {
               })
               if (token.statusCode == 200) {
                 wepy.setStorageSync(TOKEN, token.data.token);
-                let me = await api.getMe();
-                wepy.setStorageSync(ME, me.data);
+                /* let me = await api.getMe(); */
+                wepy.setStorageSync(ME, data2);
               }
-            }
-
           }
         }
       }

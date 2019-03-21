@@ -68,7 +68,7 @@ export default class Order extends wepy.page {
     let me = wepy.getStorageSync(ME) || {};
     const json = await api.queryOrders({
       query: {
-        customer: me.id,
+        customer: me.user_id,
         status: that.orderStatus,
         page: currentPage || 1,
         size: size || 10,

@@ -16,7 +16,7 @@ const host = "https://lingqule.papamk.com"
 const getDiscoverList = (params) => wxRequest(params, apiMall + '/goods/list?cateidOne=1&cateidTwo=0&price=0&sales=2');
 
 //微信的jscode换取sessionKey
-const wxJsCode2Session = (params) => request(host + "/wp-json/watch-life-net/v1/weixin/getopenid", {...params, method: 'POST'});
+const wxJsCode2Session = (params) => request(host + "/wp-json/w2w/v1/customers/login", {...params, method: 'POST'});
 const user2session = (params) => wxRequest(params, apiMall + "/api/wechat/user2session?jsoncallback=?");
 
 const getToken = (params) => request(`${host}/wp-json/jwt-auth/v1/token`, {...params, method:'POST'});
