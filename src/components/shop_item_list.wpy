@@ -3,7 +3,7 @@
 <repeat for="{{list}}" key="index" index="index" item="item">
   <view class="good_list">
     <view class="image_box">
-      <image src="{{item.image}}"></image>
+      <image src="{{item.image[0].shop_thumbnail}}"></image>
     </view>
     <view class="goods">
       <view class="product_name">{{item.name}}</view>

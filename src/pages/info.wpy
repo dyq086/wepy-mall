@@ -7,16 +7,17 @@
       </view>
     </view>
     <view class="info_block">
-      <navigator class="item" url="/pages/register" wx:if="{{bShowBind}}">
-        <view>
-          <view class="item_content">
-            <image class="item_img" src="../images/icon_my_01.png"></image>
-            <view class="text" style="color:#fe2a2a">绑定手机号</view>
-          </view>
-          <view class="tip">绑定手机号可更好的让我们服务好您！</view>
-        </view>
-        <view class="arrow">&gt;</view>
-      </navigator>
+      <!-- <navigator class="item" url="/pages/register" wx:if="{{bShowBind}}"> -->
+      <!--   <view> -->
+      <!--     <view class="item_content"> -->
+      <!--       <image class="item_img" src="../images/icon_my_01.png"></image> -->
+      <!--       <view class="text" style="color:#fe2a2a">绑定手机号</view> -->
+            <!-- <button class=text" style="color:#fe2a2a;" open-type="getPhoneNumber" bindgetphonenumber="onGetPhoneNumber">绑定手机号</button> -->
+          <!-- </view> -->
+          <!-- <view class="tip">绑定手机号可更好的让我们服务好您！</view> -->
+        <!-- </view> -->
+        <!-- <view class="arrow">&gt;</view> -->
+      <!-- </navigator> -->
       <navigator class="item" url="/pages/order">
         <view class="item_content">
           <image class="item_img" src="../images/icon_my_02.png"></image>
@@ -75,7 +76,8 @@
 import wepy from 'wepy';
 import api from '@/api/api';
 import {
-  USER_INFO,USER_SPECICAL_INFO
+  USER_INFO,USER_SPECICAL_INFO,
+  ME
 } from '@/utils/constant';
 export default class Index extends wepy.page {
   config = {
@@ -88,27 +90,25 @@ export default class Index extends wepy.page {
   data = {
     avatarUrl: "",
     nickName: "",
-    bShowBind:false
+    bShowBind:false,
+    
   }
   async getUserInfo(phone,code) {
     let that = this;
-    let userSpecialInfo = wepy.getStorageSync(USER_SPECICAL_INFO) || {};
-    let openId = userSpecialInfo.openid;
-    const json = await api.getUserInfo({
-      query: {
-        openId: openId
-      }
-    });
+    let me= wepy.getStorageSync(ME) || {};
+    const json = await api.getUserInfo(me.user_id)
 
-    if (json.data.code == 0) {
-      if (json.data.user.mobile.length>0) {
-        this.bShowBind=false;
+    if (json.statusCode == 200) {
+        let data = json.data
+        let phoneItem = data.meta_data.find(item => item.key == 'phone')
+      if (phoneItem && phoneItem.value.length>0) {
+        this.bShowBind=true;
       } else {
-        this.bShowBind = true;
+        this.bShowBind = false;
       }
       that.$apply();
     } else {
-      tip.error(json.data.msg)
+      tip.error(json.data.message)
     }
     that.showLoading = false;
   }
@@ -123,6 +123,11 @@ export default class Index extends wepy.page {
     let that = this;
     this.getUserInfo();
   }
+  onGetPhoneNumber() {
+    console.log(e.detail.errMsg)
+    console.log(e.detail.iv)
+    console.log(e.detail.encryptedData)        
+  }
   computed = {
 
   }
@@ -132,7 +137,7 @@ export default class Index extends wepy.page {
       let address = await wepy.chooseAddress();
       console.log('address', address);
       // wepy.navigateTo({
-      //  url: "/pages/address?type=order"
+      //  url: "/papes/address?type=order"
       // })
     },
   }

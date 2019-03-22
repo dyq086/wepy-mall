@@ -7,7 +7,7 @@
       <view class="order_list_top">
         <view class="left">
           <view class="title">订单号：
-            <text class="order_doc">#{{item.number}}</text>
+            <text class="order_doc">#{{item.order_number}}</text>
           </view>
           <view class="title mt10">提交时间：
             <text class="order_doc">{{item.date_created}}</text>

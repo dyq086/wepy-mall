@@ -36,7 +36,7 @@ export default class productCardList extends wepy.component {
         return tags;
       },
       descs() {
-          let descs = this.list.map(item => item.short_description ? item.short_description.replace(/<[^>]*>|/g,'') : '')
+          let descs = this.list.map(item => item.short_description_html ? item.short_description_html.replace(/<[^>]*>|/g,'') : '')
           return descs
       }
   }

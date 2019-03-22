@@ -95,7 +95,7 @@ const registerUser = (params) => wxRequest(params, apiMall + '/api/userCenter/re
 const sendRandCode = (params) => wxRequest(params, apiMall + '/api/sms/send');
 
 //用户是否绑定手机号
-const getUserInfo = (params) => wxRequest(params, apiMall + '/api/userCenter/getUserInfo');
+const getUserInfo = (id) => request(`${host}/wp-json/wc/v3/customers/${id}`);
 
 //用户收货地址
 const getUserAddress = (params) => wxRequest(params, apiMall + '/api/receiverInfo/list');
@@ -119,26 +119,26 @@ const clearSearchKeyword = (params) => wxRequest(params, apiMall + '/api/searchk
 //查询我的订单
 // const getMyOrderList = (params) => wxRequest(params, apiMall + '/api/mall/goodsOrder/getMyOrderList');
 const queryOrders = async (params) => {
-  let response = await request(`${host}/wp-json/wc/v3/orders`, params);
-  if (response.statusCode == 200) {
-    let idsArr = response.data.map((item) => item.line_items.map(item2 => item2.product_id).join(','))
-    let ids = idsArr.join(',')
-    let products = await queryProducts({query: {include: ids}});
-    let products2 = {}
-    products.data.map(item => {
-      products2[item.id] = item
-    })
+  let response = await request(`${host}/wp-json/w2w/v1/orders`, params);
+  // if (response.statusCode == 200) {
+  //   let idsArr = response.data.map((item) => item.line_items.map(item2 => item2.product_id).join(','))
+  //   let ids = idsArr.join(',')
+  //   let products = await queryProducts({query: {include: ids}});
+  //   let products2 = {}
+  //   products.data.map(item => {
+  //     products2[item.id] = item
+  //   })
 
-    console.log('products', ids, products, products2)
-    response.data = response.data.map((item) => {
-      item.line_items = item.line_items.map(item2 => {
-        let p = products2[item2.product_id];
-        item2.image = p ? p.images[0].src : null;
-        return item2
-      })
-      return item
-    })
-  }
+  //   console.log('products', ids, products, products2)
+  //   response.data = response.data.map((item) => {
+  //     item.line_items = item.line_items.map(item2 => {
+  //       let p = products2[item2.product_id];
+  //       item2.image = p ? p.images[0].src : null;
+  //       return item2
+  //     })
+  //     return item
+  //   })
+  // }
   return response;
 }
 
@@ -151,7 +151,7 @@ const getMyOrderSize = (params) => wxRequest(params, apiMall + '/api/mall/goodsO
 const getOrderInfo = (params) => wxRequest(params, apiMall + '/api/mall/goodsOrder/getOrderDetail');
 
 //根据订单号查询详情
-const getOrders = (id, params) => request(`${host}/wp-json/wc/v3/orders/${id}`, params);
+const getOrders = (id, params) => request(`${host}/wp-json/w2w/v1/orders/${id}`, params);
 
 //根据订单号查询详情
 const editOrderInfo = (params) => wxRequest(params, apiMall + '/api/mall/goodsOrder/opt');
