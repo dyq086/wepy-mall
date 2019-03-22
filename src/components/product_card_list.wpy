@@ -1,6 +1,6 @@
 <template>
   <navigator wx:for="{{list}}" wx:for-item="item" wx:key="index" url="/pages/goods_detail?id={{item.id}}">
-  <van-card price="{{item.price + '/ 件'}}" origin-price="{{item.regular_price != item.price ? item.regular_price :  null}}" title="{{item.name}}" thumb="{{item.images[0].src}}" thumb-link="/pages/goods_detail?id={{item.id}}" custom-class="item" tag="{{tags[index]}}" num="{{'库存:' + item.stock_quantity}}" desc="" >
+  <van-card price="{{item.price + '/ 件'}}" origin-price="{{item.regular_price != item.price ? item.regular_price :  null}}" title="{{item.name}}" thumb="{{item.images[0].shop_thumbnail}}" thumb-link="/pages/goods_detail?id={{item.id}}" custom-class="item" tag="{{tags[index]}}" num="{{'库存:' + item.stock_quantity}}" desc="{{descs[index] }}" >
       <view slot="footer" style="border-top:1rpx solid #ededed;margin-top:8rpx"></view>
     </van-card>
   </navigator>
@@ -17,7 +17,7 @@ export default class productCardList extends wepy.component {
   addExtra() {
   }
   onLoad() {
-      console.log('list', this.list);
+      // console.log('list', this.list);
   }
   computed = {
       tags () {
@@ -34,6 +34,10 @@ export default class productCardList extends wepy.component {
             }
         })
         return tags;
+      },
+      descs() {
+          let descs = this.list.map(item => item.short_description ? item.short_description.replace(/<[^>]*>|/g,'') : '')
+          return descs
       }
   }
   methods = {

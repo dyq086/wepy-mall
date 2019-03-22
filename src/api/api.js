@@ -27,7 +27,7 @@ const hostGoodsList = (params) => wxRequest(params, apiMall + '/api/home/hostGoo
 const getHomeDisvocerList = (params) => wxRequest(params, apiMall + '/api/mall/discoverList');
 
 //查询商品列表
-const queryProducts = ({query}) => request(`${host}/wp-json/wc/v3/products`, {query: {...query, status: 'publish'}});
+const queryProducts = ({query}) => request(`${host}/wp-json/w2w/v1/products`, {query: {...query, status: 'publish'}});
 
 //查询商品详情信息
 // const goodsDetail = (id, params) => request(`${host}/wp-json/wc/v3/products/${id}`, params);

@@ -39,7 +39,7 @@
     <!-- </view> -->
     <!--发现好商品模块-->
     <!-- <discover :list.sync="discoverList"></discover> -->
-    <view style="font-size:40rpx;">今日精选</view>
+    <view style="font-size:40rpx;padding:20rpx;">今日精选</view>
     <productCardList :list.sync="discoverList"></productCardList>
     <!--加载更多时动画-->
     <bottomLoadMore :show.sync="showLoading" message="正在加载"></bottomLoadMore>

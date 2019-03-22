@@ -11,6 +11,7 @@
     </swiper>
     <view class="details-msg">
       <view class="details-title">{{detail.name}}</view>
+      <view class="details-introduction">{{detail.short_description}}</view>
       <view class="details_pinfo">
       <text class="price">￥{{detail.price}} </text> <text class="origin-price">{{detail.regular_price}}</text>
         <view class="order_time {{detail.date_on_sale_to ? '' : 'hidden'}}">
@@ -244,11 +245,11 @@ export default class goodsDetail extends wepy.page {
       this.special = option.special;
     }
     that.getGoodsDetail();
-    that.addUserBrowser();
+    // that.addUserBrowser();
     console.log("special===" + this.special);
   }
   onShow() {
-    this.goodsIsFavorite();
+    // this.goodsIsFavorite();
     //创建动画
     var animation = wx.createAnimation({
       transformOrigin: "50% 50%",
@@ -287,6 +288,7 @@ export default class goodsDetail extends wepy.page {
     if (json.statusCode == 200) {
       let data = json.data;
       that.detail = data;
+      that.detail.short_description = that.detail.short_description.replace(/<[^>]*>|/g,'');
       WxParse.wxParse('detailInfo', 'html', that.detail.description, this);
       time.endTime = that.detail.date_on_sale_to;
       time.startTime = that.detail.date_on_sale_from;
@@ -638,14 +640,16 @@ export default class goodsDetail extends wepy.page {
     width: 100%;
     box-sizing: border-box;
     position: relative;
-    font-size: 30rpx;
+    font-size: 36rpx;
     color: #333;
+    text-align:center;
   }
   .details-introduction {
     color: #999;
     font-size: 28rpx;
     line-height: 40rpx;
     margin-top: 20rpx;
+    text-align: center;
   }
   .details_pinfo {
     padding: 20rpx 0;
