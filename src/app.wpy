@@ -6,7 +6,13 @@
 </style>
 <script>
 import wepy from 'wepy';
-import 'wepy-async-function'
+import 'wepy-async-function';
+import api from '@/api/api';
+import {
+  ESTATES,
+  CURRENT_ESTATE,
+} from '@/utils/constant';
+
 export default class extends wepy.app {
   config = {
     pages: [
@@ -80,10 +86,16 @@ export default class extends wepy.app {
     usingComponents: {
         'van-button':'components/van/button/index',
         'van-card': 'components/van/card/index',
+        'van-radio': 'components/van/radio/index',
+        'van-radio-group': 'components/van/radio-group/index',
+        'van-icon': 'components/van/icon/index',
+
     }
   }
 
-  globalData = {}
+  globalData = {
+    estates:[]
+  }
 
   constructor() {
     super()
@@ -93,7 +105,39 @@ export default class extends wepy.app {
   }
 
   async onLaunch(option) {
+    this.loadEstates()
+  }
+  async loadEstates() {
+    let json = await api.queryCities()
+    if (json.statusCode !== 200) {
+      console.log('获取城市失败');
+      return;
+    }
+    let json2 = await api.queryEstates({})
+    if (json2.statusCode !== 200)  {
+      console.log('获取小区失败');
+      return;
+    }
 
+    let estates = []
+    json.data.map((item, key) => {
+      let subCollection = json2.data.filter(item2 => {
+        return item2.cities.includes(item.id)
+      })
+      subCollection.map((item3, key) => subCollection[key].city = item.name)
+      json.data[key].items = subCollection;
+    })
+    
+    console.log("cities", json.data);
+    // wepy.setStorageSync(ESTATES, json.data);
+    this.globalData.estates = json.data;
+
+
+    let currentEstate = wepy.getStorageSync(CURRENT_ESTATE);
+    if (!currentEstate) {
+      currentEstate = json2.data[0];
+      wepy.setStorageSync(CURRENT_ESTATE, currentEstate);
+    }
   }
 }
 

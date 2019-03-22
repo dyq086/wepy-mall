@@ -119,6 +119,56 @@ function convertStarArray(score) {
   }
   return arr
 }
+var states = {
+    CN1: '云南省',
+    CN2: '北京市',
+    CN3: '天津市',
+    CN4: '河北省',
+    CN5: '山西省',
+    CN6: '内蒙古自治区',
+    CN7: '辽宁省',
+    CN8: '吉林省',
+    CN9: '黑龙江省',
+    CN10: '上海市',
+    CN11: '江苏省',
+    CN12: '浙江省',
+    CN13: '安徽省',
+    CN14: '福建省',
+    CN15: '江西省',
+    CN16: '山东省',
+    CN17: '河南省',
+    CN18: '湖北省',
+    CN19: '湖南省',
+    CN20: '广东省',
+    CN21: '广西壮族自治区',
+    CN22: '海南省',
+    CN23: '重庆市',
+    CN24: '四川省',
+    CN25: '贵州省',
+    CN26: '陕西省',
+    CN27: '甘肃省',
+    CN28: '青海省',
+    CN29: '宁夏回族自治区',
+    CN30: '澳门',
+    CN31: '西藏自治区',
+    CN32: '新疆维吾尔自治区'
+};
+
+// 省名获取省代码
+function getStateCode(provinceName) {
+    for (var stateCode in states) {
+        if (states[stateCode] == provinceName || states[stateCode] == `${provinceName}省`) {
+            return stateCode;
+        }
+    }
+}
+
+// 省代码获取省名
+function getStateName(stateCode) {
+    return states[stateCode];
+}
+
+
 module.exports = {
   getCurrentTime: getCurrentTime,
   objLength: objLength,
@@ -130,5 +180,7 @@ module.exports = {
   div: div,
   mul: mul,
   accAdd: accAdd,
-  convertStarArray: convertStarArray
+  convertStarArray: convertStarArray,
+  getStateCode,
+  getStateName
 }

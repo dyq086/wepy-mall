@@ -1,7 +1,51 @@
 <!--确认订单-->
 <template>
   <view class="comfire_order">
-    <view class="address" @tap="setAddress">
+<view class="goodsList">
+    <!--列表显示2个，绑定数据记得去掉，这里做调试-->
+<repeat for="{{list}}" key="index" index="index" item="item">
+<view class="list_box" wx:if="{{item.checked}}">
+  <swipeDelete :swipeData="item" @delItem.user="handleDelItem">
+      <view class="goods-info">
+        <view class="img-box">
+          <image src="{{item.product.images[0].shop_thumbnail}}" class="img" />
+        </view>
+        <view class="text-box">
+          <view class="goods-title">{{item.product.name}}</view>
+          <view class="goods-label">{{item.product.sku}}</view>
+          <view class="goods-price">¥ {{item.product.price}}</view>
+          <view class="buy-num">
+            <input type="number" value="{{item.quantity}}" disabled/>
+          </view>
+        </view>
+      </view>
+  </swipeDelete>
+</view>
+</repeat>
+</view>
+
+    <view class="spacing"></view>
+    <view class="order_info">
+      <view class="block">
+        <view class="left">配送方式</view>
+      </view>
+
+      <van-radio-group value="{{chosenShipping.method_id}}" @change="changeShipping('')">
+        <view class="block" @tap.="changeShipping('flat_rate')">
+          <view class="left">邮寄</view>
+          <view class="right">
+            <van-radio name="flat_rate" value="flat_rate" checked-color="#5abb6a" ></van-radio>
+          </view>
+        </view>
+        <view class="block" @tap="changeShipping('local_pickup')">
+          <view class="left">自提</view>
+          <view class="right">
+            <van-radio name="local_pickup" value="local_pickup" checked-color="#5abb6a"  ></van-radio>
+          </view>
+        </view>
+      </van-radio-group>
+    <view class="spacing"></view>
+    <view class="address" @tap="setAddress" wx:if="{{chosenShipping.method_id != 'local_pickup'}}">
       <view class="empty_address" wx:if="{{!is_exit_address}}">
         <view class="title">设置收货地址</view>
         <view class="arrow">&gt;</view>
@@ -9,7 +53,7 @@
       <view class="address_info" wx:else>
         <view class="title">
           <view class="user_info">
-            <text class="name">{{address.userName}}</text>
+            <text class="name">{{address.userName}} </text>
             <text class="phone">{{address.telNumber}}</text>
           </view>
           <view class="active_address">
@@ -20,41 +64,28 @@
         <view class="arrow">&gt;</view>
       </view>
     </view>
-    <view class="spacing"></view>
-
-
-<view class="goodsList">
-    <!--列表显示2个，绑定数据记得去掉，这里做调试-->
-<repeat for="{{list}}" key="index" index="index" item="item">
-<view class="list_box">
-  <swipeDelete :swipeData="item" @delItem.user="handleDelItem">
-      <view class="goods-info">
-        <view class="img-box">
-          <image src="{{item.product.images[0].src}}" class="img" />
-        </view>
-        <view class="text-box">
-          <view class="goods-title">{{item.product.name}}</view>
-          <view class="goods-label">{{item.product.sku}}</view>
-          <view class="goods-price">¥ {{item.line_total}}</view>
-          <view class="buy-num">
-            <view class="jian-btn {{item.num==1? 'disabled' : ''}}" catchtap="jianBtnTap" data-index="{{index}}" data-id="{{item.id}}">-</view>
-            <input type="number" value="{{item.num}}" disabled/>
-            <view class="jia-btn " catchtap="jiaBtnTap" data-index="{{index}}" data-id="{{item.id}}">+</view>
-          </view>
-        </view>
-      </view>
-  </swipeDelete>
-</view>
-</repeat>
-</view>
-
-
-    <view class="spacing"></view>
-    <view class="order_info">
+    <view wx:if="{{chosenShipping.method_id == 'local_pickup'}}">
       <view class="block">
-        <view class="left">配送方式</view>
-        <view class="right">包邮</view>
+      <view class="left">自提点: {{estate.title.rendered}}</view>
       </view>
+      <view class="block">
+        <view class="left">站长</view>
+        <view class="right">{{estate.contact}}</view>
+      </view>
+      <view class="block">
+        <view class="left">联系电话</view>
+        <view class="right">{{estate.phone}}</view>
+      </view>
+      <view class="block">
+        <view class="left">地址</view>
+        <view class="right">{{estate.address}}</view>
+      </view>
+      <view class="block">
+        <view class="left">营业时间</view>
+        <view class="right">{{estate.timerange}}</view>
+      </view>
+    </view>
+      <view class="spacing"></view>
       <view class="block">
         <view class="left">买家留言:</view>
         <view class="right input_box">
@@ -69,7 +100,7 @@
       <view class="spacing"></view>
       <view class="block">
         <view class="left tongji">商品金额</view>
-        <view><view class="right price" wx:if="{{jf_num>0}}">商品金额:￥{{totalPrice}}-积分:￥{{reduce_fee}}</view><view class="right price">应付:￥{{actualPrice}}</view></view>
+        <view><view class="right price" wx:if="{{jf_num>0}}">商品金额:￥{{cartContentsTotal}} + 运费:￥{{chosenShipping.cost}} - 积分:￥{{reduce_fee}}</view><view class="right price">应付:￥{{cartContentsTotal + chosenShipping.cost - reduce_fee}}<text wx:if="{{chosenShipping.cost != 0}}"> (运费:￥{{chosenShipping.cost}})</text></view></view>
       </view>
     </view>
     <view class="pay_box">
@@ -83,10 +114,13 @@
 import wepy from 'wepy';
 import api from '@/api/api';
 import tip from '@/utils/tip';
+import {getStateCode} from '@/utils/util';
 import {
   SYSTEM_INFO,
   USER_SPECICAL_INFO,
-  ADDRESS_ID
+  ADDRESS_ID,
+  CURRENT_ESTATE,
+  ME,
 } from '@/utils/constant';
 import swipeDelete from '@/components/common/wepy-swipe-delete'
 export default class ComfireOrder extends wepy.page {
@@ -107,6 +141,8 @@ export default class ComfireOrder extends wepy.page {
     is_exit_address: false,
     address: {},
     //总价
+    cartContentsTotal: 0,
+    shippingTotal: 0,
     totalPrice:0,
     actualPrice : 0,
     purchaseType : 1,
@@ -118,7 +154,11 @@ export default class ComfireOrder extends wepy.page {
     //输入抵扣积分
     jf_num: 0,
     reduce_fee : 0,
-    operating: false
+    operating: false,
+    shipping: [],
+    chosenShipping: {},
+    estate: {},
+    wpnonce: "",
   }
 
   //获取订单详情
@@ -126,6 +166,7 @@ export default class ComfireOrder extends wepy.page {
     let that = this;
     const json = await api.getCart({
       query: {
+        shipping: true
       }
     });
     if (json.statusCode == 200) {
@@ -134,19 +175,30 @@ export default class ComfireOrder extends wepy.page {
           return 0;
       }
       this.list = Object.keys(data.cart).map((k) => data.cart[k])
+      this.cartContentsTotal = data.cart_contents_total
+      // this.shippingTotal = data.shipping_total;
       this.totalPrice = data.cart_total;
-      this.actualPrice = data.actualPrice;
-      this.is_exit_address = data.hasDefaultAddress;
+      this.actualPrice = data.cart_total;
+      // this.is_exit_address = data.hasDefaultAddress;
       this.address = data.defaultAddress;
       this.total_jf_num = data.userScore;
       this.can_use_score = data.canUseScore;
       this.deduScore = data.deduScore;
       this.deduFee = data.deduFee;
       this.jf_num = data.canUseScore;
-      this.reduce_fee = data.reduceFee;
+      this.reduce_fee = 0; // data.reduceFee;
+      this.shipping = data.shipping;
+      this.wpnonce = data._wpnonce;
+      this.chosenShipping = data.shipping.methods.find(item => {
+        return item.id == data.shipping.chosen_method
+      })
     } else {
       tip.error(json.data.message)
     }
+
+    // 加载自提点信息
+    
+    this.estate= wepy.getStorageSync(CURRENT_ESTATE);
     that.$apply();
   }
 
@@ -157,7 +209,7 @@ export default class ComfireOrder extends wepy.page {
         id: id
       }
     });
-    if (json.data.code == 0) {
+    if (json.statusCode == 200) {
       this.is_exit_address = true;
       this.address=json.data.receiverInfo;
     } else {
@@ -193,38 +245,49 @@ export default class ComfireOrder extends wepy.page {
   async goToPay(formId) {
     //测试调用接口用，可注释
     tip.loading("提交订单中");
-    let userSpecialInfo = wepy.getStorageSync(USER_SPECICAL_INFO) || {};
-    let openId = userSpecialInfo.openid;
+    let params = {}
+    if (this.chosenShipping.method_id == 'local_pickup') {
+      // TODO
+      params.billing_first_name = '小刘';
+      params.billing_phone = '124444';
+      params.billing_country = 'CN';
+      params.billing_state = getStateCode('福建');
+      params.billing_city = this.estate.city;
+      params.billing_address_1 = this.estate.address;
+    } else {
+      let address = this.address;
+      params.billing_first_name = address.userName;
+      params.billing_phone = address.telNumber;
+      params.billing_country = 'CN';
+      params.billing_state = getStateCode(address.provinceName);
+      params.billing_city = address.cityName;
+      params.billing_address_1 = address.detailInfo;
+      params.billing_postcode = address.postalCode;
+    }
     const json = await api.saveByCart({
       query: {
-        openId: openId,
-        receiverInfoId: this.address.id,
-        businessMessage: this.sellerMessage,
-        formId: formId,
-        reduceScore: this.jf_num
+        _wpnonce: this.wpnonce,
+        terms: true,
+        form_id: formId,
+        shipping_method: this.chosenShipping.id,
+        payment_method: 'wxapay',
+        order_comments: this.sellerMessage,
+        ...params
+        // reduceScore: this.jf_num
       }
     });
 
-    if (json.data.code == 0) {
-      //补货直接提交到后台去审核
-      if (this.purchaseType==2) {//补货
-        tip.success("已提交补货申请!");
-        setTimeout(() => {
-          tip.loaded();
-          wepy.navigateTo({
-            url: "/pages/reorder"
-          })
-        }, 2000)
-        return;
-      }
+    if (json.statusCode  == 200 && json.data.result == 'success') {
+      let me = wepy.getStorageSync(ME) || {};
       //保存成功了后进行微信支付
       const pay = await api.toPay({
         query:{
-          openId: openId,
-          orderNo: json.data.tradeNo
+          id: json.data.order.id,
+          openid: me.openid,
         }
       });
-      if (pay.data.code==0) {
+
+      if (pay.data.success) {
         //以下是微信支付
         wx.requestPayment({
           appId: pay.data.appId,
@@ -239,7 +302,7 @@ export default class ComfireOrder extends wepy.page {
               //支付成功 关闭loadding 跳转到支付成功页面
               tip.loaded();
               wepy.navigateTo({
-                url: "/pages/pay_success?orderNo="+json.data.tradeNo
+                url: "/pages/pay_success?orderNo="+json.data.order.id
               })
             }, 2000)
           },
@@ -265,7 +328,7 @@ export default class ComfireOrder extends wepy.page {
         }, 2000)
       }
     } else {
-      tip.error(json.data.msg)
+      tip.error('失败:' + json.data.message)
     }
 
   }
@@ -353,7 +416,7 @@ export default class ComfireOrder extends wepy.page {
     },
     async goPay(e) {
       var fId = e.detail.formId;
-      if (!this.is_exit_address) {
+      if (this.chosenShipping.method_id !== 'local_pickup' && !this.is_exit_address) {
         await tip.confirm('你未设置收货地址，请设置地址');
         wepy.navigateTo({
           url: "/pages/address?type=order"
@@ -367,6 +430,7 @@ export default class ComfireOrder extends wepy.page {
         await wepy.authorize({scope: "scope.address"}); 
         let address = await wepy.chooseAddress();
         this.address = address;
+        this.is_exit_address = true;
         console.log('address', address);
       } catch (e) {
       }
@@ -432,7 +496,19 @@ export default class ComfireOrder extends wepy.page {
       return {
         value: this.jf_num
       };
+    },
+    changeShipping (name, e) {
+      if (!name) {
+        name = e.detail;
+      }
+      this.chosenShipping = this.shipping.methods.find(item => {
+        return item.method_id == name
+      })
+
+      console.log("shipping", e, this.chosenShipping)
+      this.$apply()
     }
+    
   }
   events = {
 

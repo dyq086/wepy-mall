@@ -35,7 +35,7 @@ const request = async(url, params = {}) => {
     // data.sign = SIGN;
     // data.time = TIMESTAMP;
     let token = wepy.getStorageSync(TOKEN);
-    let header = { 
+    let header = params.header || { 
           'Content-Type': 'application/json',
         }
     let userSpecialInfo = wepy.getStorageSync('userSpecialInfo');

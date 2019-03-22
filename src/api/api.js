@@ -50,7 +50,7 @@ const cartUpdateNum = (params) => request(`${host}/wp-json/w2w/v1/cart/update_qu
 const preOrder = (params) => wxRequest(params, apiMall + '/api/mall/goodsOrder/commitData');
 
 //支付前生成订单
-const saveByCart = (params) => wxRequest(params, apiMall + '/api/mall/goodsOrder/saveByCart');
+const saveByCart = ({query}) => request(`${host}/wp-json/w2w/v1/orders`, {query, method: 'POST', header: {'content-type': 'application/x-www-form-urlencoded'}});
 
 //支付统一下单
 const toPay = (params) => request(`${host}/wp-json/w2w/v1/payment`, params);
@@ -177,6 +177,13 @@ const childGoodsCatetoryList = (params) => wxRequest(params, apiMall + '/api/mal
 //查询广告列表
 const getBanners = (params) => request(`${host}/wp-json/w2w/v1/store/banner`, params);
 
+//获取城市
+const queryCities = (params) => request(`${host}/wp-json/wp/v2/cities?per_page=100`, params);
+
+
+//获取小区
+const queryEstates = ({query = {}}) => request(`${host}/wp-json/wp/v2/estates`, {query: {...query, status: 'publish', per_page: 100}});
+
 export default {
   hostGoodsList,
   getDiscoverList,
@@ -229,5 +236,7 @@ export default {
   getMyOrderSize,
   getOrders,
   getBanners,
-  getSignDate
+  getSignDate,
+  queryCities,
+  queryEstates,
 }

@@ -101,10 +101,14 @@
         </view>
         <contact-button class="contact">
         </contact-button>
-        <view class="item {{isFavorite?'selec_active':''}}" @tap="takeFavorite">
-          <i class="iconfont icon-collection"></i>
-          <view class="doc">收藏</view>
+        <view class="item" @tap="cartPage">
+          <van-icon name="cart-o" size="16px"></van-icon>
+          <view class="doc">购物车</view>
         </view>
+        <!-- <view class="item {{isFavorite?'selec_active':''}}" @tap="takeFavorite"> -->
+        <!--   <i class="iconfont icon-collection"></i> -->
+        <!--   <view class="doc">收藏</view> -->
+        <!-- </view> -->
         <view class="sy-bottom {{canOrder?'btn_cart':'cart_color'}}" @tap="takeCart">加入购物车</view>
         <view class="sy-bottom {{canOrder?'btn_order':'order_color'}}" @tap="takeOrder">{{purchaseText}}</view>
       </view>
@@ -474,6 +478,11 @@ export default class goodsDetail extends wepy.page {
       // })
       // console.log(wepy)
       // console.log(wx)
+    },
+    cartPage() {
+      wepy.switchTab({
+        url: '/pages/shop_cart'
+      })
     },
     moreComment() {
       wepy.navigateTo({

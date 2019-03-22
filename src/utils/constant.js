@@ -24,3 +24,7 @@ export const SEL_CLASS_CODE = "selClassCode";
 export const TOKEN = "token";
 
 export const ME = 'me';
+
+export const ESTATES = "estates";
+
+export const CURRENT_ESTATE = 'currentEstate';
