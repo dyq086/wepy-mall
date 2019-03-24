@@ -9,7 +9,7 @@ import {
 const API_SECRET_KEY = 'www.mall.cycle.com'
 const TIMESTAMP = util.getCurrentTime()
 const SIGN = md5.hex_md5((TIMESTAMP + API_SECRET_KEY).toLowerCase())
-const GUEST_TOKEN = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwczpcL1wvbGluZ3F1bGUucGFwYW1rLmNvbSIsImlhdCI6MTU1Mjc1MjcxMiwibmJmIjoxNTUyNzUyNzEyLCJleHAiOjE1NTMzNTc1MTIsImRhdGEiOnsidXNlciI6eyJpZCI6IjMifX19.SOnuJDt--BrsvzAeRC0QZu7Rm6m56JUNeu0oci-ep58'
+// const GUEST_TOKEN = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwczpcL1wvbGluZ3F1bGUucGFwYW1rLmNvbSIsImlhdCI6MTU1Mjc1MjcxMiwibmJmIjoxNTUyNzUyNzEyLCJleHAiOjE1NTMzNTc1MTIsImRhdGEiOnsidXNlciI6eyJpZCI6IjMifX19.SOnuJDt--BrsvzAeRC0QZu7Rm6m56JUNeu0oci-ep58'
 
 const wxRequest = async(params = {}, url, method = 'GET') => {
     tip.loading();
@@ -38,11 +38,10 @@ const request = async(url, params = {}) => {
     let header = params.header || { 
           'Content-Type': 'application/json',
         }
-    let userSpecialInfo = wepy.getStorageSync('userSpecialInfo');
-    if (!token) {
-      token = GUEST_TOKEN;
-    }
-    if (userSpecialInfo) {
+    // if (!token) {
+    //   token = GUEST_TOKEN;
+    // }
+    if (token) {
       header['Authorization'] = `Bearer ${token}`
     }
     let res = await wepy.request({
