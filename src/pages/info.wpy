@@ -3,72 +3,77 @@
     <view class="header">
       <view class="header_content">
         <image class="avatarUrl" src="{{avatarUrl}}"></image>
-        <view class="nickName cfff">{{nickName}}</view>
+        <view class="nickName">昵称：{{nickName}}</view>
       </view>
     </view>
     <view class="info_block">
-      <!-- <navigator class="item" url="/pages/register" wx:if="{{bShowBind}}"> -->
-      <!--   <view> -->
-      <!--     <view class="item_content"> -->
-      <!--       <image class="item_img" src="../images/icon_my_01.png"></image> -->
-      <!--       <view class="text" style="color:#fe2a2a">绑定手机号</view> -->
-            <!-- <button class=text" style="color:#fe2a2a;" open-type="getPhoneNumber" bindgetphonenumber="onGetPhoneNumber">绑定手机号</button> -->
-          <!-- </view> -->
-          <!-- <view class="tip">绑定手机号可更好的让我们服务好您！</view> -->
-        <!-- </view> -->
-        <!-- <view class="arrow">&gt;</view> -->
-      <!-- </navigator> -->
       <navigator class="item" url="/pages/order">
-        <view class="item_content">
-          <image class="item_img" src="../images/icon_my_02.png"></image>
-          <view class="text">全部订单</view>
+        <view class="item_content ">
+          <view class="text " >我的订单</view>
         </view>
-        <view class="arrow">&gt;</view>
+        <view class="arrow">全部订单&gt;</view>
+      </navigator>
+      <navigator class="item" url="/pages/order">
+          <view class="cart_menu">
+              <image class="cart_img" src="../images/icon_my_01.png"></image>
+              <view class="cart_text">待付款</view>
+          </view>
+          <view class="cart_menu">
+              <image class="cart_img" src="../images/icon_my_01.png"></image>
+              <view class="cart_text">待发货</view>
+          </view>
+          <view class="cart_menu">
+              <image class="cart_img" src="../images/icon_my_01.png"></image>
+              <view class="cart_text">配送中</view>
+          </view>
+          <view class="cart_menu">
+              <image class="cart_img" src="../images/icon_my_01.png"></image>
+              <view class="cart_text">交易成功</view>
+          </view>
+          <view class="cart_menu">
+              <image class="cart_img" src="../images/icon_my_01.png"></image>
+              <view class="cart_text">退货/退款</view>
+          </view>
+
       </navigator>
       <view class="item" @tap="setAddress">
         <view class="item_content">
-          <image class="item_img" src="../images/icon_my_02.png"></image>
-          <view class="text">我的地址</view>
+          <view class="text">我的优惠券</view>
         </view>
         <view class="arrow">&gt;</view>
       </view>
       <navigator class="item" url="/pages/points">
         <view class="item_content">
-          <image class="item_img" src="../images/icon_my_03.png"></image>
-          <view class="text">我的积分</view>
+          <view class="text">联系小区长</view>
         </view>
         <view class="arrow">&gt;</view>
       </navigator>
-      <!-- <navigator class="item" url="/pages/collection?type=0"> -->
-      <!--   <view class="item_content"> -->
-      <!--     <image class="item_img" src="../images/icon_my_04.png"></image> -->
-      <!--     <view class="text">我的足迹</view> -->
-      <!--   </view> -->
-      <!--   <view class="arrow">&gt;</view> -->
-      <!-- </navigator> -->
-      <navigator class="item" url="/pages/collection?type=1">
+      <navigator class="item" url="/pages/points">
         <view class="item_content">
-          <image class="item_img" src="../images/icon_my_05.png"></image>
-          <view class="text">我的收藏</view>
+          <view class="text">我的收货地址</view>
+        </view>
+        <view class="arrow">&gt;</view>
+      </navigator>
+      <navigator class="item" url="/pages/points">
+        <view class="item_content">
+          <view class="text">小区长招募</view>
+        </view>
+        <view class="arrow">&gt;</view>
+      </navigator>
+      <navigator class="item" url="/pages/points">
+        <view class="item_content">
+          <view class="text">供应商招募</view>
+        </view>
+        <view class="arrow">&gt;</view>
+      </navigator>
+      <navigator class="item" url="/pages/points">
+        <view class="item_content">
+          <view class="text">联系客服</view>
         </view>
         <view class="arrow">&gt;</view>
       </navigator>
     </view>
-    <view class="info_block">
-      <navigator class="item" url="/pages/messages">
-        <view class="item_content">
-          <image class="item_img" src="../images/icon_my_06.png"></image>
-          <view class="text">我的消息</view>
-        </view>
-        <view class="arrow">&gt;</view>
-      </navigator>
-      <navigator class="item" url="/pages/setting">
-        <view class="item_content">
-          <image class="item_img" src="../images/icon_my_07.png"></image>
-          <view class="text">设置</view>
-        </view>
-        <view class="arrow">&gt;</view>
-      </navigator>
+
     </view>
   </view>
 </template>
@@ -76,8 +81,7 @@
 import wepy from 'wepy';
 import api from '@/api/api';
 import {
-  USER_INFO,USER_SPECICAL_INFO,
-  ME
+  USER_INFO,USER_SPECICAL_INFO
 } from '@/utils/constant';
 export default class Index extends wepy.page {
   config = {
@@ -90,25 +94,27 @@ export default class Index extends wepy.page {
   data = {
     avatarUrl: "",
     nickName: "",
-    bShowBind:false,
-    
+    bShowBind:false
   }
   async getUserInfo(phone,code) {
     let that = this;
-    let me= wepy.getStorageSync(ME) || {};
-    const json = await api.getUserInfo(me.user_id)
+    let userSpecialInfo = wepy.getStorageSync(USER_SPECICAL_INFO) || {};
+    let openId = userSpecialInfo.openid;
+    const json = await api.getUserInfo({
+      query: {
+        openId: openId
+      }
+    });
 
-    if (json.statusCode == 200) {
-        let data = json.data
-        let phoneItem = data.meta_data.find(item => item.key == 'phone')
-      if (phoneItem && phoneItem.value.length>0) {
-        this.bShowBind=true;
+    if (json.data.code == 0) {
+      if (json.data.user.mobile.length>0) {
+        this.bShowBind=false;
       } else {
-        this.bShowBind = false;
+        this.bShowBind = true;
       }
       that.$apply();
     } else {
-      tip.error(json.data.message)
+      tip.error(json.data.msg)
     }
     that.showLoading = false;
   }
@@ -123,21 +129,16 @@ export default class Index extends wepy.page {
     let that = this;
     this.getUserInfo();
   }
-  onGetPhoneNumber() {
-    console.log(e.detail.errMsg)
-    console.log(e.detail.iv)
-    console.log(e.detail.encryptedData)        
-  }
   computed = {
 
   }
   methods = {
     async setAddress() {
-      await wepy.authorize({scope: "scope.address"}); 
+      await wepy.authorize({scope: "scope.address"});
       let address = await wepy.chooseAddress();
       console.log('address', address);
       // wepy.navigateTo({
-      //  url: "/papes/address?type=order"
+      //  url: "/pages/address?type=order"
       // })
     },
   }
@@ -149,44 +150,66 @@ export default class Index extends wepy.page {
 </script>
 <style lang="less">
 .header {
-  background: #ff6a3c;
-  height: 260rpx;
+  background: #fff;
+  height: 180rpx;
   width: 100%;
 }
 
 .header_content {
-  width: 100%;
+   display: flex;
+  flex-direction: row;
   margin: 0 auto;
   text-align: center;
   padding-top: 48rpx;
 }
 
 .avatarUrl {
-  width: 122rpx;
-  height: 122rpx;
+  width: 80rpx;
+  height: 80rpx;
+  margin-left:30rpx;
   border-radius: 1000px;
 }
 
 .nickName {
   font-size: 30rpx;
+  font-weight: 700;
   padding-top: 15rpx;
+  padding-left: 25rpx;
 }
 
 .info_block {
-  margin-top: 10rpx;
+
   .item {
-    border-top: 1rpx solid #dbdbdb;
+    border-bottom: 1rpx solid #dbdbdb;
     background: #fff;
     padding: 34rpx 28rpx;
     display: flex;
     align-items: center;
     justify-content: space-between;
   }
-  .item:last-child {
-    border-bottom: 1rpx solid #dbdbdb;
+  .item:first-child {
+    border-bottom: 0rpx solid #dbdbdb;
+
+  }
+  .cart_menu {
+       display: flex;
+       flex-direction: column;
+      .cart_img {
+          width: 60rpx;
+          height: 60rpx;
+          text-align: center;
+        }
+
+      .cart_text {
+      font-size:80%;
+      color:#707070;
+      margin-top:20rpx;
+      margin-bottom:30rpx;
+      }
   }
   .item_content {
     display: flex;
+
     align-items: center;
     .text {
       margin-left: 20rpx;
