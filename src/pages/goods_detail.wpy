@@ -288,8 +288,8 @@ export default class goodsDetail extends wepy.page {
     if (json.statusCode == 200) {
       let data = json.data;
       that.detail = data;
-      that.detail.short_description = that.detail.short_description.replace(/<[^>]*>|/g,'');
-      WxParse.wxParse('detailInfo', 'html', that.detail.description, this);
+      that.detail.short_description = that.detail.short_description_html.replace(/<[^>]*>|/g,'');
+      WxParse.wxParse('detailInfo', 'html', that.detail.description_html, this);
       time.endTime = that.detail.date_on_sale_to;
       time.startTime = that.detail.date_on_sale_from;
       if (json.data.validDate == "0") {

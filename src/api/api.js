@@ -31,7 +31,7 @@ const queryProducts = ({query}) => request(`${host}/wp-json/w2w/v1/products`, {q
 
 //查询商品详情信息
 // const goodsDetail = (id, params) => request(`${host}/wp-json/wc/v3/products/${id}`, params);
-const getProducts = (id, params) => request(`${host}/wp-json/wc/v3/products/${id}`, params);
+const getProducts = (id, params) => request(`${host}/wp-json/w2w/v1/products/${id}`, params);
 
 //商品加入购物车
 const addCart = (params) => request(`${host}/wp-json/w2w/v1/cart/add`, {...params, method: 'POST'});
@@ -169,7 +169,7 @@ const refundApply = (params) => wxRequest(params, apiMall + '/api/mall/refund/sa
 
 //商品分类--begin
 //一级分类
-const rootCtegoryList = (params) => request(`${host}/wp-json/wc/v3/products/categories?parent=0&per_page=100`, params);
+const rootCtegoryList = (params) => request(`${host}/wp-json/w2w/v1/products/categories?parent=0&per_page=100`, params);
 //二级三级分类
 const childGoodsCatetoryList = (params) => wxRequest(params, apiMall + '/api/mall/childGoodsCatetoryList');
 //商品分类--end
