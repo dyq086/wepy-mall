@@ -3,10 +3,76 @@
     <view class="header">
       <view class="header_content">
         <image class="avatarUrl" src="{{avatarUrl}}"></image>
-        <view class="nickName cfff">{{nickName}}</view>
+        <view class="nickName">昵称：{{nickName}}</view>
       </view>
     </view>
     <view class="info_block">
+      <navigator class="item" url="/pages/order">
+        <view class="item_content ">
+          <view class="text " >我的订单</view>
+        </view>
+        <view class="arrow">全部订单&gt;</view>
+      </navigator>
+      <navigator class="item" url="/pages/order">
+          <view class="cart_menu">
+              <image class="cart_img" src="../images/pay.png"></image>
+              <view class="cart_text">待付款</view>
+          </view>
+          <view class="cart_menu">
+              <image class="cart_img" src="../images/post.png"></image>
+              <view class="cart_text">待发货</view>
+          </view>
+          <view class="cart_menu">
+              <image class="cart_img" src="../images/ship.png"></image>
+              <view class="cart_text">配送中</view>
+          </view>
+          <view class="cart_menu">
+              <image class="cart_img" src="../images/transfer.png"></image>
+              <view class="cart_text">交易成功</view>
+          </view>
+          <view class="cart_menu">
+              <image class="cart_img" src="../images/reject.png"></image>
+              <view class="cart_text">退货/退款</view>
+          </view>
+
+      </navigator>
+      <view class="item" @tap="setAddress">
+        <view class="item_content">
+          <view class="text">我的优惠券</view>
+        </view>
+        <view class="arrow">&gt;</view>
+      </view>
+      <navigator class="item" url="/pages/points">
+        <view class="item_content">
+          <view class="text">联系小区长</view>
+        </view>
+        <view class="arrow">&gt;</view>
+      </navigator>
+      <navigator class="item" url="/pages/points">
+        <view class="item_content">
+          <view class="text">我的收货地址</view>
+        </view>
+        <view class="arrow">&gt;</view>
+      </navigator>
+      <navigator class="item" url="/pages/points">
+        <view class="item_content">
+          <view class="text">小区长招募</view>
+        </view>
+        <view class="arrow">&gt;</view>
+      </navigator>
+      <navigator class="item" url="/pages/points">
+        <view class="item_content">
+          <view class="text">供应商招募</view>
+        </view>
+        <view class="arrow">&gt;</view>
+      </navigator>
+      <navigator class="item" url="/pages/points">
+        <view class="item_content">
+          <view class="text">联系客服</view>
+        </view>
+        <view class="arrow">&gt;</view>
+      </navigator>
+    </view>
       <!-- <navigator class="item" url="/pages/register" wx:if="{{bShowBind}}"> -->
       <!--   <view> -->
       <!--     <view class="item_content"> -->
@@ -18,7 +84,7 @@
         <!-- </view> -->
         <!-- <view class="arrow">&gt;</view> -->
       <!-- </navigator> -->
-      <navigator class="item" url="/pages/order">
+      <!-- <navigator class="item" url="/pages/order">
         <view class="item_content">
           <image class="item_img" src="../images/icon_my_02.png"></image>
           <view class="text">全部订单</view>
@@ -38,7 +104,7 @@
           <view class="text">我的积分</view>
         </view>
         <view class="arrow">&gt;</view>
-      </navigator>
+      </navigator> -->
       <!-- <navigator class="item" url="/pages/collection?type=0"> -->
       <!--   <view class="item_content"> -->
       <!--     <image class="item_img" src="../images/icon_my_04.png"></image> -->
@@ -46,7 +112,7 @@
       <!--   </view> -->
       <!--   <view class="arrow">&gt;</view> -->
       <!-- </navigator> -->
-      <navigator class="item" url="/pages/collection?type=1">
+      <!--<navigator class="item" url="/pages/collection?type=1">
         <view class="item_content">
           <image class="item_img" src="../images/icon_my_05.png"></image>
           <view class="text">我的收藏</view>
@@ -69,7 +135,7 @@
         </view>
         <view class="arrow">&gt;</view>
       </navigator>
-    </view>
+    </view>-->
   </view>
 </template>
 <script>
@@ -91,7 +157,7 @@ export default class Index extends wepy.page {
     avatarUrl: "",
     nickName: "",
     bShowBind:false,
-    
+
   }
   async getUserInfo(phone,code) {
     let that = this;
@@ -126,14 +192,14 @@ export default class Index extends wepy.page {
   onGetPhoneNumber() {
     console.log(e.detail.errMsg)
     console.log(e.detail.iv)
-    console.log(e.detail.encryptedData)        
+    console.log(e.detail.encryptedData)
   }
   computed = {
 
   }
   methods = {
     async setAddress() {
-      await wepy.authorize({scope: "scope.address"}); 
+      await wepy.authorize({scope: "scope.address"});
       let address = await wepy.chooseAddress();
       console.log('address', address);
       // wepy.navigateTo({
@@ -149,44 +215,70 @@ export default class Index extends wepy.page {
 </script>
 <style lang="less">
 .header {
-  background: #ff6a3c;
-  height: 260rpx;
+  background: #fff;
+  height: 180rpx;
   width: 100%;
 }
 
 .header_content {
-  width: 100%;
+   display: flex;
+  flex-direction: row;
   margin: 0 auto;
   text-align: center;
   padding-top: 48rpx;
 }
 
 .avatarUrl {
-  width: 122rpx;
-  height: 122rpx;
+  width: 80rpx;
+  height: 80rpx;
+  margin-left:30rpx;
   border-radius: 1000px;
 }
 
 .nickName {
   font-size: 30rpx;
+  font-weight: 700;
   padding-top: 15rpx;
+  padding-left: 25rpx;
 }
 
 .info_block {
-  margin-top: 10rpx;
+
   .item {
-    border-top: 1rpx solid #dbdbdb;
+    border-bottom: 1rpx solid #dbdbdb;
     background: #fff;
     padding: 34rpx 28rpx;
     display: flex;
     align-items: center;
     justify-content: space-between;
   }
-  .item:last-child {
-    border-bottom: 1rpx solid #dbdbdb;
+  .item:first-child {
+    border-bottom: 0rpx solid #dbdbdb;
+
+  }
+  .cart_menu {
+       display: flex;
+       flex-direction: column;
+       align-items: center;
+       margin-left:20rpx;
+      .cart_img {
+
+          width: 50rpx;
+          height: 50rpx;
+          text-align: center;
+        }
+
+      .cart_text {
+      font-size:80%;
+      color:#707070;
+      margin-top:20rpx;
+      margin-bottom:30rpx;
+      text-align: center;
+      }
   }
   .item_content {
     display: flex;
+
     align-items: center;
     .text {
       margin-left: 20rpx;

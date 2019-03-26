@@ -1,8 +1,32 @@
 <template>
   <navigator wx:for="{{list}}" wx:for-item="item" wx:key="index" url="/pages/goods_detail?id={{item.id}}">
+  <!--
   <van-card price="{{item.price + '/ 件'}}" origin-price="{{item.regular_price != item.price ? item.regular_price :  null}}" title="{{item.name}}" thumb="{{item.images[0].shop_thumbnail}}" thumb-link="/pages/goods_detail?id={{item.id}}" custom-class="item" tag="{{tags[index]}}" num="{{'库存:' + item.stock_quantity}}" desc="{{descs[index] }}" >
       <view slot="footer" style="border-top:1rpx solid #ededed;margin-top:8rpx"></view>
     </van-card>
+  -->
+   <!--商品内容-->
+  <view class="item_container">
+      <view class="item_image_container">
+       <image class="item-img" src="{{item.images[0].src}}"></image>
+       </view>
+      <view class="item_detail_container">
+         <text class="item_title">{{item.name}}</text>
+         <text class="item_desc">{{ '测试描述信息' }}</text>
+         <view><text class="item_rule">{{ '商品规格' }}</text></view>
+         <view class="item_price_container">
+             <text class="item_price">{{ '￥' +item.price }}</text>
+             <text class="item_origin_price">{{  '￥' +  ('11' +item.regular_price != item.price ? item.regular_price :  null) }}</text>
+
+          </view>
+       </view>
+       <view class="item_number_container">
+                <image class='btnImg' src='../images/minus.png'></image>
+                <text class="item_num">{{ item.num }} 1</text>
+                <image class='btnImgP' src='../images/plus.png'></image>
+              </view>
+
+    </view>
   </navigator>
 </template>
 <script>
@@ -18,6 +42,8 @@ export default class productCardList extends wepy.component {
   }
   onLoad() {
       // console.log('list', this.list);
+
+
   }
   computed = {
       tags () {
@@ -46,12 +72,71 @@ export default class productCardList extends wepy.component {
 </script>
 <style lang="less">
 
-.item {
-  background-color: white !important;
 
-  .van-card__thumb {
+
+.item_container {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-end ;
+    justify-content:space-around;
+    height:180rpx;
+    padding:20rpx 20rpx 20rpx 20rpx;
+    border-bottom: 1px solid #ededed;
+    .item_image_container {
+    image {
     width: 150rpx !important;
     height: 150rpx !important;
+    }
+
+  }
+  .item_detail_container {
+    width:300rpx;
+    display: flex;
+    flex-direction: column;
+      .item_title{
+      font-size: 30rpx;
+      font-weight: 700;
+      color:#333;
+      padding-bottom:5rpx;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      }
+      .item_desc{
+      font-size:70%;
+      color:#707070;
+      }
+      .item_rule{
+      font-size:70%;
+      color:#707070;
+      background-color:#f1f1f1;
+      }
+      .item_price_container{
+        margin-top:20rpx;
+        margin-bottom:10rpx;
+        .item_price {
+          color:#FF9900;
+        }
+        .item_origin_price {
+          padding-left:10rpx;
+          font-size:70%;
+          color:#707070;
+          text-decoration:line-through;
+        }
+      }
+  }
+  .item_number_container {
+    display: flex;
+    .btnImg {
+      width:40rpx;
+      height:40rpx;
+      color:#00CC66  ;
+      }
+    .btnImgP {
+      width:41rpx;
+      height:41rpx;
+      color:#00CC66;
+    }
   }
 }
 </style>
