@@ -8,21 +8,21 @@
    <!--商品内容-->
   <view class="item_container">
       <view class="item_image_container">
-       <image class="item-img" src="{{item.images[0].src}}"></image>
+       <image class="item-img" src="{{item.images[0].shop_thumbnail}}"></image>
        </view>
       <view class="item_detail_container">
          <text class="item_title">{{item.name}}</text>
-         <text class="item_desc">{{ '测试描述信息' }}</text>
-         <view><text class="item_rule">{{ '商品规格' }}</text></view>
+         <text class="item_desc">{{ descs[index] }}</text>
+         <view><text class="item_rule">库存:{{ item.stock_quantity }}</text></view>
          <view class="item_price_container">
              <text class="item_price">{{ '￥' +item.price }}</text>
-             <text class="item_origin_price">{{  '￥' +  ('11' +item.regular_price != item.price ? item.regular_price :  null) }}</text>
+             <text class="item_origin_price" wx:if="{{item.regular_price != item.price}}">{{  '￥' +  item.regular_price }}</text>
 
           </view>
        </view>
        <view class="item_number_container">
-                <image class='btnImg' src='../images/minus.png'></image>
-                <text class="item_num">{{ item.num }} 1</text>
+                <!-- <image class='btnImg' src='../images/minus.png'></image> -->
+                <!-- <text class="item_num">{{ item.num }} 1</text> -->
                 <image class='btnImgP' src='../images/plus.png'></image>
               </view>
 

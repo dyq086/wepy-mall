@@ -13,60 +13,69 @@
         </view>
         <view class="arrow">全部订单&gt;</view>
       </navigator>
-      <navigator class="item" url="/pages/order">
+      <view class="item">
+        <navigator url="/pages/order?type=1">
           <view class="cart_menu">
               <image class="cart_img" src="../images/pay.png"></image>
               <view class="cart_text">待付款</view>
           </view>
+        </navigator>
+        <navigator url="/pages/order?type=2">
           <view class="cart_menu">
               <image class="cart_img" src="../images/post.png"></image>
               <view class="cart_text">待发货</view>
           </view>
+        </navigator>
+        <navigator url="/pages/order?type=2">
           <view class="cart_menu">
               <image class="cart_img" src="../images/ship.png"></image>
               <view class="cart_text">配送中</view>
           </view>
+        </navigator>
+        <navigator url="/pages/order?type=3">
           <view class="cart_menu">
               <image class="cart_img" src="../images/transfer.png"></image>
               <view class="cart_text">交易成功</view>
           </view>
+        </navigator>
+        <navigator url="/pages/order?type=4">
           <view class="cart_menu">
               <image class="cart_img" src="../images/reject.png"></image>
-              <view class="cart_text">退货/退款</view>
+              <view class="cart_text">已取消</view>
           </view>
-
-      </navigator>
-      <view class="item" @tap="setAddress">
+        </navigator>
+      </view>
+      <view class="item">
         <view class="item_content">
           <view class="text">我的优惠券</view>
         </view>
         <view class="arrow">&gt;</view>
       </view>
-      <navigator class="item" url="/pages/points">
+      <navigator class="item">
         <view class="item_content">
           <view class="text">联系小区长</view>
         </view>
         <view class="arrow">&gt;</view>
       </navigator>
-      <navigator class="item" url="/pages/points">
+      <navigator class="item" @tap="setAddress">
         <view class="item_content">
           <view class="text">我的收货地址</view>
         </view>
         <view class="arrow">&gt;</view>
       </navigator>
-      <navigator class="item" url="/pages/points">
+      <navigator class="item">
         <view class="item_content">
           <view class="text">小区长招募</view>
         </view>
         <view class="arrow">&gt;</view>
       </navigator>
-      <navigator class="item" url="/pages/points">
+      <navigator class="item">
         <view class="item_content">
           <view class="text">供应商招募</view>
         </view>
         <view class="arrow">&gt;</view>
       </navigator>
-      <navigator class="item" url="/pages/points">
+      <navigator class="item">
         <view class="item_content">
           <view class="text">联系客服</view>
         </view>
