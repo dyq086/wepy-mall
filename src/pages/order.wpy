@@ -36,7 +36,7 @@ export default class Order extends wepy.page {
   data = {
     winHeight: 0,
     totalCount: 0,
-    tabList: ["全部订单", "待支付", "待收货", "已完成", "已取消"],
+    tabList: ["全部订单", "待付款", "配送中", "已完成", "已取消"],
     orderList: [],
     currentPage: 1,
     is_empty: false,
