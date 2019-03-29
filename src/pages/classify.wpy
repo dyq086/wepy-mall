@@ -13,9 +13,9 @@
         {{item.name}}
       </view>
     </scroll-view>
-    <scroll-view class="classify_detail" scroll-y scroll-with-animation="true" style="height:{{windowHeight-50}}px">
+    <scroll-view class="classify_detail" scroll-y scroll-with-animation="true" style="height:{{windowHeight-50}}px;width:350px;">
         <view class="children">
-          <productCardList :list.sync="childList"></productCardList>
+          <productCardList :list.sync="childList" ></productCardList>
           <!--加载更多时动画-->
           <bottomLoadMore :show.sync="showLoading" message="正在加载"></bottomLoadMore>
           <!--暂无数据显示-->
@@ -48,7 +48,7 @@ export default class Classify extends wepy.page {
   components = {
       bottomLoadMore: BottomLoadMore,
       placeholder: Placeholder,
-      productCardList: ProductCardList,     
+      productCardList: ProductCardList,
   }
 
   data = {
