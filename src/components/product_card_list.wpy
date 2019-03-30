@@ -13,7 +13,7 @@
       <!-- 商品图片 -->
        <image class="item-img" src="{{item.images[0].shop_thumbnail}}">
        <!-- 商品标签 -->
-        <text class="item_tag" style ="position:absolute;">{{tags[index] + "促销"}}</text>
+        <text class="item_tag" style ="position:absolute;" wx:if="{{tags[index] != ''}}" >{{tags[index]}}</text>
        </image>
       </van-col>
       <van-col span="16">
@@ -138,6 +138,7 @@ export default class productCardList extends wepy.component {
       }
       .item_price_container{
       margin-top: 20rpx;
+      padding-right:10rpx;
       height: 50rpx;
         .item_price {
           color:#FF9900;

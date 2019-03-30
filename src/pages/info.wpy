@@ -3,7 +3,7 @@
     <view class="header">
       <view class="header_content">
         <image class="avatarUrl" src="{{avatarUrl}}"></image>
-        <view class="nickName">昵称：{{nickName}}</view>
+        <view class="nickName">昵称:{{nickName}}</view>
       </view>
     </view>
     <view class="info_block">
