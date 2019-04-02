@@ -6,27 +6,43 @@
     </van-card>
   -->
    <!--商品内容-->
-  <view class="item_container">
-      <view class="item_image_container">
-       <image class="item-img" src="{{item.images[0].shop_thumbnail}}"></image>
-       </view>
-      <view class="item_detail_container">
+  <van-row gutter="20">
+    <view class="item_container">
+      <van-col span="8" class="item_image_container">
+      <!-- 商品图片 -->
+       <image class="item-img" src="{{item.images[0].shop_thumbnail}}">
+       <!-- 商品标签 -->
+        <text class="item_tag" style ="position:absolute;" wx:if="{{tags[index] != ''}}" >{{tags[index]}}</text>
+       </image>
+      </van-col>
+      <van-col span="16">
+        <!-- 商品详情 -->
+        <view class="item_detail_container">
+          <!-- 名称 -->
          <text class="item_title">{{item.name}}</text>
+         <!-- 描述 -->
          <text class="item_desc">{{ descs[index] }}</text>
+         <!-- 库存 -->
          <view><text class="item_rule">库存:{{ item.stock_quantity }}</text></view>
-         <view class="item_price_container">
-             <text class="item_price">{{ '￥' +item.price }}</text>
-             <text class="item_origin_price" wx:if="{{item.regular_price && item.regular_price != item.price}}">{{  '￥' +  item.regular_price }}</text>
-
-          </view>
-       </view>
-       <view class="item_number_container">
-                <!-- <image class='btnImg' src='../images/minus.png'></image> -->
-                <!-- <text class="item_num">{{ item.num }} 1</text> -->
-                <image class='btnImgP' src='../images/plus.png'></image>
-              </view>
-
-    </view>
+         <van-row>
+           <view class="item_price_container">
+               <van-col span="4">
+                  <!-- 商品价格 -->
+                 <text class="item_price">{{ '￥' +item.price }}</text>
+                 <!-- 原始价格 -->
+                 <text class="item_origin_price" wx:if="{{item.regular_price != item.price}}">{{  '￥' +  item.regular_price }}</text>
+               </van-col>
+               <!-- 购买按钮 -->
+                <van-col offset="14" span="4">
+                  <view class="cannot-buy-btn" wx:if="{{item.stock_quantity == 0}}" >售罄</view>
+                  <view class="to-buy-btn " wx:else bindtap="buy">立即抢购</view>
+                </van-col>
+            </view>
+          </van-row>
+        </view>
+       </van-col>
+      </view>
+    </van-row>
   </navigator>
 </template>
 <script>
