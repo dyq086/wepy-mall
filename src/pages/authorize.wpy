@@ -16,8 +16,11 @@ import {
   USER_SPECICAL_INFO,
   USER_INFO,
   TOKEN,
+  TOKEN_EXPIRED,
   ME,
 } from '@/utils/constant';
+import moment from 'moment';
+
 export default class Authorize extends wepy.page {
   config = {
     navigationBarTitleText: '授权登录',
@@ -26,7 +29,9 @@ export default class Authorize extends wepy.page {
       /* let userInfo = wepy.getStorageSync(USER_INFO) */
 
       let token = wepy.getStorageSync(TOKEN);
-      if (!token) {
+      let tokenExpired = wepy.getStorageSync(TOKEN_EXPIRED);
+      if (!token || !tokenExpired || moment().isAfter(tokenExpired)) {
+        wepy.clearStorageSync(TOKEN);
           /*
         let data  = await wepy.getUserInfo()
         if (data) {
@@ -62,6 +67,7 @@ export default class Authorize extends wepy.page {
               })
               if (token.statusCode == 200) {
                 wepy.setStorageSync(TOKEN, token.data.token);
+                wepy.setStorageSync(TOKEN_EXPIRED, moment().add(1, 'day'));
                 /* let me = await api.getMe(); */
                 wepy.setStorageSync(ME, data2);
               }
