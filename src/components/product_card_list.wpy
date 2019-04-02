@@ -1,5 +1,5 @@
 <template>
-  <navigator wx:for="{{list}}" wx:for-item="item" wx:key="index" url="/pages/goods_detail?id={{item.id}}">
+  <view wx:for="{{list}}" wx:for-item="item" wx:key="index">
   <!--
   <van-card price="{{item.price + '/ 件'}}" origin-price="{{item.regular_price != item.price ? item.regular_price :  null}}" title="{{item.name}}" thumb="{{item.images[0].shop_thumbnail}}" thumb-link="/pages/goods_detail?id={{item.id}}" custom-class="item" tag="{{tags[index]}}" num="{{'库存:' + item.stock_quantity}}" desc="{{descs[index] }}" >
       <view slot="footer" style="border-top:1rpx solid #ededed;margin-top:8rpx"></view>
@@ -10,11 +10,13 @@
   <van-row gutter="20">
     <view class="item_container">
       <van-col span="8" class="item_image_container">
-      <!-- 商品图片 -->
-       <image class="item-img" src="{{item.images[0].shop_thumbnail}}">
-       <!-- 商品标签 -->
-        <text class="item_tag" style ="position:absolute;" wx:if="{{tags[index] != ''}}" >{{tags[index]}}</text>
-       </image>
+        <navigator url="/pages/goods_detail?id={{item.id}}">
+          <!-- 商品图片 -->
+           <image class="item-img" src="{{item.images[0].shop_thumbnail}}">
+           <!-- 商品标签 -->
+            <text class="item_tag" style ="position:absolute;" wx:if="{{tags[index] != ''}}" >{{tags[index]}}</text>
+           </image>
+        </navigator>
       </van-col>
       <van-col span="16">
         <!-- 商品详情 -->
@@ -36,7 +38,7 @@
                <!-- 购买按钮 -->
                 <van-col offset="14" span="4">
                   <view class="cannot-buy-btn" wx:if="{{item.stock_quantity == 0}}" >售罄</view>
-                  <view class="to-buy-btn " wx:else bindtap="buy">立即抢购</view>
+                  <view class="to-buy-btn " wx:else @tap="buy({{item.id}})">立即抢购</view>
                 </van-col>
             </view>
           </van-row>
@@ -44,10 +46,12 @@
        </van-col>
       </view>
     </van-row>
-  </navigator>
+  </view>
 </template>
 <script>
 import wepy from 'wepy';
+import api from '@/api/api';
+import tip from '@/utils/tip';
 
 export default class productCardList extends wepy.component {
   props = {
@@ -59,8 +63,6 @@ export default class productCardList extends wepy.component {
   }
   onLoad() {
       // console.log('list', this.list);
-
-
   }
   computed = {
       tags () {
@@ -84,6 +86,29 @@ export default class productCardList extends wepy.component {
       }
   }
   methods = {
+      async buy(productId) {
+          let that = this;
+          const json = await api.addCart({
+              query: {
+                  product_id: productId,
+                  quantity: 1,
+                  checked: true
+              }
+          });
+          if (json.statusCode == 200) {
+              tip.success("成功加入购物车");
+              wepy.setTabBarBadge({
+                  index:2,
+                  text: "" + json.data.cart_contents_count
+              })
+          } else {
+              if (json.data.message) {
+                  tip.error(json.data.message)
+              } else {
+                  tip.error('无法加入购物车')
+              }
+          }
+      }
   }
 }
 </script>
