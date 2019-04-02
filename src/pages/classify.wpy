@@ -161,8 +161,25 @@ export default class Classify extends wepy.page {
         }
       }
     },
-    getTag (item) {
-        return '促销';
+    //加载更多
+    loadMore() {
+      let that = this;
+      if (that.isEmpty)
+          return;
+      that.showLoading = true;
+      console.log(that.pageTotal + "===" + that.currentPage);
+      if ((that.pageTotal) > that.currentPage) {
+        //防止重复加载
+        if (that.preventRepeatReuqest) {
+          return true;
+        }
+        that.preventRepeatReuqest = true;
+        that.currentPage++;
+        that.doSearchGoods(that.currentPage);
+        that.preventRepeatReuqest = false;
+      } else {
+        that.showLoading = false;
+      }
     }
   }
     async doSearchGoods(currentPage, size = 10) {
@@ -177,6 +194,7 @@ export default class Classify extends wepy.page {
       if (json.data.length != 0) {
         that.childList = [...that.childList, ...json.data];
         that.pageTotal = json.header['X-WP-Total'];
+        that.isEmpty = false;
       } else {
         //暂无数据
         that.isEmpty= true;
@@ -185,23 +203,8 @@ export default class Classify extends wepy.page {
       that.showLoading = false;
       that.$apply();
     }
-    //加载更多
     onReachBottom() {
-      let that = this;
-      that.showLoading = true;
-      console.log(that.pageTotal + "===" + that.currentPage);
-      // //判断总页数是否大于翻页数
-      if ((that.pageTotal) > that.currentPage) {
-        //防止重复加载
-        if (that.preventRepeatReuqest) {
-          return true;
-        }
-        that.currentPage++;
-        that.doSearchGoods(that.currentPage);
-        that.preventRepeatReuqest = false;
-      } else {
-        that.showLoading = false;
-      }
+     // this.loadMore()
     }
 }
 
