@@ -13,7 +13,7 @@
         {{item.name}}
       </view>
     </scroll-view>
-    <scroll-view class="classify_detail" scroll-y scroll-with-animation="true" style="height:{{windowHeight-50}}px">
+    <scroll-view class="classify_detail" scroll-y scroll-with-animation="true" style="height:{{windowHeight-50}}px" lower-threshold="100" @scrolltolower="loadMore" >
         <view class="children">
           <productCardList :list.sync="childList"></productCardList>
           <!--加载更多时动画-->
@@ -161,8 +161,25 @@ export default class Classify extends wepy.page {
         }
       }
     },
-    getTag (item) {
-        return '促销';
+    //加载更多
+    loadMore() {
+      let that = this;
+      if (that.isEmpty)
+          return;
+      that.showLoading = true;
+      console.log(that.pageTotal + "===" + that.currentPage);
+      if ((that.pageTotal) > that.currentPage) {
+        //防止重复加载
+        if (that.preventRepeatReuqest) {
+          return true;
+        }
+        that.preventRepeatReuqest = true;
+        that.currentPage++;
+        that.doSearchGoods(that.currentPage);
+        that.preventRepeatReuqest = false;
+      } else {
+        that.showLoading = false;
+      }
     }
   }
     async doSearchGoods(currentPage, size = 10) {
@@ -185,23 +202,8 @@ export default class Classify extends wepy.page {
       that.showLoading = false;
       that.$apply();
     }
-    //加载更多
     onReachBottom() {
-      let that = this;
-      that.showLoading = true;
-      console.log(that.pageTotal + "===" + that.currentPage);
-      // //判断总页数是否大于翻页数
-      if ((that.pageTotal) > that.currentPage) {
-        //防止重复加载
-        if (that.preventRepeatReuqest) {
-          return true;
-        }
-        that.currentPage++;
-        that.doSearchGoods(that.currentPage);
-        that.preventRepeatReuqest = false;
-      } else {
-        that.showLoading = false;
-      }
+     // this.loadMore()
     }
 }
 

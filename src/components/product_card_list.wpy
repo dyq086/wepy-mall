@@ -16,7 +16,7 @@
          <view><text class="item_rule">库存:{{ item.stock_quantity }}</text></view>
          <view class="item_price_container">
              <text class="item_price">{{ '￥' +item.price }}</text>
-             <text class="item_origin_price" wx:if="{{item.regular_price != item.price}}">{{  '￥' +  item.regular_price }}</text>
+             <text class="item_origin_price" wx:if="{{item.regular_price && item.regular_price != item.price}}">{{  '￥' +  item.regular_price }}</text>
 
           </view>
        </view>
@@ -50,7 +50,7 @@ export default class productCardList extends wepy.component {
         let tags = [];
         this.list.map((item, key) => {
             if (!item.tag) {
-                tags[key] = item.regular_price != item.price ? '促销' : '';
+                tags[key] = item.regular_price && item.regular_price != item.price ? '促销' : '';
                 if (item.stock_quantity == 0) {
                     tags[key] += '缺货';
                 }
