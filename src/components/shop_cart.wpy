@@ -48,7 +48,7 @@
         <icon type="success" size="20" color="{{allChecked?'red':'rgb(153,153,153)'}}" />
         <view class="all_select">全选</view>
       </view>
-      <view class="total" hidden="{{noSelect}}">合计：¥ {{totalPrice}}</view>
+      <view class="total" hidden="{{noSelect}}">¥ {{totalPrice}} <text wx:if="shippingTotal">(运费¥ {{shippingTotal}})</text></view>
     </view>
     <view class="to-pay-btn {{noSelect?'no-select':''}}" hidden="{{!saveHidden}}" bindtap="pay">去结算</view>
   </view>
@@ -71,6 +71,7 @@
       noSelect: true,
       saveHidden: true,
       totalPrice: 0,
+      shippingTotal: 0,
       operating: false,
       allChecked: true
     }
@@ -83,6 +84,7 @@
         }
         this.list = Object.keys(data.cart).map((k) => data.cart[k])
         this.totalPrice = data.cart_total;
+        this.shippingTotal = data.shipping_total;
         this.noSelect = true;
         for (var i = 0; i < this.list.length; i++) {
           if (!this.list[i].checked) {
