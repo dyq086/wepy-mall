@@ -14,48 +14,42 @@
         <view class="arrow">全部订单&gt;</view>
       </navigator>
       <view class="item"  style="margin-left:-12rpx;margin-top:-12rpx;">
-      <van-row>
-        <van-col span="4">
+
         <navigator url="/pages/order?type=1">
           <view class="cart_menu">
               <image class="cart_img" src="../images/pay.png"></image>
               <view class="cart_text">待付款</view>
           </view>
         </navigator>
-        </van-row>
-        <van-col span="4">
+
         <navigator url="/pages/order?type=2">
           <view class="cart_menu">
               <image class="cart_img" src="../images/post.png"></image>
               <view class="cart_text">待发货</view>
           </view>
         </navigator>
-        </van-row>
-        <van-col span="4">
+
         <navigator url="/pages/order?type=2">
           <view class="cart_menu">
               <image class="cart_img" src="../images/ship.png"></image>
               <view class="cart_text">配送中</view>
           </view>
         </navigator>
-        </van-row>
-        <van-col span="4">
+
         <navigator url="/pages/order?type=3">
           <view class="cart_menu">
               <image class="cart_img" src="../images/transfer.png"></image>
               <view class="cart_text">交易成功</view>
           </view>
         </navigator>
-        </van-row>
-        <van-col span="4">
+
         <navigator url="/pages/order?type=4">
           <view class="cart_menu">
               <image class="cart_img" src="../images/reject.png"></image>
               <view class="cart_text">已取消</view>
           </view>
         </navigator>
-        </van-row>
-      </van-row>
+
       </view>
       <view class="item">
         <view class="item_content">
