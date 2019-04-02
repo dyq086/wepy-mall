@@ -3,7 +3,7 @@
     <view class="header">
       <view class="header_content">
         <image class="avatarUrl" src="{{avatarUrl}}"></image>
-        <view class="nickName">昵称：{{nickName}}</view>
+        <view class="nickName">昵称:{{nickName}}</view>
       </view>
     </view>
     <view class="info_block">
@@ -13,37 +13,43 @@
         </view>
         <view class="arrow">全部订单&gt;</view>
       </navigator>
-      <view class="item">
+      <view class="item"  style="margin-left:-12rpx;margin-top:-12rpx;">
+
         <navigator url="/pages/order?type=1">
           <view class="cart_menu">
               <image class="cart_img" src="../images/pay.png"></image>
               <view class="cart_text">待付款</view>
           </view>
         </navigator>
+
         <navigator url="/pages/order?type=2">
           <view class="cart_menu">
               <image class="cart_img" src="../images/post.png"></image>
               <view class="cart_text">待发货</view>
           </view>
         </navigator>
+
         <navigator url="/pages/order?type=2">
           <view class="cart_menu">
               <image class="cart_img" src="../images/ship.png"></image>
               <view class="cart_text">配送中</view>
           </view>
         </navigator>
+
         <navigator url="/pages/order?type=3">
           <view class="cart_menu">
               <image class="cart_img" src="../images/transfer.png"></image>
               <view class="cart_text">交易成功</view>
           </view>
         </navigator>
+
         <navigator url="/pages/order?type=4">
           <view class="cart_menu">
               <image class="cart_img" src="../images/reject.png"></image>
               <view class="cart_text">已取消</view>
           </view>
         </navigator>
+
       </view>
       <view class="item">
         <view class="item_content">
@@ -266,22 +272,19 @@ export default class Index extends wepy.page {
 
   }
   .cart_menu {
-       display: flex;
-       flex-direction: column;
-       align-items: center;
-       margin-left:20rpx;
-      .cart_img {
+          width: 150rpx;
+          height: 150rpx;
 
+      .cart_img {
+          margin-left:50rpx;
+          margin-top:50rpx;
           width: 50rpx;
           height: 50rpx;
-          text-align: center;
         }
-
       .cart_text {
       font-size:80%;
       color:#707070;
-      margin-top:20rpx;
-      margin-bottom:30rpx;
+      margin-top:10rpx;
       text-align: center;
       }
   }
