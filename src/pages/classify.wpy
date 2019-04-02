@@ -79,6 +79,7 @@ export default class Classify extends wepy.page {
     if (json.data.length > 0) {
       this.childList = json.data;
       this.pageTotal = json.header['X-WP-Total'];
+      this.isEmpty= false;
     } else {
       this.childList = [];
       this.isEmpty= true;

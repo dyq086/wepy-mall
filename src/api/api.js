@@ -178,11 +178,11 @@ const childGoodsCatetoryList = (params) => wxRequest(params, apiMall + '/api/mal
 const getBanners = (params) => request(`${host}/wp-json/w2w/v1/store/banner`, params);
 
 //获取城市
-const queryCities = (params) => request(`${host}/wp-json/wp/v2/cities?per_page=100`, {...params, header:{'Content-Type': 'application/json'}});
+const queryCities = (params) => request(`${host}/wp-json/wp/v2/cities?per_page=100`, {...params, noauth: true});
 
 
 //获取小区
-const queryEstates = ({query = {}}) => request(`${host}/wp-json/wp/v2/estates`, {query: {...query, status: 'publish', per_page: 100}, header:{'Content-Type': 'application/json'}});
+const queryEstates = ({query = {}}) => request(`${host}/wp-json/wp/v2/estates`, {query: {...query, status: 'publish', per_page: 100}, noauth: true});
 
 export default {
   hostGoodsList,
