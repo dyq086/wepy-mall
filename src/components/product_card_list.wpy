@@ -6,6 +6,7 @@
     </van-card>
   -->
    <!--商品内容-->
+
   <van-row gutter="20">
     <view class="item_container">
       <van-col span="8" class="item_image_container">
@@ -30,7 +31,7 @@
                   <!-- 商品价格 -->
                  <text class="item_price">{{ '￥' +item.price }}</text>
                  <!-- 原始价格 -->
-                 <text class="item_origin_price" wx:if="{{item.regular_price != item.price}}">{{  '￥' +  item.regular_price }}</text>
+                 <text class="item_origin_price" wx:if="{{item.regular_price && item.regular_price != item.price}}">{{  '￥' +  item.regular_price }}</text>
                </van-col>
                <!-- 购买按钮 -->
                 <van-col offset="14" span="4">
@@ -91,25 +92,31 @@ export default class productCardList extends wepy.component {
 
 
 .item_container {
-    display: flex;
-    flex-direction: row;
-    align-items: flex-end ;
-    justify-content:space-around;
-    height:180rpx;
+    height: 200rpx;
     padding:20rpx 20rpx 20rpx 20rpx;
     border-bottom: 1px solid #ededed;
     .item_image_container {
-    image {
-    width: 150rpx !important;
-    height: 150rpx !important;
+    .item-img {
+     position:relative;
+    width: 190rpx !important;
+    height: 190rpx !important;
+    .item_tag{
+      position:absolute;
+      top:10rpx;
+      left: 10rpx;
+      font-size: 25rpx;
+      background-color:#00CC66;
+      color: #fff;
+      padding:5rpx;
+      border-radius: 10rpx;
+      }
     }
-
   }
   .item_detail_container {
-    width:300rpx;
-    display: flex;
-    flex-direction: column;
+      display: flex;
+      flex-direction:column;
       .item_title{
+      height: 50rpx;
       font-size: 30rpx;
       font-weight: 700;
       color:#333;
@@ -119,40 +126,56 @@ export default class productCardList extends wepy.component {
       white-space: nowrap;
       }
       .item_desc{
+      height: 30rpx;
       font-size:70%;
       color:#707070;
       }
       .item_rule{
+      height: 30rpx;
       font-size:70%;
       color:#707070;
       background-color:#f1f1f1;
       }
       .item_price_container{
-        margin-top:20rpx;
-        margin-bottom:10rpx;
+      margin-top: 20rpx;
+      padding-right:10rpx;
+      height: 50rpx;
         .item_price {
           color:#FF9900;
         }
         .item_origin_price {
-          padding-left:10rpx;
           font-size:70%;
           color:#707070;
           text-decoration:line-through;
         }
+        .cannot-buy-btn {
+          width: 110rpx;
+        text-align: center;
+        line-height: 55rpx;
+        font-weight: 300;
+        background-color: #808080;
+        font-size: 25rpx;
+        color: #ffffff;
+        border-radius: 10rpx;
+        opacity: 0.6;
+
+        }
+
+        .to-buy-btn {
+        width: 110rpx;
+        text-align: center;
+        line-height: 55rpx;
+        font-weight: 300;
+        background-color: #FF9900;
+        font-size: 25rpx;
+        color: #ffffff;
+        border-radius: 10rpx;
+        }
+
+
       }
   }
-  .item_number_container {
-    display: flex;
-    .btnImg {
-      width:40rpx;
-      height:40rpx;
-      color:#00CC66  ;
-      }
-    .btnImgP {
-      width:41rpx;
-      height:41rpx;
-      color:#00CC66;
-    }
-  }
+
 }
+
 </style>

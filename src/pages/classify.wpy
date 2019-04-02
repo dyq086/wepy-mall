@@ -7,7 +7,7 @@
       </navigator>
     </view>
   </view>
-  <view class="classify" style="height:{{windowHeight-50}}px">
+  <view class="classify" style="height:{{windowHeight-50}}px;">
     <scroll-view class="classify_catetory" scroll-y scroll-with-animation="true" style="height:{{windowHeight-50}}px">
       <view class="name {{item.active? 'active':''}}" wx:for="{{rootcateList}}" wx:key="item" @tap="changeCate" data-code="{{item.id}}">
         {{item.name}}
@@ -15,7 +15,7 @@
     </scroll-view>
     <scroll-view class="classify_detail" scroll-y scroll-with-animation="true" style="height:{{windowHeight-50}}px" lower-threshold="100" @scrolltolower="loadMore" >
         <view class="children">
-          <productCardList :list.sync="childList"></productCardList>
+          <productCardList :list.sync="childList" ></productCardList>
           <!--加载更多时动画-->
           <bottomLoadMore :show.sync="showLoading" message="正在加载"></bottomLoadMore>
           <!--暂无数据显示-->
@@ -48,7 +48,7 @@ export default class Classify extends wepy.page {
   components = {
       bottomLoadMore: BottomLoadMore,
       placeholder: Placeholder,
-      productCardList: ProductCardList,     
+      productCardList: ProductCardList,
   }
 
   data = {
@@ -107,7 +107,6 @@ export default class Classify extends wepy.page {
             }
           }
         }
-
         this.getChildCate(selRottCateCode);
       }
     } else {
@@ -120,6 +119,7 @@ export default class Classify extends wepy.page {
     let that = this;
     let systemInfo = wx.getStorageSync(SYSTEM_INFO);
     this.windowHeight = systemInfo.windowHeight;
+
     this.$apply();
 
   }
@@ -140,7 +140,7 @@ export default class Classify extends wepy.page {
       for (var i = 0; i < this.rootcateList.length; i++) {
         var rootCate = this.rootcateList[i];
         rootCate.active = false;
-        if (rootCate.code == code) {
+        if (rootCate.id == code) {
           rootCate.active = true;
         }
       }
@@ -218,7 +218,7 @@ export default class Classify extends wepy.page {
   display: flex;
   position: relative;
   .classify_catetory {
-    width: 200rpx;
+    width: 140rpx;
     position: relative;
     z-index: 1;
     .name {
@@ -238,6 +238,7 @@ export default class Classify extends wepy.page {
     }
   }
   .classify_detail {
+    width: 600rpx;
     position: relative;
     z-index: 999;
     // margin-left: -15rpx;
@@ -249,7 +250,6 @@ export default class Classify extends wepy.page {
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
-      width: 170rpx;
     }
     .children_item {
       height: 200rpx;
