@@ -41,7 +41,7 @@ const request = async(url, params = {}) => {
     // if (!token) {
     //   token = GUEST_TOKEN;
     // }
-    if (token) {
+    if (!params.header && token) {
       header['Authorization'] = `Bearer ${token}`
     }
     let res = await wepy.request({
