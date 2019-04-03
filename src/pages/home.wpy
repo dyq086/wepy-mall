@@ -173,7 +173,6 @@ export default class Home extends wepy.page {
   events = {
   }
   onShow () {
-    console.log('temp')
     this.currentEstate = wepy.getStorageSync(CURRENT_ESTATE);
   }
   //加载更多
