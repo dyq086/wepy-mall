@@ -16,7 +16,7 @@
            <!-- 商品标签 -->
             <text class="item_tag" style ="position:absolute;" wx:if="{{tags[index] != ''&& tags[index] != '缺货'}}" >{{tags[index]}}</text>
             <view class="img-textbox" wx:if="{{item.stock_quantity == 0}}" >
-                <p class='img-text'style='padding-top: 25%;font-size: 12px;'>抢光啦!</p>
+                <p class='img-text' style='padding-top: 25%;font-size: 12px;'>抢光啦!</p>
                 <p class='img-text' style='padding-bottom: 25%;font-size: 8px;'>补货ing...</p>
             </view>
            </image>
