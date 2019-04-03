@@ -81,14 +81,15 @@
         </view>
         <view class="arrow">&gt;</view>
       </navigator>
-      <navigator class="item">
+      <view class="item">
         <view class="item_content contact_container">
-          <contact-button class="contact">
-          </contact-button>
           <view class="text">联系客服</view>
+          <button class="contact" open-type='contact'>
+          联系客服
+          </button>
         </view>
         <view class="arrow">&gt;</view>
-      </navigator>
+      </view>
     </view>
       <!-- <navigator class="item" url="/pages/register" wx:if="{{bShowBind}}"> -->
       <!--   <view> -->
@@ -303,9 +304,10 @@ export default class Index extends wepy.page {
       position: relative;
       .contact {
          position: absolute;
-         left:0;
          width: 750rpx;
-         height: 42rpx;
+         background: salmon;
+         line-height: 48rpx;
+         opacity:0;
       }
   }
   .item_img {
