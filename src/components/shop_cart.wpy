@@ -80,6 +80,7 @@
       if (json.statusCode == 200) {
         let data = json.data;
         if (!data.cart) {
+            this.list = []
             return 0;
         }
         this.list = Object.keys(data.cart).map((k) => data.cart[k])

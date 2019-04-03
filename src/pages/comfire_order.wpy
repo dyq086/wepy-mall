@@ -301,7 +301,7 @@ export default class ComfireOrder extends wepy.page {
             setTimeout(() => {
               //支付成功 关闭loadding 跳转到支付成功页面
               tip.loaded();
-              wepy.navigateTo({
+              wepy.redirectTo({
                 url: "/pages/pay_success?orderNo="+json.data.order.id
               })
             }, 2000)
@@ -311,7 +311,7 @@ export default class ComfireOrder extends wepy.page {
             setTimeout(() => {
               //支付成功 关闭loadding 跳转到支付成功页面
               tip.loaded();
-              wepy.navigateTo({
+              wepy.redirectTo({
                 url: "/pages/order"
               })
             }, 2000)

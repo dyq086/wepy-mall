@@ -355,18 +355,14 @@ export default class goodsDetail extends wepy.page {
   //立即购买
   async doTakeOrder() {
     let that = this;
-    let userSpecialInfo = wepy.getStorageSync(USER_SPECICAL_INFO) || {};
-    let openId = userSpecialInfo.openid;
     const json = await api.addCart({
       query: {
-        openId: openId,
-        goodsId: that.goodsId,
-        goodsSkuId: this.detail.goodsSkuValIds,
-        purchaseType: this.purchasetype,
-        num: this.orderNum
+        product_id: that.goodsId,
+        quantity: this.orderNum,
+        checked: true
       }
     });
-    if (json.data.code == 0) {
+    if (json.statusCode == 200) {
       this.winHeight = "100%";
       this.animation.height(0).step();
       this.setData({
@@ -380,8 +376,8 @@ export default class goodsDetail extends wepy.page {
         url: "/pages/comfire_order?goodsId=" + that.goodsId + "&purchasetype=" + that.purchasetype
       })
     } else {
-      if (json.data.msg) {
-        tip.error(json.data.msg)
+      if (json.data.message) {
+        tip.error(json.data.message)
       } else {
         tip.error('无法立刻购买')
       }
