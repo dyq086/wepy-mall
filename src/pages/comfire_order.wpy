@@ -271,14 +271,12 @@ console.log("load");
     let params = {}
     if (this.chosenShipping.method_id == 'local_pickup') {
       // TODO
-      params.billing_first_name = this.estate.contact;
-      params.billing_phone =  this.estate.phone;
+      params.billing_first_name = this.customer.name;
+      params.billing_phone =  this.customer.phone;
       params.billing_country = 'CN';
       params.billing_state = getStateCode('福建');
       params.billing_city = this.estate.city;
       params.billing_address_1 = this.estate.address;
-      params.customer_name = this.customer.name;
-      params.customer_phone = this.customer.phone;
     } else {
       let address = this.address;
       params.billing_first_name = address.userName;

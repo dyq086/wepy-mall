@@ -145,7 +145,8 @@
         </scroll-view>
         <view class="colse_model" @tap="closeModel"><i class="iconfont icon-close"></i></view>
       </view>
-      <view class="comfire_btn" @tap.stop="confirmTake">确定</view>
+      <view class="empty_btn" wx:if="{{detail.stock_quantity == 0}}" >售罄</view>
+      <view class="comfire_btn" wx:else @tap.stop="confirmTake">确定</view>
     </view>
   </view>
 </template>
@@ -971,6 +972,18 @@ export default class goodsDetail extends wepy.page {
   position: absolute;
   bottom: 0;
   z-index: 10003;
+}
+.empty_btn {
+  height: 100rpx;
+  line-height: 100rpx;
+  width: 100%;
+  background: #808080;
+  text-align: center;
+  color: #fff;
+  position: absolute;
+  bottom: 0;
+  z-index: 10003;
+  opacity: 0.6;
 }
 
 .button-more-cmment {

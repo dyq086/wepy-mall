@@ -15,6 +15,10 @@
            <image class="item-img" src="{{item.images[0].shop_thumbnail}}">
            <!-- 商品标签 -->
             <text class="item_tag" style ="position:absolute;" wx:if="{{tags[index] != ''}}" >{{tags[index]}}</text>
+            <view class="img-textbox" wx:if="{{item.stock_quantity == 0}}" >
+                <p class='img-text'style='padding-top: 25%;font-size: 12px;'>抢光啦!</p>
+                <p class='img-text' style='padding-bottom: 25%;font-size: 8px;'>补货ing...</p>
+            </view>
            </image>
         </navigator>
       </van-col>
@@ -125,16 +129,34 @@ export default class productCardList extends wepy.component {
      position:relative;
     width: 190rpx !important;
     height: 190rpx !important;
-    .item_tag{
-      position:absolute;
-      top:10rpx;
-      left: 10rpx;
-      font-size: 25rpx;
-      background-color:#00CC66;
-      color: #fff;
-      padding:5rpx;
-      border-radius: 10rpx;
-      }
+        .item_tag{
+          position:absolute;
+          top:10rpx;
+          left: 10rpx;
+          font-size: 25rpx;
+          background-color:#00CC66;
+          color: #fff;
+          padding:5rpx;
+          border-radius: 10rpx;
+          }
+        .img-textbox {
+        display: flex;
+        flex-direction:column;
+        position: absolute;
+        top: 20rpx;
+        left: 20rpx;
+        width: 80%;
+        height: 80%;
+        opacity: 0.5;
+        border-radius: 50%;
+        background-color: rgba(0,0,0,0.75) !important;
+        // box-shadow: inset 0px 0px 10px 4px rgba(255,255,255,.75);
+        .img-text {
+            color: #fff;
+            font-weight: 400;
+            margin: auto;
+            }
+        }
     }
   }
   .item_detail_container {
