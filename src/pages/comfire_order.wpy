@@ -77,6 +77,18 @@
         <view class="right">{{estate.phone}}</view>
       </view>
       <view class="block">
+        <view class="left">联系人:</view>
+        <view class="right input_box">
+          <input bindinput="bindCustomerNameInput" placeholder={{customerName}} />
+        </view>
+      </view>
+      <view class="block">
+        <view class="left">联系手机:</view>
+        <view class="right input_box">
+          <input bindinput="bindCustomerPhoneInput" placeholder={{customerPhone}} />
+        </view>
+      </view>
+      <view class="block">
         <view class="left">地址</view>
         <view class="right">{{estate.address}}</view>
       </view>
@@ -136,6 +148,9 @@ export default class ComfireOrder extends wepy.page {
     goodsId: "",
     //卖家留言
     sellerMessage: "",
+    // 买家信息
+    customerName: "",
+    customerPhone:"",
 
     //是否存在默认地址
     is_exit_address: false,
@@ -197,7 +212,7 @@ export default class ComfireOrder extends wepy.page {
     }
 
     // 加载自提点信息
-    
+
     this.estate= wepy.getStorageSync(CURRENT_ESTATE);
     that.$apply();
   }
@@ -237,6 +252,10 @@ export default class ComfireOrder extends wepy.page {
     if (from=="selAdd") {
       this.getAddressInfo(wepy.getStorageSync(ADDRESS_ID))
     }
+    //加载买家信息
+    this.customerName= wepy.getStorageSync("customerName");
+    this.customerPhone= wepy.getStorageSync("customerPhone");
+
   }
   computed = {
 
@@ -248,8 +267,8 @@ export default class ComfireOrder extends wepy.page {
     let params = {}
     if (this.chosenShipping.method_id == 'local_pickup') {
       // TODO
-      params.billing_first_name = '小刘';
-      params.billing_phone = '124444';
+      params.billing_first_name = this.estate.contact;
+      params.billing_phone =  this.estate.phone;
       params.billing_country = 'CN';
       params.billing_state = getStateCode('福建');
       params.billing_city = this.estate.city;
@@ -272,6 +291,9 @@ export default class ComfireOrder extends wepy.page {
         shipping_method: this.chosenShipping.id,
         payment_method: 'wxapay',
         order_comments: this.sellerMessage,
+        // 订单提交
+        customerName:this.customerName,
+        customerPhone:this.customerPhone,
         ...params
         // reduceScore: this.jf_num
       }
@@ -412,7 +434,14 @@ export default class ComfireOrder extends wepy.page {
     },
     bindKeyInput(e) {
       this.sellerMessage = e.detail.value;
-      console.log("====" + e.detail.value);
+    },
+    bindCustomerNameInput(e) {
+      this.customerName = e.detail.value;
+      wepy.setStorageSync("customerName",this.customerName);
+    },
+    bindCustomerPhoneInput(e) {
+      this.customerPhone = e.detail.value;
+      wepy.setStorageSync("customerPhone",this.customerPhone);
     },
     async goPay(e) {
       var fId = e.detail.formId;
@@ -427,7 +456,7 @@ export default class ComfireOrder extends wepy.page {
     },
     async setAddress() {
       try {
-        await wepy.authorize({scope: "scope.address"}); 
+        await wepy.authorize({scope: "scope.address"});
         let address = await wepy.chooseAddress();
         this.address = address;
         this.is_exit_address = true;
@@ -508,7 +537,7 @@ export default class ComfireOrder extends wepy.page {
       console.log("shipping", e, this.chosenShipping)
       this.$apply()
     }
-    
+
   }
   events = {
 
