@@ -30,3 +30,7 @@ export const ME = 'me';
 export const ESTATES = "estates";
 
 export const CURRENT_ESTATE = 'currentEstate';
+
+export const CUSTOMER = 'customer';
+
+

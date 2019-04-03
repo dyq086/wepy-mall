@@ -4,7 +4,12 @@
     <view class="shop_item">
       <navigator class="list" wx:for="{{list}}" wx:key="item" url="/pages/goods_detail?id={{item.id}}&purchasetype={{purchasetype}}&special={{special}}">
         <view class="image_box">
-          <image src="{{item.images[0].shop_thumbnail}}"></image>
+          <image src="{{item.images[0].shop_thumbnail}}">
+          </image>
+            <view class="img-textbox" wx:if="{{item.stock_quantity == 0}}" >
+                <p class='img-text' style='padding-top: 25%;font-size: 25px;'>抢光啦!</p>
+                <p class='img-text' style='padding-bottom: 25%;font-size: 15px;'>补货ing...</p>
+            </view>
         </view>
         <view class="goods">
           <view class="product_name" wx:if="{{showTitle}}">{{item.name}}</view>
@@ -67,10 +72,29 @@ export default class ShopGridList extends wepy.component {
   width: 355rpx;
   margin-top: 15rpx;
   .image_box {
+    position:relative;
     image {
       width: 100%;
       height: 345rpx;
     }
+      .img-textbox {
+        display: flex;
+        flex-direction:column;
+        position: absolute;
+        top: 0rpx;
+        left: 5rpx;
+        width: 345rpx;
+        height: 345rpx;
+        opacity: 0.5;
+        border-radius: 50%;
+        background-color: rgba(0,0,0,0.55) !important;
+        // box-shadow: inset 0px 0px 10px 4px rgba(255,255,255,.75);
+        .img-text {
+            color: #fff;
+            font-weight: 400;
+            margin: auto;
+            }
+        }
   }
   .product_name {
     color: #1a1a1a;
