@@ -12,7 +12,7 @@
           <view class="arrow_down {{arrowType=='asc' ? 'arrow_down_red' : 'arrow_down_gray'}} "></view>
         </view>
       </view>
-      <view class="nav" @tap="filterSearch">筛选<i class="iconfont icon-filter"></i></view>
+      <!-- <view class="nav" @tap="filterSearch">筛选<i class="iconfont icon-filter"></i></view> -->
     </view>
     <!--筛选测栏-->
     <filterSlider></filterSlider>

@@ -65,7 +65,8 @@
       keywordhisList: [],
       cateCode: "",
       show: true,
-      sort: -1,
+      orderby: null,
+      order: 'desc',
       title: "",
       skuval: ""
     }
@@ -103,19 +104,32 @@
     computed = {}
     async doSearchGoods(keyword, currentPage, size) {
       let that = this;
-      const json = await api.queryProducts({
-        query: {
+      let query = {
           page: currentPage || 1,
           size: size || 10,
           search: this.keyword,
           category: that.cateCode || "",
-          sort: this.sort,
+          order: this.order,
         }
+      // console.log('orderby', this.orderby)
+      switch (this.orderby) {
+        case 'total_sales':
+          query.orderby = 'meta_value_num';
+          query.meta_key = this.orderby
+          break;
+        case '_price':
+          query.orderby = 'meta_value_num';
+          query.meta_key = this.orderby
+          break;
+    
+      }
+      const json = await api.queryProducts({
+        query
       });
       if (json.statusCode == 200) {
         that.list = [...that.list, ...json.data];
         that.page_total = json.header['X-WP-Total'];
-        if (that.page_total == 0) {
+        if (that.page_total == 0 && that.list.length == 0) {
           //暂无数据
           that.is_empty = true;
         }
@@ -164,16 +178,16 @@
         //tip.success("状态:" + obj);
         var name = obj.name;
         var type = obj.type;
-        if (name == "zhonghe") {
-          this.sort = -1;
+        // console.log('obj', obj);
+        if (name == "zonghe") {
+          this.orderby = '';
+          this.order = 'desc';
         } else if (name == "sale") {
-          this.sort = 3;
+          this.orderby = 'total_sales';
+          this.order = 'desc'
         } else if (name == "price") {
-          if (type == "desc") {
-            this.sort = 2;
-          } else if (type == "asc") {
-            this.sort = 1;
-          }
+          this.orderby = '_price';
+          this.order = type
         } else if (name == "sku") {
           this.skuval = type;
         }

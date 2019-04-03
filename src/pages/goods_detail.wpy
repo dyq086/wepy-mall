@@ -119,7 +119,7 @@
       <view class="model_content">
         <view class="head_box">
           <view class="img_wrap">
-            <image class="goods_img" src="{{detail.images[0].src}}" />
+            <image class="goods_img" src="{{detail.images[0].shop_thumbnail}}" />
           </view>
           <view class="product_wrap">
             <view class="product_name">{{detail.name}}</view>
