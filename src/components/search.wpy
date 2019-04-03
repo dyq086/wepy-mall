@@ -13,10 +13,12 @@
 </template>
 <script>
 import wepy from 'wepy';
+import {SEARCH_LIST} from '@/utils/constant';
 export default class Search extends wepy.component {
   data = {
     search_input_value: '',
-    show : 1
+    show : 1,
+    search_list :[]
   }
 
   events = {
@@ -34,6 +36,8 @@ export default class Search extends wepy.component {
       })
     },
     search() {
+      this.search_list.push({keyword : this.search_input_value});
+      wepy.setStorageSync(SEARCH_LIST,this.search_list);
       this.$emit('searchValue', this.search_input_value);
     },
     delText() {
@@ -47,7 +51,10 @@ export default class Search extends wepy.component {
   }
 
   onLoad() {
-
+    this.search_list = wepy.getStorageSync(SEARCH_LIST);
+    if(!this.search_list){
+      this.search_list = [];
+    }
   }
 }
 

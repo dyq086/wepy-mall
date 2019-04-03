@@ -14,7 +14,7 @@
     <view class="history {{show?'':'hidden'}}" wx:else>
       <view class="doc">历史记录</view>
       <view class="lable">
-        <view wx:for="{{keywordhisList}}" wx:key="item" @tap.stop="selHisKeyWord" data-id="{{item.id}}">
+        <view wx:for="{{keywordhisList}}" wx:key="item" @tap.stop="selHisKeyWord" data-id="{{index}}">
           <view class="child {{item.sel=='1' ?'active':''}}">{{item.keyword}}</view>
         </view>
       </view>
@@ -31,7 +31,8 @@
   import tip from '@/utils/tip'
   import {
     SYSTEM_INFO,
-    USER_SPECICAL_INFO
+    USER_SPECICAL_INFO,
+    SEARCH_LIST
   } from '@/utils/constant';
   import Searchs from '@/components/search'
   import FilterBar from "../components/filter_bar"
@@ -71,10 +72,12 @@
       skuval: ""
     }
     async getKeyWordHisList() {
-      const json = await api.searchKeywordList()
-      if (json.statusCode == 200) {
-        this.keywordhisList = json.data.list;
-      }
+      // const json = await api.searchKeywordList()
+      // if (json.statusCode == 200) {
+      //   this.keywordhisList = json.data.list;
+      // }
+      this.keywordhisList = wepy.getStorageSync(SEARCH_LIST);
+      console.log(this.keywordhisList);
       this.$apply();
     }
     setTitle(title) {
@@ -96,9 +99,9 @@
         this.$invoke('search', 'show', "1");
         this.show = true;
         // TODO:函数内部改为从storage中读取
-        /*
+
         this.getKeyWordHisList();
-        */
+
       }
     }
     computed = {}
@@ -121,7 +124,7 @@
           query.orderby = 'meta_value_num';
           query.meta_key = this.orderby
           break;
-    
+
       }
       const json = await api.queryProducts({
         query
@@ -149,18 +152,20 @@
       }
     }
     async clearUserKeywords() {
-      let userSpecialInfo = wepy.getStorageSync(USER_SPECICAL_INFO) || {};
-      let openId = userSpecialInfo.openid;
-      const json = await api.clearSearchKeyword({
-        query: {
-          openId: openId
-        }
-      });
-      if (json.data.code == 0) {
-        this.keywordhisList = [];
-      } else {
-        tip.error(json.data.msg);
-      }
+      // let userSpecialInfo = wepy.getStorageSync(USER_SPECICAL_INFO) || {};
+      // let openId = userSpecialInfo.openid;
+      // const json = await api.clearSearchKeyword({
+      //   query: {
+      //     openId: openId
+      //   }
+      // });
+      // if (json.data.code == 0) {
+      //   this.keywordhisList = [];
+      // } else {
+      //   tip.error(json.data.msg);
+      // }
+      this.keywordhisList = [];
+      wepy.setStorageSync(SEARCH_LIST,this.keywordhisList);
       this.$apply();
     }
     methods = {
@@ -204,7 +209,7 @@
         var hisKeyword = "";
         for (var i = 0; i < this.keywordhisList.length; i++) {
           this.keywordhisList[i].sel = 0;
-          if (id == this.keywordhisList[i].id) {
+          if (id == i) {
             hisKeyword = this.keywordhisList[i].keyword;
             this.keywordhisList[i].sel = 1;
           }
