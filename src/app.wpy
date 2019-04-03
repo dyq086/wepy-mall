@@ -45,7 +45,8 @@ export default class extends wepy.app {
       'pages/filter',
       'pages/logistics',
       'pages/comment',
-      'pages/comment_add'
+      'pages/comment_add',
+      'pages/estate',
     ],
     window: {
       backgroundTextStyle: 'dark',
@@ -89,7 +90,9 @@ export default class extends wepy.app {
         'van-radio': 'components/van/radio/index',
         'van-radio-group': 'components/van/radio-group/index',
         'van-icon': 'components/van/icon/index',
-
+        "van-row": "components/van/row/index",
+        "van-col": "components/van/col/index",
+        "van-tree-select": "components/van/tree-select/index"
     }
   }
 
@@ -127,7 +130,7 @@ export default class extends wepy.app {
       subCollection.map((item3, key) => subCollection[key].city = item.name)
       json.data[key].items = subCollection;
     })
-    
+
     console.log("cities", json.data);
     // wepy.setStorageSync(ESTATES, json.data);
     this.globalData.estates = json.data;

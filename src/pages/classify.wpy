@@ -7,15 +7,15 @@
       </navigator>
     </view>
   </view>
-  <view class="classify" style="height:{{windowHeight-50}}px">
+  <view class="classify" style="height:{{windowHeight-50}}px;">
     <scroll-view class="classify_catetory" scroll-y scroll-with-animation="true" style="height:{{windowHeight-50}}px">
       <view class="name {{item.active? 'active':''}}" wx:for="{{rootcateList}}" wx:key="item" @tap="changeCate" data-code="{{item.id}}">
         {{item.name}}
       </view>
     </scroll-view>
-    <scroll-view class="classify_detail" scroll-y scroll-with-animation="true" style="height:{{windowHeight-50}}px">
+    <scroll-view class="classify_detail" scroll-y scroll-with-animation="true" style="height:{{windowHeight-50}}px" lower-threshold="100" @scrolltolower="loadMore" >
         <view class="children">
-          <productCardList :list.sync="childList"></productCardList>
+          <productCardList :list.sync="childList" ></productCardList>
           <!--加载更多时动画-->
           <bottomLoadMore :show.sync="showLoading" message="正在加载"></bottomLoadMore>
           <!--暂无数据显示-->
@@ -48,7 +48,7 @@ export default class Classify extends wepy.page {
   components = {
       bottomLoadMore: BottomLoadMore,
       placeholder: Placeholder,
-      productCardList: ProductCardList,     
+      productCardList: ProductCardList,
   }
 
   data = {
@@ -79,6 +79,7 @@ export default class Classify extends wepy.page {
     if (json.data.length > 0) {
       this.childList = json.data;
       this.pageTotal = json.header['X-WP-Total'];
+      this.isEmpty= false;
     } else {
       this.childList = [];
       this.isEmpty= true;
@@ -107,7 +108,6 @@ export default class Classify extends wepy.page {
             }
           }
         }
-
         this.getChildCate(selRottCateCode);
       }
     } else {
@@ -120,6 +120,7 @@ export default class Classify extends wepy.page {
     let that = this;
     let systemInfo = wx.getStorageSync(SYSTEM_INFO);
     this.windowHeight = systemInfo.windowHeight;
+
     this.$apply();
 
   }
@@ -140,7 +141,7 @@ export default class Classify extends wepy.page {
       for (var i = 0; i < this.rootcateList.length; i++) {
         var rootCate = this.rootcateList[i];
         rootCate.active = false;
-        if (rootCate.code == code) {
+        if (rootCate.id == code) {
           rootCate.active = true;
         }
       }
@@ -161,8 +162,25 @@ export default class Classify extends wepy.page {
         }
       }
     },
-    getTag (item) {
-        return '促销';
+    //加载更多
+    loadMore() {
+      let that = this;
+      if (that.isEmpty)
+          return;
+      that.showLoading = true;
+      console.log(that.pageTotal + "===" + that.currentPage);
+      if ((that.pageTotal) > that.currentPage) {
+        //防止重复加载
+        if (that.preventRepeatReuqest) {
+          return true;
+        }
+        that.preventRepeatReuqest = true;
+        that.currentPage++;
+        that.doSearchGoods(that.currentPage);
+        that.preventRepeatReuqest = false;
+      } else {
+        that.showLoading = false;
+      }
     }
   }
     async doSearchGoods(currentPage, size = 10) {
@@ -177,6 +195,7 @@ export default class Classify extends wepy.page {
       if (json.data.length != 0) {
         that.childList = [...that.childList, ...json.data];
         that.pageTotal = json.header['X-WP-Total'];
+        that.isEmpty = false;
       } else {
         //暂无数据
         that.isEmpty= true;
@@ -185,23 +204,8 @@ export default class Classify extends wepy.page {
       that.showLoading = false;
       that.$apply();
     }
-    //加载更多
     onReachBottom() {
-      let that = this;
-      that.showLoading = true;
-      console.log(that.pageTotal + "===" + that.currentPage);
-      // //判断总页数是否大于翻页数
-      if ((that.pageTotal) > that.currentPage) {
-        //防止重复加载
-        if (that.preventRepeatReuqest) {
-          return true;
-        }
-        that.currentPage++;
-        that.doSearchGoods(that.currentPage);
-        that.preventRepeatReuqest = false;
-      } else {
-        that.showLoading = false;
-      }
+     // this.loadMore()
     }
 }
 
@@ -215,7 +219,7 @@ export default class Classify extends wepy.page {
   display: flex;
   position: relative;
   .classify_catetory {
-    width: 200rpx;
+    width: 140rpx;
     position: relative;
     z-index: 1;
     .name {
@@ -235,6 +239,7 @@ export default class Classify extends wepy.page {
     }
   }
   .classify_detail {
+    width: 600rpx;
     position: relative;
     z-index: 999;
     // margin-left: -15rpx;
@@ -246,7 +251,6 @@ export default class Classify extends wepy.page {
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
-      width: 170rpx;
     }
     .children_item {
       height: 200rpx;

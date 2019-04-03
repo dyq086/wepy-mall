@@ -23,8 +23,14 @@ export const SEL_CLASS_CODE = "selClassCode";
 
 export const TOKEN = "token";
 
+export const TOKEN_EXPIRED = "token_expired";
+
 export const ME = 'me';
 
 export const ESTATES = "estates";
 
 export const CURRENT_ESTATE = 'currentEstate';
+
+export const CUSTOMER = 'customer';
+
+

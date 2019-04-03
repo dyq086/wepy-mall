@@ -119,7 +119,7 @@
       <view class="model_content">
         <view class="head_box">
           <view class="img_wrap">
-            <image class="goods_img" src="{{detail.images[0].src}}" />
+            <image class="goods_img" src="{{detail.images[0].shop_thumbnail}}" />
           </view>
           <view class="product_wrap">
             <view class="product_name">{{detail.name}}</view>
@@ -145,7 +145,8 @@
         </scroll-view>
         <view class="colse_model" @tap="closeModel"><i class="iconfont icon-close"></i></view>
       </view>
-      <view class="comfire_btn" @tap.stop="confirmTake">确定</view>
+      <view class="empty_btn" wx:if="{{detail.stock_quantity == 0}}" >售罄</view>
+      <view class="comfire_btn" wx:else @tap.stop="confirmTake">确定</view>
     </view>
   </view>
 </template>
@@ -288,8 +289,8 @@ export default class goodsDetail extends wepy.page {
     if (json.statusCode == 200) {
       let data = json.data;
       that.detail = data;
-      that.detail.short_description = that.detail.short_description.replace(/<[^>]*>|/g,'');
-      WxParse.wxParse('detailInfo', 'html', that.detail.description, this);
+      that.detail.short_description = that.detail.short_description_html.replace(/<[^>]*>|/g,'');
+      WxParse.wxParse('detailInfo', 'html', that.detail.description_html, this);
       time.endTime = that.detail.date_on_sale_to;
       time.startTime = that.detail.date_on_sale_from;
       if (json.data.validDate == "0") {
@@ -355,18 +356,14 @@ export default class goodsDetail extends wepy.page {
   //立即购买
   async doTakeOrder() {
     let that = this;
-    let userSpecialInfo = wepy.getStorageSync(USER_SPECICAL_INFO) || {};
-    let openId = userSpecialInfo.openid;
     const json = await api.addCart({
       query: {
-        openId: openId,
-        goodsId: that.goodsId,
-        goodsSkuId: this.detail.goodsSkuValIds,
-        purchaseType: this.purchasetype,
-        num: this.orderNum
+        product_id: that.goodsId,
+        quantity: this.orderNum,
+        checked: true
       }
     });
-    if (json.data.code == 0) {
+    if (json.statusCode == 200) {
       this.winHeight = "100%";
       this.animation.height(0).step();
       this.setData({
@@ -380,8 +377,8 @@ export default class goodsDetail extends wepy.page {
         url: "/pages/comfire_order?goodsId=" + that.goodsId + "&purchasetype=" + that.purchasetype
       })
     } else {
-      if (json.data.msg) {
-        tip.error(json.data.msg)
+      if (json.data.message) {
+        tip.error(json.data.message)
       } else {
         tip.error('无法立刻购买')
       }
@@ -975,6 +972,18 @@ export default class goodsDetail extends wepy.page {
   position: absolute;
   bottom: 0;
   z-index: 10003;
+}
+.empty_btn {
+  height: 100rpx;
+  line-height: 100rpx;
+  width: 100%;
+  background: #808080;
+  text-align: center;
+  color: #fff;
+  position: absolute;
+  bottom: 0;
+  z-index: 10003;
+  opacity: 0.6;
 }
 
 .button-more-cmment {

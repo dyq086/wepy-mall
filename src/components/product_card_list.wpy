@@ -1,47 +1,61 @@
 <template>
-  <navigator wx:for="{{list}}" wx:for-item="item" wx:key="index" url="/pages/goods_detail?id={{item.id}}">
-
-<!--
-  <van-card price="{{ item.price }}" origin-price="{{'￥' + item.regular_price != item.price ? item.regular_price :  null}}" title="{{item.name}}" thumb="{{item.images[0].src}}" thumb-link="/pages/goods_detail?id={{item.id}}" custom-class="item" tag="{{tags[index]}}" num="{{'库存:' + item.stock_quantity}}"  desc="{{ '测试描述信息' }}" >
+  <view wx:for="{{list}}" wx:for-item="item" wx:key="index">
+  <!--
+  <van-card price="{{item.price + '/ 件'}}" origin-price="{{item.regular_price != item.price ? item.regular_price :  null}}" title="{{item.name}}" thumb="{{item.images[0].shop_thumbnail}}" thumb-link="/pages/goods_detail?id={{item.id}}" custom-class="item" tag="{{tags[index]}}" num="{{'库存:' + item.stock_quantity}}" desc="{{descs[index] }}" >
       <view slot="footer" style="border-top:1rpx solid #ededed;margin-top:8rpx"></view>
     </van-card>
--->
+  -->
+   <!--商品内容-->
+
+  <van-row gutter="20">
     <view class="item_container">
-      <view class="item_image_container">
-       <image class="item-img" src="{{item.images[0].src}}"></image>
-       </view>
-      <view class="item_detail_container">
+      <van-col span="8" class="item_image_container">
+        <navigator url="/pages/goods_detail?id={{item.id}}">
+          <!-- 商品图片 -->
+           <image class="item-img" src="{{item.images[0].shop_thumbnail}}">
+           <!-- 商品标签 -->
+            <text class="item_tag" style ="position:absolute;" wx:if="{{tags[index] != ''}}" >{{tags[index]}}</text>
+            <view class="img-textbox" wx:if="{{item.stock_quantity == 0}}" >
+                <p class='img-text'style='padding-top: 25%;font-size: 12px;'>抢光啦!</p>
+                <p class='img-text' style='padding-bottom: 25%;font-size: 8px;'>补货ing...</p>
+            </view>
+           </image>
+        </navigator>
+      </van-col>
+      <van-col span="16">
+        <!-- 商品详情 -->
+        <view class="item_detail_container">
+          <!-- 名称 -->
          <text class="item_title">{{item.name}}</text>
-         <text class="item_desc">{{ '测试描述信息' }}</text>
-         <text class="item_rule">{{ '商品规格' }}</text>
-          <view class="item_price_container">
-             <text class="item_price">{{ '￥' +item.price }}</text>
-             <text class="item_origin_price">{{  '￥' +  ('11' +item.regular_price != item.price ? item.regular_price :  null) }}</text>
-              <view class="item_number_container">
-                <image class='btnImg' src='../images/minus.png'></image>
-                <text class="item_num">{{ item.num }} </text>
-                <image class='btnImgP' src='../images/plus.png'></image>
-              </view>
-          </view>
-       </view>
-      <view class="item_image_container">
-       </view>
-    </view>
-  </navigator>
-  <view class="jiesuan-box" >
-    <view class="left-price">
-      <view class="cart_part">
-        <image class='cart_icon' src='../images/icon_shop_cart.png'  bindtap="cart" ></image>
-        <text class="select_num">已选（{{ cart.select_num }}） </text>
+         <!-- 描述 -->
+         <text class="item_desc">{{ descs[index] }}</text>
+         <!-- 库存 -->
+         <view><text class="item_rule">库存:{{ item.stock_quantity }}</text></view>
+         <van-row>
+           <view class="item_price_container">
+               <van-col span="4">
+                  <!-- 商品价格 -->
+                 <text class="item_price">{{ '￥' +item.price }}</text>
+                 <!-- 原始价格 -->
+                 <text class="item_origin_price" wx:if="{{item.regular_price && item.regular_price != item.price}}">{{  '￥' +  item.regular_price }}</text>
+               </van-col>
+               <!-- 购买按钮 -->
+                <van-col offset="14" span="4">
+                  <view class="cannot-buy-btn" wx:if="{{item.stock_quantity == 0}}" >售罄</view>
+                  <view class="to-buy-btn " wx:else @tap="buy({{item.id}})">立即抢购</view>
+                </van-col>
+            </view>
+          </van-row>
+        </view>
+       </van-col>
       </view>
-      <view class="total" >¥ {{totalPrice}}</view>
-    </view>
-    <view class="to-pay-btn "  bindtap="pay">去结算</view>
+    </van-row>
   </view>
 </template>
-
 <script>
 import wepy from 'wepy';
+import api from '@/api/api';
+import tip from '@/utils/tip';
 
 export default class productCardList extends wepy.component {
   props = {
@@ -52,14 +66,14 @@ export default class productCardList extends wepy.component {
   addExtra() {
   }
   onLoad() {
-      console.log('list', this.list);
+      // console.log('list', this.list);
   }
   computed = {
       tags () {
         let tags = [];
         this.list.map((item, key) => {
             if (!item.tag) {
-                tags[key] = item.regular_price != item.price ? '促销' : '';
+                tags[key] = item.regular_price && item.regular_price != item.price ? '促销' : '';
                 if (item.stock_quantity == 0) {
                     tags[key] += '缺货';
                 }
@@ -69,140 +83,146 @@ export default class productCardList extends wepy.component {
             }
         })
         return tags;
+      },
+      descs() {
+          let descs = this.list.map(item => item.short_description_html ? item.short_description_html.replace(/<[^>]*>|/g,'') : '')
+          return descs
       }
   }
   methods = {
+      async buy(productId) {
+          let that = this;
+          const json = await api.addCart({
+              query: {
+                  product_id: productId,
+                  quantity: 1,
+                  checked: true
+              }
+          });
+          if (json.statusCode == 200) {
+              tip.success("成功加入购物车");
+              wepy.setTabBarBadge({
+                  index:2,
+                  text: "" + json.data.cart_contents_count
+              })
+          } else {
+              if (json.data.message) {
+                  tip.error(json.data.message)
+              } else {
+                  tip.error('无法加入购物车')
+              }
+          }
+      }
   }
 }
 </script>
 <style lang="less">
 
 
+
 .item_container {
-    display: flex;
-    flex-direction: row;
-    height:200rpx;
-    margin:40rpx;
+    height: 200rpx;
+    padding:20rpx 20rpx 20rpx 20rpx;
     border-bottom: 1px solid #ededed;
     .item_image_container {
-
-    image {
-    width: 150rpx !important;
-    height: 150rpx !important;
+    .item-img {
+     position:relative;
+    width: 190rpx !important;
+    height: 190rpx !important;
+        .item_tag{
+          position:absolute;
+          top:10rpx;
+          left: 10rpx;
+          font-size: 25rpx;
+          background-color:#00CC66;
+          color: #fff;
+          padding:5rpx;
+          border-radius: 10rpx;
+          }
+        .img-textbox {
+        display: flex;
+        flex-direction:column;
+        position: absolute;
+        top: 20rpx;
+        left: 20rpx;
+        width: 80%;
+        height: 80%;
+        opacity: 0.5;
+        border-radius: 50%;
+        background-color: rgba(0,0,0,0.75) !important;
+        // box-shadow: inset 0px 0px 10px 4px rgba(255,255,255,.75);
+        .img-text {
+            color: #fff;
+            font-weight: 400;
+            margin: auto;
+            }
+        }
     }
-
   }
   .item_detail_container {
-    padding-left:40rpx;
-
-    display: flex;
-    flex-direction: column;
+      display: flex;
+      flex-direction:column;
       .item_title{
+      height: 50rpx;
       font-size: 30rpx;
       font-weight: 700;
       color:#333;
       padding-bottom:5rpx;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
       }
-
       .item_desc{
+      height: 30rpx;
       font-size:70%;
       color:#707070;
-      padding-bottom:5rpx;
       }
       .item_rule{
-
+      height: 30rpx;
       font-size:70%;
       color:#707070;
       background-color:#f1f1f1;
-
-
       }
       .item_price_container{
-        width:500rpx;
-        margin-top:20rpx;
-
+      margin-top: 20rpx;
+      padding-right:10rpx;
+      height: 50rpx;
         .item_price {
           color:#FF9900;
         }
         .item_origin_price {
-          padding-left:10rpx;
           font-size:70%;
           color:#707070;
           text-decoration:line-through;
         }
-
-        .item_number_container {
-          float:right;
-
-          .btnImg {
-            width:40rpx;
-            height:40rpx;
-            color:#00CC66  ;
-        }
-         .btnImgP {
-            width:41rpx;
-            height:41rpx;
-            color:#00CC66;
-         }
-
+        .cannot-buy-btn {
+          width: 110rpx;
+        text-align: center;
+        line-height: 55rpx;
+        font-weight: 300;
+        background-color: #808080;
+        font-size: 25rpx;
+        color: #ffffff;
+        border-radius: 10rpx;
+        opacity: 0.6;
 
         }
+
+        .to-buy-btn {
+        width: 110rpx;
+        text-align: center;
+        line-height: 55rpx;
+        font-weight: 300;
+        background-color: #FF9900;
+        font-size: 25rpx;
+        color: #ffffff;
+        border-radius: 10rpx;
+        }
+
+
       }
-
   }
 
 }
-
-
-  .jiesuan-box {
-    display: flex;
-    justify-content: space-between;
-    width: 100%;
-    height: 100rpx;
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    border-bottom: 1px solid #eee;
-    border-top: 1px solid #eee;
-    background-color: #333333;
-    z-index: 9999;
-
-    .to-pay-btn {
-      width: 240rpx;
-      text-align: center;
-      line-height: 100rpx;
-      font-weight: 600;
-      background-color: #FF9900;
-      font-size: 32rpx;
-      color: #ffffff;
-    }
-    .left-price {
-        display: flex;
-        width: 510rpx;
-        justify-content: space-between;
-        padding: 0 30rpx 0 20rpx;
-        font-size: 28rpx;
-        box-sizing: border-box;
-        align-items: center;
-        .cart_part {
-          display: flex;
-          justify-content:  flex-start;
-          .cart_icon {
-              width:60rpx;
-              height:60rpx;
-              color:#00CC66;
-            }
-          .select_num {
-              padding-top:10rpx ;
-              padding-left:10rpx;
-              color: #ffffff;
-            }
-        }
-
-    }
-    .total {
-        color: #ffffff;
-      }
-  }
 
 </style>

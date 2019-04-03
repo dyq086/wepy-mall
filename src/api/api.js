@@ -31,7 +31,7 @@ const queryProducts = ({query}) => request(`${host}/wp-json/w2w/v1/products`, {q
 
 //查询商品详情信息
 // const goodsDetail = (id, params) => request(`${host}/wp-json/wc/v3/products/${id}`, params);
-const getProducts = (id, params) => request(`${host}/wp-json/wc/v3/products/${id}`, params);
+const getProducts = (id, params) => request(`${host}/wp-json/w2w/v1/products/${id}`, params);
 
 //商品加入购物车
 const addCart = (params) => request(`${host}/wp-json/w2w/v1/cart/add`, {...params, method: 'POST'});
@@ -169,7 +169,7 @@ const refundApply = (params) => wxRequest(params, apiMall + '/api/mall/refund/sa
 
 //商品分类--begin
 //一级分类
-const rootCtegoryList = (params) => request(`${host}/wp-json/wc/v3/products/categories?parent=0&per_page=100`, params);
+const rootCtegoryList = (params) => request(`${host}/wp-json/w2w/v1/products/categories?parent=0&per_page=100`, params);
 //二级三级分类
 const childGoodsCatetoryList = (params) => wxRequest(params, apiMall + '/api/mall/childGoodsCatetoryList');
 //商品分类--end
@@ -178,11 +178,11 @@ const childGoodsCatetoryList = (params) => wxRequest(params, apiMall + '/api/mal
 const getBanners = (params) => request(`${host}/wp-json/w2w/v1/store/banner`, params);
 
 //获取城市
-const queryCities = (params) => request(`${host}/wp-json/wp/v2/cities?per_page=100`, params);
+const queryCities = (params) => request(`${host}/wp-json/wp/v2/cities?per_page=100`, {...params, noauth: true});
 
 
 //获取小区
-const queryEstates = ({query = {}}) => request(`${host}/wp-json/wp/v2/estates`, {query: {...query, status: 'publish', per_page: 100}});
+const queryEstates = ({query = {}}) => request(`${host}/wp-json/wp/v2/estates`, {query: {...query, status: 'publish', per_page: 100}, noauth: true});
 
 export default {
   hostGoodsList,
