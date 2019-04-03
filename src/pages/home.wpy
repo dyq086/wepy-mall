@@ -2,7 +2,7 @@
   <view class="container">
     <navigator class="loc" url="/pages/estate">
       <van-icon name="location-o"></van-icon>
-      <text style="font-size:32rpx;">{{currentEstate.title && currentEstate.title.rendered}} &gt; </text>
+      <text style="font-size:36rpx;">{{currentEstate.title && currentEstate.title.rendered}} &gt; </text>
     </navigator>
     <swiper class="swiper" indicator-active-color="{{indicatorActiveColor}}" indicator-dots="{{indicatorDots}}" autoplay="{{autoplay}}" interval="{{interval}}" duration="{{duration}}" circular="true">
       <block wx:for="{{adList}}" wx:key="key">
@@ -200,7 +200,7 @@ export default class Home extends wepy.page {
 </script>
 <style lang="less">
 .loc {
-  font-size: 28rpx;
+  font-size: 32rpx;
   padding: 16rpx;
   vertical-align:middle;
 }

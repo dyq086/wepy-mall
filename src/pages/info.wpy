@@ -82,7 +82,9 @@
         <view class="arrow">&gt;</view>
       </navigator>
       <navigator class="item">
-        <view class="item_content">
+        <view class="item_content contact_container">
+          <contact-button class="contact">
+          </contact-button>
           <view class="text">联系客服</view>
         </view>
         <view class="arrow">&gt;</view>
@@ -296,6 +298,15 @@ export default class Index extends wepy.page {
       margin-left: 20rpx;
       color: #1a1a1a;
     }
+  }
+  .contact_container {
+      position: relative;
+      .contact {
+         position: absolute;
+         left:0;
+         width: 750rpx;
+         height: 42rpx;
+      }
   }
   .item_img {
     width: 42rpx;
