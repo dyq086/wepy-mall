@@ -255,7 +255,10 @@ console.log("load");
       this.getAddressInfo(wepy.getStorageSync(ADDRESS_ID))
     }
     // 加载买家信息
-    this.customer= wepy.getStorageSync(CUSTOMER);
+    var storgeCustomer = wx.getStorageSync(CUSTOMER);
+    if (storgeCustomer) {
+      this.customer = storgeCustomer;
+    }
 
   }
   computed = {
@@ -274,6 +277,8 @@ console.log("load");
       params.billing_state = getStateCode('福建');
       params.billing_city = this.estate.city;
       params.billing_address_1 = this.estate.address;
+      params.customer_name = this.customer.name;
+      params.customer_phone = this.customer.phone;
     } else {
       let address = this.address;
       params.billing_first_name = address.userName;
@@ -292,9 +297,6 @@ console.log("load");
         shipping_method: this.chosenShipping.id,
         payment_method: 'wxapay',
         order_comments: this.sellerMessage,
-        // 订单提交
-        // customerName:this.customer.name,
-        // customerPhone:this.customer.phone,
         ...params
         // reduceScore: this.jf_num
       }
