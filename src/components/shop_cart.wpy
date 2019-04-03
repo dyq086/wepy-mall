@@ -1,5 +1,5 @@
 <template name="cart-goods-list">
-  <view class="goodsList">
+  <view class="goodsList" style='margin-bottom:100rpx;'>
     <repeat for="{{list}}" key="index" index="index" item="item">
       <view class="list_box">
         <swipeDelete :swipeData="item" @delItem.user="handleDelItem">
