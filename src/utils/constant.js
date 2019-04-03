@@ -31,6 +31,6 @@ export const ESTATES = "estates";
 
 export const CURRENT_ESTATE = 'currentEstate';
 
-export const CUSTOMER_NAME = 'customerName';
+export const CUSTOMER = 'customer';
 
-export const CUSTOMER_PHONE = 'customerPhone';
+

@@ -79,13 +79,13 @@
       <view class="block">
         <view class="left">联系人:</view>
         <view class="right input_box">
-          <input @input="changeCustomerName" placeholder="{{customerName}}" />
+          <input @input="changeCustomerName" placeholder="{{customer.name}}" />
         </view>
       </view>
       <view class="block">
         <view class="left">联系手机:</view>
         <view class="right input_box">
-          <input @input="changeCustomerPhone" placeholder="{{customerPhone}}" />
+          <input @input="changeCustomerPhone" placeholder="{{customer.phone}}" />
         </view>
       </view>
       <view class="block">
@@ -131,8 +131,7 @@ import {
   SYSTEM_INFO,
   USER_SPECICAL_INFO,
   ADDRESS_ID,
-  CUSTOMER_NAME,
-  CUSTOMER_PHONE,
+  CUSTOMER,
   CURRENT_ESTATE,
   ME,
 } from '@/utils/constant';
@@ -151,8 +150,7 @@ export default class ComfireOrder extends wepy.page {
     //卖家留言
     sellerMessage: "",
     // 买家信息
-    customerName: "",
-    customerPhone:"",
+    customer: {},
 
     //是否存在默认地址
     is_exit_address: false,
@@ -255,10 +253,9 @@ console.log("load");
     let from = option.from==undefined?"":option.from;
     if (from=="selAdd") {
       this.getAddressInfo(wepy.getStorageSync(ADDRESS_ID))
-
     }
-    this.customerName= wepy.getStorageSync(CUSTOMER_NAME);
-    this.customerPhone= wepy.getStorageSync(CUSTOMER_PHONE);
+    // 加载买家信息
+    this.customer= wepy.getStorageSync(CUSTOMER);
 
   }
   computed = {
@@ -296,8 +293,8 @@ console.log("load");
         payment_method: 'wxapay',
         order_comments: this.sellerMessage,
         // 订单提交
-        customerName:this.customerName,
-        customerPhone:this.customerPhone,
+        // customerName:this.customer.name,
+        // customerPhone:this.customer.phone,
         ...params
         // reduceScore: this.jf_num
       }
@@ -440,12 +437,12 @@ console.log("load");
       this.sellerMessage = e.detail.value;
     },
     changeCustomerName(e) {
-      this.customerName = e.detail.value;
-      wepy.setStorageSync(CUSTOMER_NAME,this.customerName);
+      this.customer.name = e.detail.value;
+      wepy.setStorageSync(CUSTOMER,this.customer);
     },
     changeCustomerPhone(e) {
-      this.customerPhone = e.detail.value;
-      wepy.setStorageSync(CUSTOMER_PHONE,this.customerPhone);
+      this.customer.phone = e.detail.value;
+      wepy.setStorageSync(CUSTOMER,this.customer);
     },
     async goPay(e) {
       var fId = e.detail.formId;
