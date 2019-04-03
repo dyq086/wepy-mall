@@ -79,13 +79,13 @@
       <view class="block">
         <view class="left">联系人:</view>
         <view class="right input_box">
-          <input bindinput="bindCustomerNameInput" placeholder={{customerName}} />
+          <input @input="changeCustomerName" placeholder="{{customerName}}" />
         </view>
       </view>
       <view class="block">
         <view class="left">联系手机:</view>
         <view class="right input_box">
-          <input bindinput="bindCustomerPhoneInput" placeholder={{customerPhone}} />
+          <input @input="changeCustomerPhone" placeholder="{{customerPhone}}" />
         </view>
       </view>
       <view class="block">
@@ -131,6 +131,8 @@ import {
   SYSTEM_INFO,
   USER_SPECICAL_INFO,
   ADDRESS_ID,
+  CUSTOMER_NAME,
+  CUSTOMER_PHONE,
   CURRENT_ESTATE,
   ME,
 } from '@/utils/constant';
@@ -214,6 +216,8 @@ export default class ComfireOrder extends wepy.page {
     // 加载自提点信息
 
     this.estate= wepy.getStorageSync(CURRENT_ESTATE);
+
+console.log("load");
     that.$apply();
   }
 
@@ -251,10 +255,10 @@ export default class ComfireOrder extends wepy.page {
     let from = option.from==undefined?"":option.from;
     if (from=="selAdd") {
       this.getAddressInfo(wepy.getStorageSync(ADDRESS_ID))
+
     }
-    //加载买家信息
-    this.customerName= wepy.getStorageSync("customerName");
-    this.customerPhone= wepy.getStorageSync("customerPhone");
+    this.customerName= wepy.getStorageSync(CUSTOMER_NAME);
+    this.customerPhone= wepy.getStorageSync(CUSTOMER_PHONE);
 
   }
   computed = {
@@ -435,13 +439,13 @@ export default class ComfireOrder extends wepy.page {
     bindKeyInput(e) {
       this.sellerMessage = e.detail.value;
     },
-    bindCustomerNameInput(e) {
+    changeCustomerName(e) {
       this.customerName = e.detail.value;
-      wepy.setStorageSync("customerName",this.customerName);
+      wepy.setStorageSync(CUSTOMER_NAME,this.customerName);
     },
-    bindCustomerPhoneInput(e) {
+    changeCustomerPhone(e) {
       this.customerPhone = e.detail.value;
-      wepy.setStorageSync("customerPhone",this.customerPhone);
+      wepy.setStorageSync(CUSTOMER_PHONE,this.customerPhone);
     },
     async goPay(e) {
       var fId = e.detail.formId;
