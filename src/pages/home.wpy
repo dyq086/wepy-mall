@@ -1,5 +1,9 @@
 <template>
   <view class="container">
+    <navigator class="loc" url="/pages/estate">
+      <van-icon name="location-o"></van-icon>
+      <text style="font-size:32rpx;">{{currentEstate.title && currentEstate.title.rendered}} &gt; </text>
+    </navigator>
     <swiper class="swiper" indicator-active-color="{{indicatorActiveColor}}" indicator-dots="{{indicatorDots}}" autoplay="{{autoplay}}" interval="{{interval}}" duration="{{duration}}" circular="true">
       <block wx:for="{{adList}}" wx:key="key">
         <swiper-item>
@@ -7,18 +11,18 @@
         </swiper-item>
       </block>
     </swiper>
-    <view class="pos">
-      <view class="search_read_only">
-        <navigator class="search_content" open-type="navigate" url="/pages/search">
-          <i class="iconfont icon-search"></i>
-          <view class="search_input">搜索商品</view>
-        </navigator>
-        <navigator class="message" url="/pages/messages">
-          <i class="iconfont icon-message cfff"></i>
-          <view class="doc cfff">消息</view>
-        </navigator>
-      </view>
-    </view>
+    <!-- <view class="pos"> -->
+    <!--   <view class="search_read_only"> -->
+    <!--     <navigator class="search_content" open-type="navigate" url="/pages/search"> -->
+    <!--       <i class="iconfont icon-search"></i> -->
+    <!--       <view class="search_input">搜索商品</view> -->
+    <!--     </navigator> -->
+    <!--     <navigator class="message" url="/pages/messages"> -->
+    <!--       <i class="iconfont icon-message cfff"></i> -->
+    <!--       <view class="doc cfff">消息</view> -->
+    <!--     </navigator> -->
+    <!--   </view> -->
+    <!-- </view> -->
     <!-- <view class="nav_list"> -->
       <!-- <navigator open-type="navigate" url="/pages/sign_in"> -->
       <!--   <image src="../images/icon_nav_01_new.png" class="nav_icon"></image> -->
@@ -39,7 +43,7 @@
     <!-- </view> -->
     <!--发现好商品模块-->
     <!-- <discover :list.sync="discoverList"></discover> -->
-    <view style="font-size:40rpx;padding:20rpx;">今日精选</view>
+    <view style="font-size:40rpx;padding:20rpx;text-align:center;color:black;weight:600;">最新商品</view>
     <productCardList :list.sync="discoverList"></productCardList>
     <!--加载更多时动画-->
     <bottomLoadMore :show.sync="showLoading" message="正在加载"></bottomLoadMore>
@@ -58,10 +62,13 @@ import Bombscreen from '@/components/bomb_screen'
 import BottomLoadMore from "../components/common/bottomLoadMore"
 import Placeholder from "../components/common/placeholder"
 import ProductCardList from "@/components/product_card_list"
+import {
+  CURRENT_ESTATE,
+} from '@/utils/constant';
 
 export default class Home extends wepy.page {
   config = {
-    navigationBarTitleText: '菜篮先生',
+    navigationBarTitleText: '邻区乐',
   }
   components = {
     discover: Discover,
@@ -90,7 +97,8 @@ export default class Home extends wepy.page {
     //广告列表
     adList: [],
     tps: 0,
-    is_show_alert: false, //true
+    is_show_alert: false, //true,
+    currentEstate: {},
   }
   async getDiscoverList(currentPage, size) {
     let that = this;
@@ -125,6 +133,8 @@ export default class Home extends wepy.page {
     this.discoverList = [];
     that.getDiscoverList();
     this.getAdList();
+
+    // this.currentEstate = wepy.getStorageSync(CURRENT_ESTATE);
   }
   computed = {}
   methods = {
@@ -143,7 +153,7 @@ export default class Home extends wepy.page {
         console.log(res.target)
       }
       return {
-        title: '素洁服装厂',
+        title: '邻区乐',
         path: '/pages/home',
         success: function(res) {
           // 转发成功
@@ -158,9 +168,13 @@ export default class Home extends wepy.page {
     },
     closeAlert() {
      // tip.alert('关闭');
-    }
+    },
   }
-  events = {}
+  events = {
+  }
+  onShow () {
+    this.currentEstate = wepy.getStorageSync(CURRENT_ESTATE);
+  }
   //加载更多
   onReachBottom() {
       /*
@@ -185,6 +199,11 @@ export default class Home extends wepy.page {
 
 </script>
 <style lang="less">
+.loc {
+  font-size: 28rpx;
+  padding: 16rpx;
+  vertical-align:middle;
+}
 .swiper {
   height: 348rpx;
 }

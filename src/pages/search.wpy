@@ -65,19 +65,14 @@
       keywordhisList: [],
       cateCode: "",
       show: true,
-      sort: -1,
+      orderby: null,
+      order: 'desc',
       title: "",
       skuval: ""
     }
     async getKeyWordHisList() {
-      let userSpecialInfo = wepy.getStorageSync(USER_SPECICAL_INFO) || {};
-      let openId = userSpecialInfo.openid;
-      const json = await api.searchKeywordList({
-        query: {
-          openId: openId
-        }
-      });
-      if (json.data.code == 0) {
+      const json = await api.searchKeywordList()
+      if (json.statusCode == 200) {
         this.keywordhisList = json.data.list;
       }
       this.$apply();
@@ -100,43 +95,57 @@
       } else { //搜索进入
         this.$invoke('search', 'show', "1");
         this.show = true;
+        // TODO:函数内部改为从storage中读取
+        /*
         this.getKeyWordHisList();
+        */
       }
     }
     computed = {}
     async doSearchGoods(keyword, currentPage, size) {
       let that = this;
-      const json = await api.queryProducts({
-        query: {
+      let query = {
           page: currentPage || 1,
           size: size || 10,
-          searchKeyWords: this.keyword,
-          category: this.cateCode || "",
-          sort: this.sort,
-          skuval: this.skuval
+          search: this.keyword,
+          category: that.cateCode || "",
+          order: this.order,
         }
+      // console.log('orderby', this.orderby)
+      switch (this.orderby) {
+        case 'total_sales':
+          query.orderby = 'meta_value_num';
+          query.meta_key = this.orderby
+          break;
+        case '_price':
+          query.orderby = 'meta_value_num';
+          query.meta_key = this.orderby
+          break;
+    
+      }
+      const json = await api.queryProducts({
+        query
       });
-      if (json.data.code == 0) {
-        that.list = [...that.list, ...json.data.list];
-        that.page_total = json.data.page_total;
-        if (json.data.page_total == 0) {
+      if (json.statusCode == 200) {
+        that.list = [...that.list, ...json.data];
+        that.page_total = json.header['X-WP-Total'];
+        if (that.page_total == 0 && that.list.length == 0) {
           //暂无数据
           that.is_empty = true;
         }
       } else {
-        tip.error(json.data.msg);
+        tip.error(json.data.message);
       }
       that.showLoading = false;
       that.$apply();
       if (keyword.length > 0) {
-        let userSpecialInfo = wepy.getStorageSync(USER_SPECICAL_INFO) || {};
-        let openId = userSpecialInfo.openid;
+        // TODO:改为写入Storage
+        /*
         const resultJson = await api.addSearchKeyword({
           query: {
-            openId: openId,
             keyword: keyword
           }
-        });
+        });*/
       }
     }
     async clearUserKeywords() {
@@ -169,16 +178,16 @@
         //tip.success("状态:" + obj);
         var name = obj.name;
         var type = obj.type;
-        if (name == "zhonghe") {
-          this.sort = -1;
+        // console.log('obj', obj);
+        if (name == "zonghe") {
+          this.orderby = '';
+          this.order = 'desc';
         } else if (name == "sale") {
-          this.sort = 3;
+          this.orderby = 'total_sales';
+          this.order = 'desc'
         } else if (name == "price") {
-          if (type == "desc") {
-            this.sort = 2;
-          } else if (type == "asc") {
-            this.sort = 1;
-          }
+          this.orderby = '_price';
+          this.order = type
         } else if (name == "sku") {
           this.skuval = type;
         }

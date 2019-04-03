@@ -4,14 +4,14 @@
     <view class="shop_item">
       <navigator class="list" wx:for="{{list}}" wx:key="item" url="/pages/goods_detail?id={{item.id}}&purchasetype={{purchasetype}}&special={{special}}">
         <view class="image_box">
-          <image src="{{item.thumLogo}}"></image>
+          <image src="{{item.images[0].shop_thumbnail}}"></image>
         </view>
         <view class="goods">
           <view class="product_name" wx:if="{{showTitle}}">{{item.name}}</view>
           <view class="product_info">
             <view class="price">￥{{item.price}}</view>
-            <view class="cost_price">￥{{item.marketPrice}}</view>
-            <view class="sale_num">销量{{item.saleCount}}件</view>
+            <view class="cost_price" wx:if="{{item.on_sale}}">￥{{item.regular_price}}</view>
+            <view class="sale_num">销量{{item.total_sales}}件</view>
           </view>
         </view>
       </navigator>
