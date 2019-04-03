@@ -1,0 +1,55 @@
+<template>
+    <view>
+        <van-tree-select
+          items="{{items}}"
+          active-id="{{currentEstate.id}}"
+          main-active-index="{{ mainActiveIndex }}"
+          bind:click-nav="onClickNav"
+          bind:click-item="onClickItem"
+          />
+    </view>
+</template>
+<script>
+import wepy from 'wepy'
+import {
+  CURRENT_ESTATE,
+} from '@/utils/constant';
+
+export default class Estate extends wepy.page {
+  config = {
+    navigationBarTitleText: '选择小区',
+  }
+  data = {
+    mainActiveIndex: 0,
+    items: [],
+    currentEstate: {}
+  }
+  computed = {}
+  onLoad() {
+    // console.log('es', wepy.$instance.globalData)
+    let items = wepy.$instance.globalData.estates.map(item => {
+      let children = item.items.map(item2 => ({text: item2.title.rendered, id: item2.id, disabled: false})) 
+      return {text: item.name, disabled: false, children}
+    })
+    console.log('items', items)
+
+    this.items = items
+    this.currentEstate = wepy.getStorageSync(CURRENT_ESTATE);
+    this.mainActiveIndex = wepy.$instance.globalData.estates.findIndex(item => this.currentEstate.cities[0] == item.id)
+  }
+  methods = {
+    onClickNav({ detail = {} }) {
+      this.mainActiveIndex =  detail.index || 0
+    },    
+    onClickItem({ detail = {} }) {
+      this.currentEstate = wepy.$instance.globalData.estates[this.mainActiveIndex].items.find(item => item.id == detail.id)
+      wepy.setStorageSync(CURRENT_ESTATE, this.currentEstate)
+      // this.$emit('current-estate', this.currentEstate)
+      wepy.navigateBack()
+    }
+  }
+}
+</script>
+<style lang="less">
+
+</style>
