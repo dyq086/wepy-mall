@@ -1,7 +1,7 @@
 {
-  "name": "wxYuHanStore",
+  "name": "wepy-mall",
   "version": "1.0.2",
-  "description": "wxYuHanStore project",
+  "description": "wepy-mall project",
   "main": "dist/app.js",
   "scripts": {
     "dev": "wepy build --watch",
@@ -36,6 +36,7 @@
     "eslint-plugin-html": "^2.0.1",
     "eslint-plugin-promise": "^3.5.0",
     "eslint-plugin-standard": "^2.0.1",
+    "less": "^3.10.3",
     "wepy-compiler-babel": "^1.5.1",
     "wepy-compiler-less": "^1.3.10",
     "wepy-eslint": "^1.5.3"
