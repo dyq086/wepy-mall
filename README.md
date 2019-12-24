@@ -149,7 +149,8 @@
 
 ### 欢迎交流
  微信:dyq088
- <img src="https://github.com/dyq086/wxYuHanStore/blob/master/screenshots/WechatIMG278.jpg" width="624" height="371"/>  -->
+ 
+ <img src="https://github.com/dyq086/wxYuHanStore/blob/master/screenshots/WechatIMG278.png" width="624" height="371"/>
 
 
  <!-- ### 友情赞助
