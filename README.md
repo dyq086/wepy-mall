@@ -1,14 +1,15 @@
 ### 安装（更新） wepy 命令行工具。
-	npm install wepy-cli -g
+	yarn: yarn global add wepy-cli 
+    npm: npm i wepy-cli -g
 
 ### 安装依赖包
-	npm install
+	yarn / npm install
 
 ### 开发实时编译。
-	npm run dev
+	yarn run dev / npm run dev
 
 ### 生产压缩
-	npm run build //上传代码时，请先执行此命令，否则会提示包体积过大
+	yarn run build / npm run build //上传代码时，请先执行此命令，否则会提示包体积过大
 
 
 ### 开发使用说明(重要)
