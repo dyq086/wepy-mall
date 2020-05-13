@@ -149,7 +149,7 @@
 此小程序借助于wepy进行高度的组件封装，仅供学习参考。喜欢就动手点个star吧~^o^~
 
 ### 联系方式
- ### 如需开发合作请添加微信，欢迎成为好伙伴
+ #### 如果你有产品或技术需求可以找我哈，可提供一切前端开发技术服务，如需要的小伙伴请添加微信
  
  <img src="https://github.com/dyq086/wxYuHanStore/blob/master/screenshots/WechatIMG278.png" width="624" height="371"/>
 
