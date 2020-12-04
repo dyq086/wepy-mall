@@ -153,7 +153,7 @@
  
  <img src="https://github.com/dyq086/wxYuHanStore/blob/master/screenshots/WechatIMG278.png" width="624" height="371"/>
 
- ### 寻找有缘合作伙伴，可提供一切前端开发技术服务,做事实在是我个特点；（2020-12-10）
+ ### 寻找有缘合作伙伴，可提供一切前端开发技术服务；（2020-12-10）
  <!-- ### 友情赞助
  如果本项目对你有较大的帮助，可以对我打赏，否则不需要，随便放个二维码，看看有没有对我特别好的小伙伴 ~ 哈哈 
 <img src="https://github.com/dyq086/wxYuHanStore/blob/master/screenshots/WechatIMG276.jpg" width="400" height="400"/>  -->
