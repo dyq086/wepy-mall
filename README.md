@@ -6,10 +6,10 @@
 	yarn / npm install
 
 ### 开发实时编译。
-	yarn run dev / npm run dev
+	yarn  dev / npm run dev
 
 ### 生产压缩
-	yarn run build / npm run build //上传代码时，请先执行此命令，否则会提示包体积过大
+	yarn  build / npm run build //上传代码时，请先执行此命令，否则会提示包体积过大
 
 
 ### 开发使用说明(重要)
@@ -154,7 +154,7 @@
  <img src="https://github.com/dyq086/wxYuHanStore/blob/master/screenshots/WechatIMG278.png" width="624" height="371"/>
 
  ### 寻找有缘合作伙伴，可提供一切前端开发技术服务；（2021-01-10）
- <!-- ### 友情赞助
+ ### 友情赞助
  如果本项目对你有较大的帮助，可以对我打赏，否则不需要，随便放个二维码，看看有没有对我特别好的小伙伴 ~ 哈哈 
-<img src="https://github.com/dyq086/wxYuHanStore/blob/master/screenshots/WechatIMG276.jpg" width="400" height="400"/>  -->
+<img src="https://github.com/dyq086/wxYuHanStore/blob/master/screenshots/WechatIMG276.jpg" width="400" height="400"/> 
 
