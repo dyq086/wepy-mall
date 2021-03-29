@@ -148,7 +148,7 @@
 
 此小程序借助于wepy进行高度的组件封装，仅供学习参考。喜欢就动手点个star吧~^o^~
 
-### 寻找有缘合作伙伴，可提供一切前端开发技术服务；（2021-01-10）
+### 寻找有缘合作伙伴，可提供一切前端开发技术服务；（2021-04-10）
 
  <img src="https://github.com/dyq086/wxYuHanStore/blob/master/screenshots/WechatIMG278.png" width="624" height="371"/>
 
