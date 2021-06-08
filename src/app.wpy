@@ -1,96 +1,105 @@
 <style lang="less">
-@import "./styles/base";
-@import "./styles/icon";
-@import "./styles/style";
-
+  @import "./styles/base";
+  @import "./styles/icon";
+  @import "./styles/style";
 </style>
-<script>
-import wepy from 'wepy';
-import 'wepy-async-function'
-export default class extends wepy.app {
-  config = {
-    pages: [
-      'pages/authorize',
-      'pages/home',
-      'pages/home_detail',
-      'pages/classify',
-      'pages/shop_cart',
-      'pages/info',
-      'pages/search',
-      'pages/test',
-      'pages/sign_in',
-      'pages/exchange_goods',
-      'pages/wholesale',
-      'pages/replenishment_goods',
-      'pages/register',
-      'pages/order',
-      'pages/reorder',
-      'pages/pay_success',
-      'pages/points',
-      'pages/points_more',
-      'pages/points_rule',
-      'pages/collection',
-      'pages/messages',
-      'pages/setting',
-      'pages/goods_detail',
-      'pages/comfire_order',
-      'pages/address',
-      'pages/order_detail',
-      'pages/filter',
-      'pages/logistics',
-      'pages/comment',
-      'pages/comment_add'
-    ],
-    window: {
-      backgroundTextStyle: 'dark',
-      navigationBarBackgroundColor: '#FFFFFF',
-      navigationBarTitleText: 'WeChat',
-      navigationBarTextStyle: 'black',
-      enablePullDownRefresh: false,
-      backgroundColor: '#EFEFEF'
 
-    },
-    "tabBar": {
-      "color": "#999999",
-      "selectedColor": "#ff6a3c",
-      "backgroundColor": "#ffffff",
-      "borderStyle": "black",
-      "list": [{
-        "pagePath": "pages/home",
-        "text": "首页",
-        "iconPath": "images/icon_home.png",
-        "selectedIconPath": "images/icon_home_active.png"
-      }, {
-        "pagePath": "pages/classify",
-        "text": "分类",
-        "iconPath": "images/icon_classify.png",
-        "selectedIconPath": "images/icon_classify_active.png"
-      }, {
-        "pagePath": "pages/shop_cart",
-        "text": "购物车",
-        "iconPath": "images/icon_shop_cart.png",
-        "selectedIconPath": "images/icon_shop_cart_active.png"
-      }, {
-        "pagePath": "pages/info",
-        "text": "我",
-        "iconPath": "images/icon_info.png",
-        "selectedIconPath": "images/icon_info_active.png"
-      }]
+<script>
+  import wepy from 'wepy';
+  import 'wepy-async-function'
+  export default class extends wepy.app {
+    config = {
+      pages: [
+        'pages/authorize',
+        'pages/home',
+        'pages/home_detail',
+        'pages/classify',
+        'pages/shop_cart',
+        'pages/info',
+        'pages/search',
+        'pages/test',
+        'pages/sign_in',
+        'pages/exchange_goods',
+        'pages/wholesale',
+        'pages/replenishment_goods',
+        'pages/register',
+        'pages/order',
+        'pages/reorder',
+        'pages/pay_success',
+        'pages/points',
+        'pages/points_more',
+        'pages/points_rule',
+        'pages/collection',
+        'pages/messages',
+        'pages/setting',
+        'pages/goods_detail',
+        'pages/comfire_order',
+        'pages/address',
+        'pages/order_detail',
+        'pages/filter',
+        'pages/logistics',
+        'pages/comment',
+        'pages/comment_add'
+      ],
+      window: {
+        backgroundTextStyle: 'dark',
+        navigationBarBackgroundColor: '#FFFFFF',
+        navigationBarTitleText: 'WeChat',
+        navigationBarTextStyle: 'black',
+        enablePullDownRefresh: false,
+        backgroundColor: '#EFEFEF'
+      },
+      "tabBar": {
+        "color": "#999999",
+        "selectedColor": "#ff6a3c",
+        "backgroundColor": "#ffffff",
+        "borderStyle": "black",
+        "list": [{
+          "pagePath": "pages/home",
+          "text": "首页",
+          "iconPath": "images/icon_home.png",
+          "selectedIconPath": "images/icon_home_active.png"
+        }, {
+          "pagePath": "pages/classify",
+          "text": "分类",
+          "iconPath": "images/icon_classify.png",
+          "selectedIconPath": "images/icon_classify_active.png"
+        }, {
+          "pagePath": "pages/shop_cart",
+          "text": "购物车",
+          "iconPath": "images/icon_shop_cart.png",
+          "selectedIconPath": "images/icon_shop_cart_active.png"
+        }, {
+          "pagePath": "pages/info",
+          "text": "我",
+          "iconPath": "images/icon_info.png",
+          "selectedIconPath": "images/icon_info_active.png"
+        }]
+      }
+    }
+    globalData = {}
+    constructor() {
+      super()
+      this.use('requestfix')
+      this.use('promisify');
+    }
+    networkStatusChangeLog() {
+      const log = new Date().toUTCString() + 'BizInfo' + 'uploadWhenOk'
+      wx.setStorageSync('onNetworkStatusChangeLog', log)
+    }
+    async onLaunch(option) {
+      let that = this
+      wx.onNetworkStatusChange(function(res) {
+        that.networkStatusChangeLog()
+        wx.setStorageSync('onNetworkStatusChange', res)
+        if (!res.isConnected) {
+          wx.showToast({
+            title: '无网络',
+            icon: 'loading',
+            duration: 2000
+          })
+        }
+      })
     }
   }
-
-  globalData = {}
-
-  constructor() {
-    super()
-    this.use('requestfix')
-    this.use('promisify');
-
-  }
-
-  async onLaunch(option) {
-
-  }
-}
-
 </script>
